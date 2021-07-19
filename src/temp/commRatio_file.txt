@@ -1,0 +1,75 @@
+force=AFFE_CHAR_MECA(MODELE=model,
+FORCE_NODALE=_F(GROUP_NO=('load',),
+	***********load*********,),
+);
+stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+EXCIT=(			_F(CHARGE=encast,),
+		_F(CHARGE=force,),
+),
+SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=10,),
+);
+stat=CALC_CHAMP( reuse =stat,
+	MODELE=model,
+	CHAM_MATER=material,
+	CARA_ELEM=elemcar,
+	RESULTAT = stat,
+	FORCE = ('FORC_NODA'),
+);
+stat=CALC_CHAMP( reuse =stat,
+	MODELE=model,
+	CHAM_MATER=material,
+	CARA_ELEM=elemcar,
+	RESULTAT = stat,
+	CONTRAINTE = ('SIPO_ELNO'),
+	FORCE = ('REAC_NODA'),
+);    
+TABDEP1=POST_RELEVE_T(ACTION=_F(OPERATION='EXTRACTION',
+                                INTITULE='Contrainte',
+                                RESULTAT=stat,
+                                NOM_CHAM='SIPO_ELNO',
+                                GROUP_NO='ALL',
+                                TOUT_CMP='OUI',
+                                REPERE='GLOBAL',
+),);
+TAB_eff=POST_RELEVE_T(ACTION=_F(OPERATION='EXTRACTION',
+                                INTITULE='reaction',
+                                RESULTAT=stat,
+                                NOM_CHAM='REAC_NODA',
+                                GROUP_NO='encas',
+                                TOUT_CMP='OUI',
+                                REPERE='GLOBAL',							
+								
+),);
+
+contrainte = TABDEP1.EXTR_TABLE()
+Sn = contrainte.SN
+Svy = contrainte.SVY
+Svz = contrainte.SVZ
+Smfy = contrainte.SMFY
+Smfz = contrainte.SMFZ
+Smt = contrainte.SMT
+ratio = Ratio(value,niveau, Sn, Svy, Svz, Smt, Smfy, Smfz)
+ratioMax = ratio.maxRatio()
+ratio.write_result()
+print("ratioMax",ratioMax)
+ratioPlatine = RatioPlatine(value)
+
+torseur = TAB_eff.EXTR_TABLE()
+dx = torseur.DX
+dy = torseur.DY
+dz = torseur.DZ
+drx = torseur.DRX
+dry = torseur.DRY
+drz = torseur.DRZ
+nbChevilles = value['platine']['nbCheville']
+maxRatio = []
+for i in range(len(nbChevilles)):
+	if nbChevilles[i] =='2':                 
+		maxRatio.append(ratioPlatine.ratio2chevilles(niveau, dx, dy, dz, drx, dry, drz,i))
+	if nbChevilles[i] =='4':
+		maxRatio.append(ratioPlatine.ratio4chevilles(niveau, dx, dy, dz, drx, dry, drz,i))
+ratioPlatine.write_result(dx, dy,dz, drx, dry, drz, maxRatio)
+ratioMax = max(maxRatio)
+IMPR_TABLE (TABLE=TABDEP1,)
+IMPR_TABLE (TABLE=TAB_eff,)
+FIN()

@@ -1,0 +1,33 @@
+import os
+VERSION = "1.0"
+SETTINGS_PATH = os.getcwd()
+PATH = os.getcwd()
+TEMP = os.getcwd() + "/src/temp/"
+GMSH = os.getcwd() + "/gmsh-4.0.7-Windows64/gmsh.exe"
+MED_GMSH = os.getcwd() + "/gmsh-4.0.7-Windows64/gmsh " + os.getcwd() + "/code-aster_v2019_std-win64/v2019/14.4/share/aster/tests/osup.geo -1 -format med"
+
+MATERIAL_DB = os.getcwd() + "/databases/material.json"
+PROFILE_DB = os.getcwd() + "/databases/profile(2).json"
+STIRRUP_DB = os.getcwd() + "/databases/stirrup.json"
+
+BEAMS_GROUP_SUFFIX = ""
+NODE_GROUP_SUFFIX = ""
+
+DICHOTOMIE_COUBE_X = os.getcwd() + "/src/temp/commCourbe_X.txt"
+DICHOTOMIE_COUBE_Y = os.getcwd() + "/src/temp/commCourbe_Y.txt"
+DICHOTOMIE_COUBE_Z = os.getcwd() + "/src/temp/commCourbe_Z.txt"
+DICHOTOMIE_RATIO = os.getcwd()+ "/src/temp/commRatio_file.txt"
+
+ASTER = os.getcwd() + "/code-aster_v2019_std-win64//v2019//bin//as_run --test osup"
+
+PROFILE_RSLT = ("'" + TEMP + "profile(2).Osup" + "'").replace("\\","/")
+PLATINE_RSLT = ("'" + TEMP + "platine(2).Osup" + "'").replace("\\","/")
+CHEVILLE_RSLT = ("'" + TEMP + "cheville.Osup" + "'").replace("\\","/")
+
+COMM_FILE = os.getcwd() + "/code-aster_v2019_std-win64/v2019/14.4/share/aster/tests/osup.comm"
+EXPORT_FILE = os.getcwd() + "/code-aster_v2019_std-win64/v2019/14.4/share/aster/tests/osup.export"
+resu_PATH = os.getcwd() + "/code-aster_v2019_std-win64/v2019/14.4/share/aster/tests/osup.resu"
+mess_PATH = os.getcwd() + "/code-aster_v2019_std-win64/v2019/14.4/share/aster/tests/osup.mess"
+GEO_FILE = os.getcwd() + "/code-aster_v2019_std-win64/v2019/14.4/share/aster/tests/osup.geo"
+
+PATH_TEMPLATE_NOTE_RCCM = TEMP + "[Template]NoteDeCalcul_RCCM.docx"
