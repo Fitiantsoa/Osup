@@ -512,20 +512,34 @@ Rectangle {
 
                         }
                     }
-                    Rectangle{
+Rectangle{
                         color: Theme.grey_3
                         anchors.verticalCenter: parent.verticalCenter
                         width: 1
-                        height: parent.height-10
+                        height: parent.height - 10
                     }
                     Rectangle{
                         height : parent.height
-                        width : ((parent.width)/2) - 25
+                        width : ((parent.width)/2) + 100
                         id : table
                         Column{
                             anchors.fill: parent
                             anchors.margins: 20
                             spacing: -1
+
+                            RowLayout{
+                                spacing: 15
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 15
+                                anchors.rightMargin: 20
+                                Label{
+                                    text: "Données géometrique de la platine:"
+                                    Layout.preferredWidth: 50
+                                    color : Theme.grey_6
+                                    font.bold:true
+                                    }
+                            }
                             RowLayout{
                                 spacing: 15
                                 anchors.right: parent.right
@@ -568,7 +582,7 @@ Rectangle {
                                     placeholderText: qsTr(" ")
                                     Layout.preferredWidth: 50
                                     validator: IntValidator{}
-                                }                                
+                                }
                                 Label{
                                     text : "a (mm) :"
                                     visible: (nbCheville.currentText === "2" && orientation.currentText == "Horizontal") || (nbCheville.currentText === "4")
@@ -600,26 +614,28 @@ Rectangle {
 
                             }
                             RowLayout{
-                                spacing: 10
+                                spacing: 15
                                 anchors.right: parent.right
                                 anchors.left: parent.left
                                 anchors.leftMargin: 15
                                 anchors.rightMargin: 20
+                                height: 30
                                 Label{
-                                    text: "Type chevilles :"
-                                    Layout.preferredWidth: 100
-                                    color : Theme.grey_6
-                                }
-                                CComboBox{
-                                    id: typeCheville
-                                    width: 250
-                                    objectName: "TypeCheville"
-                                    model: ["HILTI HSL 3-G M16", "HILTI HSL 3-G M16", "HDA-P M10"]
-
-                                }
-                                Label{
-                                    text : "Béton :"
+                                    text: "Choix des données materiaux:"
                                     Layout.preferredWidth: 50
+                                    color : Theme.grey_6
+                                    font.bold:true
+                                    }
+                                }
+                            RowLayout{
+                                spacing: 15
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 15
+                                anchors.rightMargin: 20
+                                height: 30
+                                Label{
+                                    text : "Etat :"
                                     color : Theme.grey_6
                                 }
                                 CComboBox{
@@ -634,15 +650,19 @@ Rectangle {
 //                                    Layout.preferredWidth: 50
 //                                    color : Theme.grey_6
 //                                }
+                                Label{
+                                    text : "Classe :"
+                                    color : Theme.grey_6
+                                }
                                 CComboBox{
                                     id: pression
                                     width:150
                                     objectName: "pression"
-                                    model: ["25 MPa", "30 MPa","35 MPa"]
+                                    model: ["C20/25", "C25/30", "C30/37", "C35/45", "C40/50", "C45/55", "C50/60"]
 
                                 }
                                 Label{
-                                    text : "Epaisseur béton (mm) :"
+                                    text : "Epaisseur (mm) :"
                                     color : Theme.grey_6
                                 }
                                 CTextField{
@@ -652,14 +672,26 @@ Rectangle {
                                     Layout.preferredWidth: 50
                                     validator: IntValidator{}
                                 }
-                            }
+
+                                Label{
+                                    text : "Armature :"
+                                    color : Theme.grey_6
+                                }
+                                CComboBox{
+                                    id: armature
+                                    width:150
+                                    objectName: "armature"
+                                    model: ["Oui", "Non"]
+
+                                }
+                                }
                             RowLayout{
-                                Component.onCompleted: visible=false
                                 spacing: 10
                                 anchors.right: parent.right
                                 anchors.left: parent.left
                                 anchors.leftMargin: 15
                                 anchors.rightMargin: 20
+                                height: 30
                                 Label{
                                     text: "Production :"
                                     Layout.preferredWidth: 50
@@ -690,6 +722,229 @@ Rectangle {
 
                             }
                             RowLayout{
+                                spacing: 15
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 15
+                                anchors.rightMargin: 20
+                                Label{
+                                    text: "Etude:"
+                                    Layout.preferredWidth: 50
+                                    color : Theme.grey_6
+                                    font.bold:true
+                                    }
+                            }
+                            RowLayout{
+                                spacing: 15
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 15
+                                anchors.rightMargin: 20
+
+                                CCheckBox{
+                                            objectName: "EDF"
+                                            id:edf
+                                            text: "EDF"
+                                            checked: true
+                                        }
+
+                                Label{
+                                    text: "Norme utilisée:"
+                                    Layout.preferredWidth: 100
+                                    color : Theme.grey_6
+                                    font.bold:true
+                                    }
+
+                                CComboBox{
+                                    id: norme
+                                    implicitWidth: 100
+                                    objectName: "Norme"
+                                    model: ["Eurocode 2", "ETAG"]
+
+                                }
+                                Label{
+                                    text: "Type de charge:"
+                                    Layout.preferredWidth: 50
+                                    color : Theme.grey_6
+                                    font.bold:true
+                                    }
+                                CComboBox{
+                                    id: typecharge
+                                    implicitWidth: 150
+                                    objectName: "TypeCharge"
+                                    model: ["Statique ou quasi-statique", "Sismique C1", "Sismique C2"]
+
+                                }
+                                }
+                                RowLayout{
+                                spacing: 15
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 15
+                                anchors.rightMargin: 20
+                                Label{
+                                    text: "Situation initiale:"
+                                    Layout.preferredWidth: 100
+                                    color : Theme.grey_6
+                                    font.bold:true
+                                    }
+                                CComboBox{
+                                    id: situationinitiale
+                                    implicitWidth: 200
+                                    objectName: "SituationInitiale"
+                                    model: ["Situations permanentes et transitoires", "Situations accidentelles"]
+
+                                }
+
+
+                            }
+                            RowLayout{
+                                spacing: 15
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 15
+                                anchors.rightMargin: 20
+                                height: 30
+                                Label{
+                                    text: "Choix du type de cheville:"
+                                    Layout.preferredWidth: 50
+                                    color : Theme.grey_6
+                                    font.bold:true
+                                }
+                            }
+                            RowLayout{
+                                spacing: 10
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 15
+                                anchors.rightMargin: 20
+                                height: 30
+                                Label{
+                                    text: "Gamme chevilles :"
+                                    Layout.preferredWidth: 100
+                                    color : Theme.grey_6
+                                }
+                                CComboBox{
+                                    id: gammeCheville
+                                    implicitWidth: 100
+                                    objectName: "GammeCheville"
+                                    model: ["HILTI", "Würth", "SPIT"]
+
+                                }
+                                Label{
+                                    text: "Modèle chevilles :"
+                                    Layout.preferredWidth: 100
+                                    color : Theme.grey_6
+                                }
+                                CComboBox{
+                                    id: modeleCheville
+                                    implicitWidth: 100
+                                    objectName: "ModeleCheville"
+                                    model: ["HSL 3-G", "HST3", "HDA-T", "HDA-P"]
+
+                                }
+                                Label{
+                                    text: "Type chevilles :"
+                                    Layout.preferredWidth: 80
+                                    color : Theme.grey_6
+                                }
+                                CComboBox{
+                                    id: typeCheville
+                                    implicitWidth: 50
+                                    objectName: "TypeCheville"
+                                    model: ["M8", "M10", "M12", "M16", "M20", "M24"]
+
+                                }
+                                Label{
+                                    text: "Profondeur ancrage :"
+                                    Layout.preferredWidth: 100
+                                    color : Theme.grey_6
+                                }
+                                CComboBox{
+                                    id: profondeurCheville
+                                    implicitWidth: 50
+                                    objectName: "ProfondeurCheville"
+                                    model: ["60", "80", "100"]
+
+                                }
+
+                            }
+
+                            RowLayout{
+                                spacing: 10
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 15
+                                anchors.rightMargin: 20
+                                height: 30
+                                Label{
+                                    text: "Distance aux bords:"
+                                    Layout.preferredWidth: 50
+                                    color : Theme.grey_6
+                                    font.bold:true
+                                }
+                            }
+
+                            RowLayout{
+                                spacing: 10
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 15
+                                anchors.rightMargin: 20
+                                height: 30
+                                Label{
+                                    text : "cx1 (mm):"
+                                    Layout.preferredWidth: 50
+                                    color : Theme.grey_6
+                                }
+                                CTextField{
+                                    id: cx1
+                                    objectName: "cx1"
+                                    placeholderText: qsTr("1e+15")
+                                    Layout.preferredWidth: 50
+                                    validator: IntValidator{}
+                                }
+                                Label{
+                                    text : "cx2 (mm):"
+                                    Layout.preferredWidth: 50
+                                    color : Theme.grey_6
+                                }
+                                CTextField{
+                                    id: cx2
+                                    objectName: "cx2"
+                                    placeholderText: qsTr("1e+15")
+                                    Layout.preferredWidth: 50
+                                    validator: IntValidator{}
+                                }
+                                Label{
+                                    text : "cz1 (mm):"
+                                    Layout.preferredWidth: 50
+                                    color : Theme.grey_6
+                                }
+                                CTextField{
+                                    id: cz1
+                                    objectName: "cz1"
+                                    placeholderText: qsTr("1e+15")
+                                    Layout.preferredWidth: 50
+                                    validator: IntValidator{}
+                                }
+                                Label{
+                                    text : "cz2 (mm):"
+                                    Layout.preferredWidth: 50
+                                    color : Theme.grey_6
+                                }
+                                CTextField{
+                                    id: cz2
+                                    objectName: "cz2"
+                                    placeholderText: qsTr("1e+15")
+                                    Layout.preferredWidth: 50
+                                    validator: IntValidator{}
+                                }
+                            }
+
+
+
+                            RowLayout{
                                 spacing: 10
                                 anchors.right: parent.right
                                 anchors.left: parent.left
@@ -697,8 +952,8 @@ Rectangle {
                                 anchors.rightMargin: 20
                                 Rectangle{
                                     color: "transparent"
-                                    height: 180
-                                    width:920
+                                    height: 50
+                                    width: 920
 
                                 }
                                 ButtonAdd{
@@ -738,7 +993,7 @@ Rectangle {
                 anchors.top: parent.top
                 anchors.leftMargin: 20
                 width: parent.width
-                anchors.topMargin: 350
+                anchors.topMargin: 400
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 10
                 Rectangle {
@@ -857,7 +1112,6 @@ Rectangle {
 
     }
 }
-
 
 
 
