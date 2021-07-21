@@ -46,8 +46,8 @@ Rectangle {
             id:moduletitle
             text:"Importation des familles de supports"
             z:1
-            color:Theme.grey_4
-            font.pointSize: Theme.title_4
+            color:Theme.grey_3
+            font.pointSize: Theme.title_3
             font.bold:true
             anchors.top: parent.top
             anchors.topMargin: 2

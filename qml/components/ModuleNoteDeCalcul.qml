@@ -129,7 +129,7 @@ Rectangle {
                             horizontalAlignment: Text.AlignRight
                         }
                         CTextField {
-                            objectName: "ndcRefTextField"
+                            objectName: "RefTF"
                             text: ""
                             Layout.fillWidth: true
                             Layout.rightMargin: 100
@@ -154,7 +154,7 @@ Rectangle {
                             horizontalAlignment: Text.AlignRight
                         }
                         CTextField {
-                            objectName: "ndcClientTextField"
+                            objectName: "clientTF"
                             text: "SOM CALCUL "
                             Layout.fillWidth: true
                             Layout.rightMargin: 100
@@ -180,7 +180,7 @@ Rectangle {
                             horizontalAlignment: Text.AlignRight
                         }
                         CTextField {
-                            objectName: "ndcTitreTextField"
+                            objectName: "DocNameTF"
                             id: osupTextField3
                             text: ""
                             Layout.fillWidth: true
@@ -207,7 +207,7 @@ Rectangle {
                             horizontalAlignment: Text.AlignRight
                         }
                         CTextField {
-                            objectName: "ndcRedacteurTextField"
+                            objectName: "AuthorTF"
                             id: osupTextField2
                             Layout.fillWidth: true
                             Layout.rightMargin: 100
@@ -233,7 +233,7 @@ Rectangle {
                             horizontalAlignment: Text.AlignRight
                         }
                         CTextField {
-                            objectName: "ndcVerificateurTextField"
+                            objectName: "SupervisorTF"
                             id: osupTextField1
                             Layout.fillWidth: true
                             Layout.rightMargin: 100
@@ -259,7 +259,7 @@ Rectangle {
                             horizontalAlignment: Text.AlignRight
                         }
                         CTextField {
-                            objectName: "ndcApprobateurTextField"
+                            objectName: "ApproverTF"
                             id: osupTextField4
                             Layout.fillWidth: true
                             Layout.rightMargin: 100
@@ -285,7 +285,7 @@ Rectangle {
                             horizontalAlignment: Text.AlignRight
                         }
                         CTextField {
-                            objectName: "ndcNomSiteTextField"
+                            objectName: "SiteNameTF"
                             id: osupTextField5
                             Layout.fillWidth: true
                             Layout.rightMargin: 100
@@ -312,7 +312,7 @@ Rectangle {
                             horizontalAlignment: Text.AlignRight
                         }
                         CComboBox {
-                            objectName: "ndcEtatComboBox"
+                            objectName: "StateCC"
                             id: osupTextFieldEtat
                             Layout.preferredWidth: 70
                             model: ["BPO", "BPE"]
@@ -332,7 +332,7 @@ Rectangle {
                             horizontalAlignment: Text.AlignRight
                         }
                         CComboBox {
-                            objectName: "ndcIndiceComboBox"
+                            objectName: "IndexCC"
                             id: osupTextFieldind
                             Layout.preferredWidth: 70
                             model: ["A", "B", "C", "D", "E"]
@@ -358,7 +358,7 @@ Rectangle {
                             horizontalAlignment: Text.AlignRight
                         }
                         CTextField {
-                            objectName: "ndcDateTextField"
+                            objectName: "DateTF"
                             id: osupTextFieldDate
                             placeholderText: "JJ/MM/AAAA"
                             Layout.fillWidth: true

@@ -1,4 +1,4 @@
-from database import Database
+from src.constantes import *
 
 
 class ReadingInputData:
@@ -8,7 +8,7 @@ class ReadingInputData:
         self.tfix = tfix
         self.modele = modele
         self.nom = []
-        self.opendata = Database().open_database()
+        self.opendata = self.open_database()
         self.datadowel = self.opendata.get("datadowel")
         self.typebeton = typebeton
         self.fulldata = self.get_dowel_data()
@@ -82,3 +82,18 @@ class ReadingInputData:
         q = self.data_recovery(self.nom, "Classe de resistance", self.dataconcrete).index(self.typebeton)
         prop = self.dataconcrete[q]['{}'.format(propriete)]
         return prop
+
+    # def open_database(self):
+    #     with open(DOWEL_DB, "r") as f:
+    #         datadowel = json.load(f)
+    #
+    #     with open("concretedatabase.json", "r") as f:
+    #         dataconcrete_ec2 = json.load(f)
+    #
+    #     with open("concretedatabaseetag.json", "r") as f:
+    #         dataconcrete_etag = json.load(f)
+    #
+    #     return {"dataconcrete_ec2": dataconcrete_ec2,
+    #             "dataconcrete_etag": dataconcrete_etag,
+    #             "datadowel": datadowel
+    #             }
