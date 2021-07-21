@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QObject
 
-from src.constantes import MATERIAL_DB, PROFILE_DB
+from src.constantes import MATERIAL_DB, PROFILE_DB, DOWEL_DB
 from src.utils import read_json
 
 from src.modules.components import ListView, Combobox
@@ -13,6 +13,7 @@ class ModulePlatine:
         self.sibling = parent.findChild(QObject, self.objectName)
         self.material_db = read_json(MATERIAL_DB)
         self.profile_db = read_json(PROFILE_DB)
+        self.dowel_db = read_json(DOWEL_DB)
 
         self.platine_list_view = ListView("PlatineListView", parent, PlatineListModel([]))
         self.production_cb = Combobox("ProdPlatine", parent)
@@ -20,7 +21,12 @@ class ModulePlatine:
         self.node = Combobox("DowelNode", parent)
 
         self.sibling.findChild(QObject, "ProdPlatine").activated.connect(self.update_material)
+        self.sibling.findChild(QObject, "GammeCheville").activated.connect(self.update_model)
+        self.sibling.findChild(QObject, "ModeleCheville").activated.connect(self.update_dowel_type)
+        self.sibling.findChild(QObject, "TypeCheville").activated.connect(self.update_dowel_deep)
+
         self.init_cb()
+        self.init_cd_dowel()
 
         self.data = self.platine_list_view._model._data
         self.axis = []
@@ -69,11 +75,27 @@ class ModulePlatine:
     def update_from_file(self, data):
         self.platine_list_view.set_model_data(data)
 
+    def init_cd_dowel(self):
+        self.set_model("GammeCheville", list(self.dowel_db.keys()))
+        self.update_model()
+        self.update_dowel_type()
+        self.update_dowel_deep()
+
+    def update_model(self):
+        self.current_text_model = self.sibling.findChild(QObject, "GammeCheville").property("currentText")
+        self.set_model("ModeleCheville", list(self.dowel_db[self.current_text_model].keys()))
+
+    def update_dowel_type(self):
+        self.current_text_type = self.sibling.findChild(QObject, "ModeleCheville").property("currentText")
+        self.set_model("TypeCheville", list(self.dowel_db[self.current_text_model][self.current_text_type].keys()))
+
+    def update_dowel_deep(self):
+        current_text = self.sibling.findChild(QObject, "TypeCheville").property("currentText")
+        self.set_model("ProfondeurCheville", list(self.dowel_db[self.current_text_model][self.current_text_type][current_text].keys()))
 
     def update_material(self):
         current_text = self.sibling.findChild(QObject, "ProdPlatine").property("currentText")
         self.set_model("MatPlatine", list(self.material_db["RCC-M 2016"][current_text].keys()))
-
 
     def set_model(self, objectName, value):
         self.sibling.findChild(QObject, objectName).setProperty("model", value)
