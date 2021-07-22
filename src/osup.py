@@ -104,7 +104,6 @@ class OSup(QObject):
         }
 
 
-
     def update_from_file(self, data):
         self.calculation_condition.update_from_file(data['calculation_condition'])
         self.geometry_module.update_from_file(data['geo'])
