@@ -4,35 +4,44 @@ import math
 
 
 class CalculationEffort:
-    def __init__(self, NbFixa, geometrie, data_board_dowel, effort, inputdata, inertia):
-        self.N = effort.get("N")
-        self.Mx = effort.get("Mx")
-        self.Mz = effort.get("Mz")
-        self.Mzb = inertia.get("Mzb")
-        self.Mxb = inertia.get("Mxb")
-        self.NbFixa = NbFixa
-        self.PosFix = inertia.get("PosFix")
+    def __init__(self, inputdataaster):
+        self.effort = inputdataaster.get("effort")
+        self.N = self.effort.get("N")
+        self.Mx = self.effort.get("Mx")
+        self.Mz = self.effort.get("Mz")
+        self.Vx = self.effort.get("Vx")
+        self.Vz = self.effort.get("Vz")
+
+        self.inertia = inputdataaster.get("inertia")
+        self.Mzb = self.inertia.get("Mzb")
+        self.Mxb = self.inertia.get("Mxb")
+        self.PosFix = self.inertia.get("PosFix")
+        self.CentreGeo1 = self.inertia.get("CentreGeo1")
+        self.CentreGeo0 = self.inertia.get("CentreGeo0")
+        self.Ix = self.inertia.get("Ix")
+        self.Iy = self.inertia.get("Iy")
+        self.Iz = self.inertia.get("Iz")
+        self.Tb = self.inertia.get("Tb")
+        self.PosCmax = self.inertia.get("PosCmax")
+        self.PosCmax1 = self.inertia.get("PosCmax1")
+        self.PosFix_bis = self.inertia.get("PosFix_bis")
+
+        self.NbFixa = inputdataaster.get("NbFixa")
         self.eN = [0, 0]
-        self.Lx = data_board_dowel.get("Lx")
-        self.Lz = data_board_dowel.get("Lz")
-        self.CentreGeo1 = inertia.get("CentreGeo1")
-        self.CentreGeo0 = inertia.get("CentreGeo0")
-        self.geometrie = geometrie
-        self.Ix = inertia.get("Ix")
-        self.Iy = inertia.get("Iy")
-        self.Iz = inertia.get("Iz")
-        self.Tb = inertia.get("Tb")
-        self.Vx = effort.get("Vx")
-        self.Vz = effort.get("Vz")
-        self.Vedx = np.zeros((NbFixa, 1))
-        self.Vedz = np.zeros((NbFixa, 1))
-        self.Ved = np.zeros((NbFixa, 1))
-        self.NEd = np.zeros((NbFixa, 1))
-        self.nd = inputdata[5]
-        self.Ar = inputdata[6]
-        self.PosCmax = inertia.get("PosCmax")
-        self.PosCmax1 = inertia.get("PosCmax1")
-        self.PosFix_bis = inertia.get("PosFix_bis")
+
+        self.data_board_dowel = inputdataaster.get("data_board_dowel")
+        self.Lx = self.data_board_dowel.get("Lx")
+        self.Lz = self.data_board_dowel.get("Lz")
+
+        self.Vedx = np.zeros((self.NbFixa, 1))
+        self.Vedz = np.zeros((self.NbFixa, 1))
+        self.Ved = np.zeros((self.NbFixa, 1))
+        self.NEd = np.zeros((self.NbFixa, 1))
+
+        self.inputdata = inputdataaster.get("inputdata")
+        self.nd = self.inputdata.get("nd")
+        self.Ar = self.inputdata.get("Ar")
+
         self.NbFixTraction = 0
         self.NEdg = 0
 
