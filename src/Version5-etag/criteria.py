@@ -5,33 +5,46 @@ from readinginputdata import ReadingInputData
 
 
 class Criteria:
-    def __init__(self, NbFixa, TypeCharge, effort, modele, hef, tfix, h, etat, armature, typebeton,
-                 geometrie, resultCisail, resultTrac, data_board_dowel, inertia, inputdata, EDF, txt, norme):
-        self.NbFixa = NbFixa
-        self.TypeCharge = TypeCharge
-        self.sx0 = data_board_dowel.get("sx0")
-        self.sx1 = data_board_dowel.get("sx1")
-        self.sz0 = data_board_dowel.get("sz0")
-        self.sz1 = data_board_dowel.get("sz1")
-        self.cx0 = data_board_dowel.get("cx0")
-        self.cx1 = data_board_dowel.get("cx1")
-        self.cz0 = data_board_dowel.get("cz0")
-        self.cz1 = data_board_dowel.get("cz1")
-        self.Lx = data_board_dowel.get("Lx")
-        self.Lz = data_board_dowel.get("Ly")
-        self.Mx = effort.get('Mx')
-        self.Mz = effort.get('Mz')
-        self.N = effort.get('N')
-        self.T = effort.get('T')
-        self.Vx = effort.get('Vx')
-        self.Vz = effort.get('Vz')
-        self.modele = modele
-        self.hef = hef
-        self.tfix = tfix
-        self.h = h
-        self.etat = etat
-        self.armature = armature
-        self.typebeton = typebeton
+    def __init__(self, inputdataaster, resultTrac, resultCisail):
+        self.NbFixa = inputdataaster.get("NbFixa")
+        self.TypeCharge = inputdataaster.get("TypeCharge")
+        self.norme = inputdataaster.get("norme")
+        self.modele = inputdataaster.get("modele")
+        self.hef = inputdataaster.get("hef")
+        self.dnom = inputdataaster.get("dnom")
+        self.EDF = inputdataaster.get("EDF")
+        self.txt = inputdataaster.get("txt")
+
+        self.dowel_property = inputdataaster.get("dowel_property")
+        self.gamme = self.dowel_property.get("gamme")
+
+        self.data_board_dowel = inputdataaster.get("data_board_dowel")
+        self.sx0 = self.data_board_dowel.get("sx0")
+        self.sx1 = self.data_board_dowel.get("sx1")
+        self.sz0 = self.data_board_dowel.get("sz0")
+        self.sz1 = self.data_board_dowel.get("sz1")
+        self.cx0 = self.data_board_dowel.get("cx0")
+        self.cx1 = self.data_board_dowel.get("cx1")
+        self.cz0 = self.data_board_dowel.get("cz0")
+        self.cz1 = self.data_board_dowel.get("cz1")
+        self.Lx = self.data_board_dowel.get("Lx")
+        self.Lz = self.data_board_dowel.get("Ly")
+        self.tfix = self.data_board_dowel.get("tfix")
+
+        self.effort = inputdataaster.get("effort")
+        self.Mx = self.effort.get('Mx')
+        self.Mz = self.effort.get('Mz')
+        self.N = self.effort.get('N')
+        self.T = self.effort.get('T')
+        self.Vx = self.effort.get('Vx')
+        self.Vz = self.effort.get('Vz')
+
+        self.data_concrete = inputdataaster.get("data_concrete")
+        self.h = self.data_concrete.get("h")
+        self.etat = self.data_concrete.get("etat")
+        self.armature = self.data_concrete.get("armature")
+        self.typebeton = self.data_concrete.get("typebeton")
+
         self.resultshearing = resultCisail
         self.Ved = self.resultshearing.get('Ved')
         self.VEdg = self.resultshearing.get('VEdg')
@@ -42,33 +55,35 @@ class Criteria:
         self.eV0 = self.resultshearing.get("eV0")
         self.eV1 = self.resultshearing.get("eV1")
         self.eV = [self.eV0, self.eV1]
-        self.norme = norme
 
         self.NEd = resultTrac.get("NEd")
         self.NEdg = resultTrac.get("NEdg")
         self.eN = resultTrac.get("eN")
         self.z = resultTrac.get("z")
         self.CEd = resultTrac.get("CEd")
-        self.PosFix = inertia.get("PosFix")
-        self.DistFixBord = inertia.get("DistFixBord")
-        self.DistFixFix = inertia.get("DistFixFix")
-        self.Recuperationproprietecheville = ReadingInputData(hef, tfix, modele, typebeton, norme)
-        self.CentreGeo0 = inertia.get("CentreGeo0")
-        self.CentreGeo1 = inertia.get("CentreGeo1")
-        self.scrn = inputdata[0]
-        self.ccrN = inputdata[1]
-        self.scrsp = inputdata[2]
-        self.ccrsp = inputdata[3]
-        self.hmin = inputdata[4]
-        self.geometrie = geometrie
 
-        self.Iy = inertia.get("Iy")
-        self.Tb = inertia.get("Tb")
-        self.fck = self.Recuperationproprietecheville.get_concrete_property('fck')
-        self.gamme = self.Recuperationproprietecheville.get_dowel_property('gamme')
-        self.dnom = self.Recuperationproprietecheville.get_dowel_property('diametre percage')
-        self.EDF = EDF
-        self.txt = txt
+        self.inertia = inputdataaster.get("inertia")
+        self.PosFix = self.inertia.get("PosFix")
+        self.DistFixBord = self.inertia.get("DistFixBord")
+        self.DistFixFix = self.inertia.get("DistFixFix")
+        self.Iy = self.inertia.get("Iy")
+        self.Tb = self.inertia.get("Tb")
+        self.CentreGeo0 = self.inertia.get("CentreGeo0")
+        self.CentreGeo1 = self.inertia.get("CentreGeo1")
+
+        self.Recuperationproprietecheville = ReadingInputData(self.norme, self.dowel_property, self.data_board_dowel,
+                                                              self.data_concrete)
+
+        self.inputdata = inputdataaster.get("inputdata")
+        self.scrn = self.inputdata.get("scrn")
+        self.ccrN = self.inputdata.get("ccrN")
+        self.scrsp = self.inputdata.get("scrsp")
+        self.ccrsp = self.inputdata.get("ccrsp")
+        self.hmin = self.inputdata.get("hmin")
+        self.fck = self.inputdata.get('fck')
+        self.k8 = self.inputdata.get('k8')
+        self.aeq_groupe = self.inputdata.get('aeq_groupe')
+        self.aeq_isolee = self.inputdata.get('aeq_groupe')
 
         self.calculation_criteria_traction_shearing()
 
@@ -146,8 +161,8 @@ class Criteria:
                     self.rupture_splitting_C1()
 
     def rupture_steel_fixation_without_lever_arm(self):
-        gamma = self.Recuperationproprietecheville.get_dowel_property('rupture acier sans bras levier gamma')
-        VRKs = self.Recuperationproprietecheville.get_dowel_property('rupture acier sans bras levier vrks')
+        gamma = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier sans bras de levier - gamma Ms,V'))
+        VRKs = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier sans bras de levier - VRk,s (N)'))
         Ruptureacciersansbraslevier = []
         VedMax = 0
 
@@ -192,20 +207,20 @@ class Criteria:
     def rupture_concrete_with_lever_arm(self, C1, C2):
         global aeq, VRkcpseis, VRdcpeq
         agap = 0.5
-        gamma = self.calculation_gamma_c() * self.Recuperationproprietecheville.get_dowel_property(
-            'rupture effet levier gamma')
+        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+            'Rupture du beton par effet de levier - gamma inst'))
         ruptbetonlevierC2 = []
         ruptbetonlevierC1 = []
         ruptbetonlevier = []
 
         if C1 == "C1" or C2 == "C2":
             if self.NbFixa > 1:
-                aeq = self.Recuperationproprietecheville.get_dowel_property('aeq groupe')
+                aeq = self.aeq_groupe
             else:
-                aeq = self.Recuperationproprietecheville.get_dowel_property('aeq isolee')
+                aeq = self.aeq_isolee
 
         if C2 == "C2":
-            self.dV_seis_eq = self.Recuperationproprietecheville.get_dowel_property('deplacement delta v seis dls')
+            self.dV_seis_eq = float(self.Recuperationproprietecheville.get_dowel_property('Deplacement deltaV,seis (DLS)'))
             self.dV_seis_req = 3
             rat = self.dV_seis_req / self.dV_seis_eq
             if rat > 1:
@@ -225,21 +240,20 @@ class Criteria:
             psiecN = self.calculation_psie_cN(scrN1, self.eV, 2)
         psiMN = 1
         NRkc = self.calculation_N(N0, a, A0, psisN, psireN, psiecN, psiMN, 1)
-        k8 = self.Recuperationproprietecheville.get_dowel_property('rupture effet levier facteur pryoutk3')
         if C1 == "C1":
-            VRkcp = agap * aeq * k8 * NRkc
+            VRkcp = agap * aeq * self.k8 * NRkc
             VRdcpeq = VRkcp / gamma
             ratio = self.VEdg / VRdcpeq
             self.ruptbetonlevierglob = self.VEdg / VRdcpeq
         elif C2 == "C2":
-            VRkcp = agap * aeq * k8 * NRkc
+            VRkcp = agap * aeq * self.k8 * NRkc
             VRdcpeq = VRkcp / gamma
             VRkcpseis = VRdcpeq * (self.dV_seis_req / self.dV_seis_eq)
             ratio = self.VEdg / VRkcpseis
             self.ruptbetonlevierglob = self.VEdg / VRkcpseis
 
         else:
-            VRkcp = k8 * NRkc
+            VRkcp = self.k8 * NRkc
             ratio = self.VEdg / (VRkcp / gamma)
             if VRkcp == 0:
                 self.ruptbetonlevierglob = 0
@@ -282,10 +296,9 @@ class Criteria:
                 psiecN = self.calculation_psie_cN(scrN1, self.eV, 2)
                 psiMN = 1
                 NRkc = self.calculation_N(N0, a, A0, psisN, psireN, psiecN, psiMN, 1)
-                k8 = self.Recuperationproprietecheville.get_dowel_property('rupture effet levier facteur pryoutk3')
 
                 if C1 == "C1":
-                    VRkcp = agap * aeq * k8 * NRkc
+                    VRkcp = agap * aeq * self.k8 * NRkc
                     VRdcpeq = VRkcp / gamma
                     ruptbetonlevierC1.append(self.Ved[j] / VRdcpeq)
                     if self.Ved[j] / VRdcpeq > ratio:
@@ -295,7 +308,7 @@ class Criteria:
                         return ruptbetonlevierC1glob, ruptbetonlevierC1
                     return ruptbetonlevierC1
                 elif C2 == "C2":
-                    VRkcp = agap * aeq * k8 * NRkc
+                    VRkcp = agap * aeq * self.k8 * NRkc
                     VRdcpeq = VRkcp / gamma
                     VRkcpseis = VRdcpeq * (self.dV_seis_req / self.dV_seis_eq)
                     ruptbetonlevierC2.append(self.Ved[j] / VRkcpseis)
@@ -306,7 +319,7 @@ class Criteria:
                         return ruptbetonlevierC2glob, ruptbetonlevierC2
                     return ruptbetonlevierC2
                 else:
-                    VRkcp = k8 * NRkc
+                    VRkcp = self.k8 * NRkc
                     if a != 0:
                         if self.Ved[j] / (VRkcp / gamma) > ratio:
                             ratio = self.Ved[j] / (VRkcp / gamma)
@@ -340,7 +353,7 @@ class Criteria:
                     a = self.calculation_acn(scrN1, j)
 
                 psisN = self.calculation_psis_n(scrN1, "")
-                print(psisN)
+                #print(psisN)
                 psireN = self.calculation_psir_eN(hef1)
                 if self.norme == "ETAG":
                     psiecN = self.calculation_psie_cN(scrN1, self.eV, 2)
@@ -348,9 +361,8 @@ class Criteria:
                     psiecN = self.calculation_psie_cN(scrN1, self.eV, 2)
                 psiMN = 1
                 NRkc = self.calculation_N(N0, a, A0, psisN, psireN, psiecN, psiMN, 1)
-                k8 = self.Recuperationproprietecheville.get_dowel_property('rupture effet levier facteur pryoutk3')
                 if C1 == "C1":
-                    VRkcp = agap * aeq * k8 * NRkc
+                    VRkcp = agap * aeq * self.k8 * NRkc
                     VRdcpeq = VRkcp / gamma
                     ruptbetonlevierC1.append(self.Ved[j] / VRdcpeq)
                     if self.Ved[j] / VRdcpeq > ratio:
@@ -360,7 +372,7 @@ class Criteria:
                         return ruptbetonlevierC1glob, ruptbetonlevierC1
                     return ruptbetonlevierC1
                 elif C2 == "C2":
-                    VRkcp = agap * aeq * k8 * NRkc
+                    VRkcp = agap * aeq * self.k8 * NRkc
                     VRdcpeq = VRkcp / gamma
                     VRkcpseis = VRdcpeq * (self.dV_seis_req / self.dV_seis_eq)
                     ruptbetonlevierC2.append(self.Ved[j] / VRkcpseis)
@@ -371,7 +383,7 @@ class Criteria:
                         return ruptbetonlevierC2glob, ruptbetonlevierC2
                     return ruptbetonlevierC2
                 else:
-                    VRkcp = k8 * NRkc
+                    VRkcp = self.k8 * NRkc
                     if a != 0:
                         if self.Ved[j] / (VRkcp / gamma) > ratio:
                             ratio = self.Ved[j] / (VRkcp / gamma)
@@ -383,31 +395,31 @@ class Criteria:
                     else:
                         ruptbetonlevier.append(0)
                         return ruptbetonlevier
-                print(N0, a, A0, psisN, psireN, psiecN, psiMN, NRkc, ratio, k8, VRkcp, gamma, self.VEdg, scrN1,
-                      self.ccrN, hef1, self.fck, k8, self.ruptbetonlevierglob, self.Ved[j] / (VRkcp / gamma), self.Ved[j])
+                #print(N0, a, A0, psisN, psireN, psiecN, psiMN, NRkc, ratio, k8, VRkcp, gamma, self.VEdg, scrN1,
+                      #self.ccrN, hef1, self.fck, self.ruptbetonlevierglob, self.Ved[j] / (VRkcp / gamma), self.Ved[j])
         return self.ruptbetonlevierglob
 
     def rupture_edge_concrete(self, C1, C2):
 
         global c1z, c1x, tempx1, tempx2
-        gamma = self.calculation_gamma_c() * self.Recuperationproprietecheville.get_dowel_property(
-            'rupture effet levier gamma')
+        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+            'Rupture du beton par effet de levier - gamma inst'))
         kt = 1
         agap = 0.5
         if C1 == "C1" or C2 == "C2":
             if self.NbFixa > 1:
                 if C1 == "C1" and C2 == "":
-                    self.aeq = self.Recuperationproprietecheville.get_dowel_property('aeq groupe')
+                    self.aeq = self.aeq_groupe
                 elif C1 == "" and C2 == "C2":
                     self.aeq = 0.85
             else:
                 if C1 == "C1" and C2 == "":
-                    self.aeq = self.Recuperationproprietecheville.get_dowel_property('aeq isolee')
+                    self.aeq = self.aeq_isolee
                 elif C1 == "" and C2 == "C2":
                     self.aeq = 1
 
         if C2 == "C2":
-            self.dV_seis_eq = self.Recuperationproprietecheville.get_dowel_property('deplacement delta v seis dls')
+            self.dV_seis_eq = float(self.Recuperationproprietecheville.get_dowel_property('Deplacement deltaV,seis (DLS)'))
             self.dV_seis_req = 3
             rat = self.dV_seis_req / self.dV_seis_eq
             if rat > 1:
@@ -853,7 +865,7 @@ class Criteria:
                 else:
                     self.Vrkcx1 = self.calculation_N(V0rkcx1, Ax, A0x, psisVx, psihVx, self.psiecVx, self.psiaVx,
                                                  psireVx)
-                print(V0rkcx1, Ax, A0x, psisVx, psihVx, self.psiecVx, self.psiaVx, psireVx, gamma, self.Vrkcx1 / gamma, self.Vx, self.Vz)
+                #print(V0rkcx1, Ax, A0x, psisVx, psihVx, self.psiecVx, self.psiaVx, psireVx, gamma, self.Vrkcx1 / gamma, self.Vx, self.Vz)
                 tempx1 = self.Vedx[0, 0]
                 tempx2 = self.Vedx[1, 0]
                 tempx3 = self.Vedx[2, 0]
@@ -961,7 +973,7 @@ class Criteria:
                                             psireVx) * agap * self.aeq
                 else:
                     Vrkcx2 = self.calculation_N(V0rkcx2, Ax, A0x, psisVx, psihVx, self.psiecVx, self.psiaVx, psireVx)
-                print(V0rkcx2, Ax, A0x, psisVx, psihVx, self.psiecVx, self.psiaVx, psireVx, c1x, Vrkcx2)
+                #print(V0rkcx2, Ax, A0x, psisVx, psihVx, self.psiecVx, self.psiaVx, psireVx, c1x, Vrkcx2)
                 tempx1 = self.Vedx[0, 0]
                 tempx2 = self.Vedx[1, 0]
                 tempx3 = self.Vedx[2, 0]
@@ -1063,7 +1075,6 @@ class Criteria:
                     elif self.VEgdx != 0 and self.VEgdz > 0:
                         self.psiaVz = 2
                         self.psiecVz = self.calculation_psie_cN(3 * c1z, np.array([self.eV0, 0]), 4)
-                        print("he")
 
                     elif self.VEgdx == 0 and (self.VEgdz < 0 or self.T / 1000 != 0):
                         self.psiecVz = 1 / (1 + (2 * (abs(self.eV0) / (c1z * 3))))
@@ -1072,7 +1083,7 @@ class Criteria:
                             self.PosFix[1, 0] - self.CentreGeo1) * self.Vedz[1, 0] * 2) / (
                                   self.T / math.sqrt((self.sx0 / 2) ** 2 + (self.sz0 / 2) ** 2))
                             self.psiecVz = self.calculation_psie_cN(3 * c1z, np.array([eVx, 0]), 4)
-                            print(eVx)
+                            #print(eVx)
                         else:
                             self.psiecVz = self.calculation_psie_cN(3 * c1z, np.array([self.eV1, 0]), 4)
 
@@ -1087,7 +1098,7 @@ class Criteria:
                         self.PosFix[1, 0] - self.CentreGeo1) * self.Vedz[1, 0] * 2) / (
                               self.T / math.sqrt((self.sx0 / 2) ** 2 + (self.sz0 / 2) ** 2))
                 self.psiecVz = self.calculation_psie_cN(3 * c1z, np.array([eVx, 0]), 4)
-                print(eVx)
+                #print(eVx)
                 psireVz = 1
                 if C1 == "C1" or C2 == "C2":
                     Vrkcz = self.calculation_N(V0rkcz1, Az, A0z, self.psisVz, self.psihVz, self.psiecVz, self.psiaVz,
@@ -1100,7 +1111,7 @@ class Criteria:
                 tempz2 = self.Vedz[1, 0]
                 tempz3 = self.Vedz[2, 0]
                 tempz4 = self.Vedz[3, 0]
-                print(V0rkcz1, Az, A0z, self.psisVz, self.psihVz, self.psiecVz, self.psiaVz, psireVz, self.cx0, self.cx1)
+                #print(V0rkcz1, Az, A0z, self.psisVz, self.psihVz, self.psiecVz, self.psiaVz, psireVz, self.cx0, self.cx1)
                 if tempz1 >= 0:
                     tempz1 = 0
                 if tempz2 >= 0:
@@ -1186,7 +1197,7 @@ class Criteria:
                     tempz3 = 0
                 if tempz4 <= 0:
                     tempz4 = 0
-                print(Vrkcz, V0rkcz2, Az, A0z, psisVz, psihVz, psiecVz, self.psiaVz, psireVz)
+                #print(Vrkcz, V0rkcz2, Az, A0z, psisVz, psihVz, psiecVz, self.psiaVz, psireVz)
                 if C2 == "C2":
                     VRkczseis = Vrkcz * (self.dV_seis_req / self.dV_seis_eq)
                     ratio4 = math.sqrt(
@@ -1204,7 +1215,7 @@ class Criteria:
             kt = self.calculation_kt(c1)
         else:
             kt = 1
-        print(ratio1, ratio2, ratio3, ratio4)
+        #print(ratio1, ratio2, ratio3, ratio4)
         if self.norme == "ETAG":
             if self.TypeCharge == "Sismique C1" or self.TypeCharge == "Sismique C2":
                 self.rupturebordbeton = 1.5 * max(ratio1, ratio2, ratio3, ratio4)
@@ -1231,8 +1242,8 @@ class Criteria:
 
     def rupture_steel_fixation_without_lever_arm_C1(self):
         global V0Rks
-        gamma = self.Recuperationproprietecheville.get_dowel_property('rupture acier sans bras levier gamma seis c1')
-        V0Rks = self.Recuperationproprietecheville.get_dowel_property('rupture acier sans bras levier vrks seis c1')
+        gamma = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier sans bras de levier - gamma Ms,seis C1'))
+        V0Rks = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier sans bras de levier - VRk,s,seis C1'))
         ruptacierfixasansbraslevierC1 = []
         Vedmax = 0
         agap = 0.5
@@ -1295,8 +1306,8 @@ class Criteria:
 
     def rupture_steel_fixation_without_lever_arm_C2(self):
         global V0Rks
-        gamma = self.Recuperationproprietecheville.get_dowel_property('rupture acier sans bras levier gamma seis c2')
-        V0Rks = self.Recuperationproprietecheville.get_dowel_property('rupture acier sans bras levier vrks seis c2')
+        gamma = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier sans bras de levier - gamma Ms,seis C2'))
+        V0Rks = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier sans bras de levier - VRk,s,seis C2'))
         ruptacierfixasansbraslevierC2 = []
         Vedmax = 0
         agap = 0.5
@@ -1306,7 +1317,7 @@ class Criteria:
         else:
             aeq = 1
 
-        dV_seis_eq = self.Recuperationproprietecheville.get_dowel_property('deplacement delta v seis dls')
+        dV_seis_eq = float(self.Recuperationproprietecheville.get_dowel_property('Deplacement deltaV,seis (DLS)'))
         dV_seis_req = 3
         rat = dV_seis_req / dV_seis_eq
         if rat > 1:
@@ -1365,8 +1376,8 @@ class Criteria:
         return ruptacierfixasansbraslevierC2
 
     def rupture_steel_fixing(self):
-        gamma = self.Recuperationproprietecheville.get_dowel_property('rupture acier gamma')
-        NRks = self.Recuperationproprietecheville.get_dowel_property('rupture acier nrk')
+        gamma = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier - gamma Ms,N'))
+        NRks = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier - NRk,s (N)'))
         Nedmax = 0
         ruptureacierfixa = []
 
@@ -1381,8 +1392,8 @@ class Criteria:
         return ruptureacierfixa
 
     def rupture_cone_concrete(self):
-        gamma = self.calculation_gamma_c() * self.Recuperationproprietecheville.get_dowel_property(
-            'rupture cone beton fendage gamma')
+        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+            'Rupture par cone beton et par fendage - gamma inst'))
         hef1c = self.calculation_hef(self.scrn, "", self.ccrN)
         scrN1 = self.calculation_scrN(hef1c, self.scrn)
         N0 = self.calculation_n0rkc(hef1c)
@@ -1401,11 +1412,12 @@ class Criteria:
         return ruptureconebeton
 
     def rupture_extraction(self):
-        gamma = self.calculation_gamma_c() * self.Recuperationproprietecheville.get_dowel_property(
-            'rupture extraction glissement gamma')
+        #print(self.typebeton)
+        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+            'Rupture par extraction glissement - gamma inst beton C20/25'))
         NRkp = self.calculation_NRkp()
-        psic = self.Recuperationproprietecheville.get_dowel_property(
-            'rupture extraction glissement {}'.format(self.typebeton))
+        psic = float(self.Recuperationproprietecheville.get_dowel_property(
+            'Rupture par extraction glissement - facteur acroissement pour beton psi c {}'.format(self.typebeton)))
         NRkp = NRkp * psic
         ratio = 0
         ruptureextrac = []
@@ -1424,8 +1436,8 @@ class Criteria:
         return ruptureextrac
 
     def rupture_splitting(self):
-        gamma = self.calculation_gamma_c() * self.Recuperationproprietecheville.get_dowel_property(
-            'rupture cone beton fendage gamma')
+        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+            'Rupture par cone beton et par fendage - gamma inst'))
         cmin = self.calculation_cmin("")
         hef1 = self.calculation_hef(self.scrsp, "", self.ccrsp)
         scrsp1 = self.calculation_scrN(hef1, self.scrsp)
@@ -1471,8 +1483,8 @@ class Criteria:
         ratio = 0
         agap = 1
         aeq = 1
-        gamma = self.Recuperationproprietecheville.get_dowel_property('rupture acier gamma seis c1')
-        N0Rks = self.Recuperationproprietecheville.get_dowel_property('rupture acier nrk seis c1')
+        gamma = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier - gamma Ms,seis C1'))
+        N0Rks = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier - NRk,s,seis (N) C1'))
         NRks = agap * aeq * N0Rks
         NRdseq = NRks / gamma
         NEdeq = self.NEd[0, 0]
@@ -1486,8 +1498,8 @@ class Criteria:
         return ruptacierfixac1
 
     def rupture_cone_concrete_C1(self):
-        gamma = self.calculation_gamma_c() * self.Recuperationproprietecheville.get_dowel_property(
-            'rupture cone beton gamma c1')
+        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+            'Rupture par cone beton - gamma inst C1'))
         agap = 1
         tempaeq = 0
 
@@ -1496,9 +1508,9 @@ class Criteria:
                 tempaeq = tempaeq + 1
 
         if tempaeq > 1:
-            aeq = self.Recuperationproprietecheville.get_dowel_property('aeq groupe')
+            aeq = self.aeq_groupe
         else:
-            aeq = self.Recuperationproprietecheville.get_dowel_property('aeq isolee')
+            aeq = self.aeq_isolee
 
         hef1c = self.calculation_hef(self.scrn, "", self.ccrN)
         scrN1 = self.calculation_scrN(hef1c, self.scrn)
@@ -1518,8 +1530,8 @@ class Criteria:
         return ruptureconebetonC1
 
     def rupture_extraction_C1(self):
-        gamma = self.calculation_gamma_c() * self.Recuperationproprietecheville.get_dowel_property(
-            'rupture extraction glissement gamma c1')
+        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+            'Rupture par extraction glissement - gamma inst C1'))
         agap = 1
         tempaeq = 0
         ruptureextraC1 = []
@@ -1535,8 +1547,8 @@ class Criteria:
             aeq = 1
 
         NRkp = self.calculation_NRkp_C1()
-        psic = self.Recuperationproprietecheville.get_dowel_property(
-            'rupture extraction glissement {}'.format(self.typebeton))
+        psic = float(self.Recuperationproprietecheville.get_dowel_property(
+            'Rupture par extraction glissement - facteur acroissement pour beton psi c {}'.format(self.typebeton)))
         NRkpeq = NRkp * agap * aeq
 
         NRdp = (NRkpeq * psic) / gamma
@@ -1554,8 +1566,8 @@ class Criteria:
 
     def rupture_splitting_C1(self):
         global textresult
-        gamma = self.calculation_gamma_c() * self.Recuperationproprietecheville.get_dowel_property(
-            'rupture cone beton gamma c1')
+        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+            'Rupture par cone beton - gamma inst C1'))
         agap = 1
         tempaeq = 0
         hef1c = self.calculation_hef(self.scrn, "", self.ccrN)
@@ -1643,7 +1655,7 @@ class Criteria:
         agap = 1
         aeq = 1
 
-        dN_seis_eq = self.Recuperationproprietecheville.get_dowel_property('deplacement delta n seis dls')
+        dN_seis_eq = float(self.Recuperationproprietecheville.get_dowel_property('Deplacement deltaN,seis (DLS)'))
         if self.norme == "ETAG":
             dN_seis_req = 3.95
         else:
@@ -1652,8 +1664,8 @@ class Criteria:
         if rat > 1:
             dN_seis_eq = dN_seis_req
 
-        gamma = self.Recuperationproprietecheville.get_dowel_property('rupture acier gamma seis c2')
-        N0Rks = self.Recuperationproprietecheville.get_dowel_property('rupture acier nrk seis c2')
+        gamma = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier - gamma Ms,seis C2'))
+        N0Rks = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier - NRk,s,seis (N) C2'))
         NRks = agap * aeq * N0Rks
         NRdseq = NRks / gamma
         NRKsseis = NRdseq * (dN_seis_req / dN_seis_eq)
@@ -1670,8 +1682,8 @@ class Criteria:
         return ruptacierfixac2
 
     def rupture_cone_concrete_C2(self):
-        gamma = self.calculation_gamma_c() * self.Recuperationproprietecheville.get_dowel_property(
-            'rupture cone beton gamma c2')
+        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+            'Rupture par cone beton - gamma inst C2'))
 
         tempaeq = 0
 
@@ -1680,13 +1692,13 @@ class Criteria:
                 tempaeq = tempaeq + 1
 
         if tempaeq > 1:
-            aeq = self.Recuperationproprietecheville.get_dowel_property('aeq groupe')
+            aeq = self.aeq_groupe
         else:
-            aeq = self.Recuperationproprietecheville.get_dowel_property('aeq isolee')
+            aeq = self.aeq_groupe
 
         agap = 1
 
-        dN_seis_eq = self.Recuperationproprietecheville.get_dowel_property('deplacement delta n seis dls')
+        dN_seis_eq = float(self.Recuperationproprietecheville.get_dowel_property('Deplacement deltaN,seis (DLS)'))
         dN_seis_req = 3
         rat = dN_seis_req / dN_seis_eq
 
@@ -1710,8 +1722,8 @@ class Criteria:
         return ruptconebetonC2
 
     def rupture_extraction_C2(self):
-        gamma = self.calculation_gamma_c() * self.Recuperationproprietecheville.get_dowel_property(
-            'rupture extraction glissement gamma c2')
+        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+            'Rupture par extraction glissement - gamma inst C2'))
         agap = 1
         tempaeq = 0
         ruptureextraC2 = []
@@ -1726,15 +1738,15 @@ class Criteria:
         else:
             aeq = 1
 
-        dN_seis_eq = self.Recuperationproprietecheville.get_dowel_property('deplacement delta n seis dls')
+        dN_seis_eq = float(self.Recuperationproprietecheville.get_dowel_property('Deplacement deltaN,seis (DLS)'))
         dN_seis_req = 3
         rat = dN_seis_req / dN_seis_eq
         if rat > 1:
             dN_seis_eq = dN_seis_req
 
         NRkp = self.calculation_NRkp_C2()
-        psic = self.Recuperationproprietecheville.get_dowel_property(
-            'rupture extraction glissement {}'.format(self.typebeton))
+        psic = float(self.Recuperationproprietecheville.get_dowel_property(
+            'Rupture par extraction glissement - facteur acroissement pour beton psi c {}'.format(self.typebeton)))
         NRkpeq = NRkp * agap * aeq
         NRdp = (NRkpeq * psic) / gamma
         NRkpseis = NRdp * (dN_seis_req / dN_seis_eq)
@@ -1752,8 +1764,8 @@ class Criteria:
 
     def rupture_splitting_C2(self):
         global textresult
-        gamma = self.calculation_gamma_c() * self.Recuperationproprietecheville.get_dowel_property(
-            'rupture cone beton gamma c2')
+        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+            'Rupture par cone beton - gamma inst C2'))
         agap = 1
         tempaeq = 0
         hef1c = self.calculation_hef(self.scrn, "", self.ccrN)
@@ -1767,7 +1779,7 @@ class Criteria:
         else:
             aeq = 1
 
-        dN_seis_eq = self.Recuperationproprietecheville.get_dowel_property('deplacement delta n seis dls')
+        dN_seis_eq = self.Recuperationproprietecheville.get_dowel_property('Deplacement deltaN,seis (DLS)')
         dN_seis_req = 3
         rat = dN_seis_req / dN_seis_eq
         if rat > 1:
@@ -1850,8 +1862,7 @@ class Criteria:
         return calculation_gamma_c
 
     def calculation_hef(self, scrN, j, ccrN): ####  GROSSE MODIF enlever le if j == "":
-        NbBord = self.geometrie.calculation_number_edge(scrN)
-        NbFixaBord = self.geometrie.calculation_distance_fixing_edge()[1]
+        NbBord = self.calculation_number_edge(scrN)
         cmax = self.calculation_cmax(scrN, "")
         smax = self.calculation_smax(scrN)
         if NbBord >= 3:
@@ -1895,14 +1906,14 @@ class Criteria:
 
         if cmax >= ccrN or cmax == 0:
             cmax = ccrN
-        print(cmax)
+        #print(cmax)
         return cmax
 
     def calculation_smax(self, scrN):
         global scrN1
         smin = self.calculation_smin()
         smax = smin
-        NbBord = self.geometrie.calculation_number_edge(scrN)
+        NbBord = self.calculation_number_edge(scrN)
         scrN1 = 0
 
         if NbBord == 3:
@@ -1986,9 +1997,9 @@ class Criteria:
                     k1 = 10.1
         else:
             if self.etat == "Fissuré":
-                k1 = self.Recuperationproprietecheville.get_dowel_property('rupture cone beton fendage kcr')
+                k1 = float(self.Recuperationproprietecheville.get_dowel_property('Rupture par cone beton et par fendage - kcr,N'))
             else:
-                k1 = self.Recuperationproprietecheville.get_dowel_property('rupture cone beton fendage kucr')
+                k1 = float(self.Recuperationproprietecheville.get_dowel_property('Rupture par cone beton et par fendage - kucr,N'))
         return k1
 
     def calculation_acn(self, scrN1, j):
@@ -2301,11 +2312,11 @@ class Criteria:
             cmin = self.calculation_cmin(j)
 
             psisN = 0.7 + 0.3 * (cmin / (scrN1 / 2))
-            print(scrN1, "je", psisN)
+            #print(scrN1, "je", psisN)
 
         if psisN >= 1:
             psisN = 1
-        print(psisN)
+        #print(psisN)
         return psisN
 
     def calculation_psir_eN(self, hef1):
@@ -2401,7 +2412,7 @@ class Criteria:
         return Ax * Az
 
     def calculation_v0rkc(self, c1):
-        dnom = self.Recuperationproprietecheville.get_dowel_property('diametre percage')
+        dnom = self.dnom
         k9 = self.calculation_k9()
 
         if dnom <= 24:
@@ -2544,19 +2555,19 @@ class Criteria:
     def calculation_NRkp(self):
         if self.etat == "Non fissuré":
             if self.Recuperationproprietecheville.get_dowel_property(
-                    'rupture extraction glissement nrk puncr') == "non determinante":
+                    'Rupture par extraction glissement - NRk,p,uncr (N) beton C20/25') == "non determinante":
                 self.NRkp = 0
             else:
-                self.NRkp = self.Recuperationproprietecheville.get_dowel_property(
-                    'rupture extraction glissement nrk puncr')
+                self.NRkp = float(self.Recuperationproprietecheville.get_dowel_property(
+                    'Rupture par extraction glissement - NRk,p,uncr (N) beton C20/25'))
 
         elif self.etat == "Fissuré":
             if self.Recuperationproprietecheville.get_dowel_property(
-                    'rupture extraction glissement nrk pcr') == "non determinante":
+                    'Rupture par extraction glissement - NRk,p,cr (N) beton C20/25') == "non determinante":
                 self.NRkp = 0
             else:
-                self.NRkp = self.Recuperationproprietecheville.get_dowel_property(
-                    'rupture extraction glissement nrk pcr')
+                self.NRkp = float(self.Recuperationproprietecheville.get_dowel_property(
+                    'Rupture par extraction glissement - NRk,p,cr (N) beton C20/25'))
         return self.NRkp
 
     def calculation_N0Rksp(self, hef1):
@@ -2591,10 +2602,10 @@ class Criteria:
 
     def calculation_NRkp_C1(self):
         if self.Recuperationproprietecheville.get_dowel_property(
-                'rupture extraction glissement nrkp seis c1') == "non determinante":
+                'Rupture par extraction glissement - NRk,p,seis (N) C1') == "non determinante":
             NRkpC1 = 0
         else:
-            NRkpC1 = self.Recuperationproprietecheville.get_dowel_property('rupture extraction glissement nrkp seis c1')
+            NRkpC1 = float(self.Recuperationproprietecheville.get_dowel_property('Rupture par extraction glissement - NRk,p,seis (N) C1'))
         return NRkpC1
 
     def calculation_N0Rksp_C1(self, hef1):
@@ -2609,10 +2620,10 @@ class Criteria:
 
     def calculation_NRkp_C2(self):
         if self.Recuperationproprietecheville.get_dowel_property(
-                'rupture extraction glissement nrk seis c2') == "non determinante":
+                'Rupture par extraction glissement - NRk,p,seis (N) C2') == "non determinante":
             NRkpC2 = 0
         else:
-            NRkpC2 = self.Recuperationproprietecheville.get_dowel_property('rupture extraction glissement nrk seis c2')
+            NRkpC2 = float(self.Recuperationproprietecheville.get_dowel_property('Rupture par extraction glissement - NRk,p,seis (N) C2'))
 
         return NRkpC2
 
@@ -2625,3 +2636,20 @@ class Criteria:
             calculation_N0Rksp_C2 = N0Rkc
 
         return calculation_N0Rksp_C2
+
+    def calculation_number_edge(self, scrn):
+        NbBord = 0
+        ccrN = 0.5 * scrn
+        if self.cx0 <= ccrN:
+            NbBord = NbBord + 1
+
+        if self.cx1 <= ccrN:
+            NbBord = NbBord + 1
+
+        if self.cz0 <= ccrN:
+            NbBord = NbBord + 1
+
+        if self.cz1 <= ccrN:
+            NbBord = NbBord + 1
+
+        return NbBord
