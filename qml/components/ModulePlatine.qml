@@ -655,9 +655,9 @@ Rectangle{
                                     color : Theme.grey_6
                                 }
                                 CComboBox{
-                                    id: pression
+                                    id: classeb
                                     width:150
-                                    objectName: "pression"
+                                    objectName: "ClasseB"
                                     model: ["C20/25", "C25/30", "C30/37", "C35/45", "C40/50", "C45/55", "C50/60"]
 
                                 }
@@ -667,7 +667,7 @@ Rectangle{
                                 }
                                 CTextField{
                                     id: epaisseurbeton
-                                    objectName: "b"
+                                    objectName: "EpaisseurBeton"
                                     placeholderText: qsTr(" ")
                                     Layout.preferredWidth: 50
                                     validator: IntValidator{}
@@ -963,14 +963,20 @@ Rectangle{
                                         if (pageGeo.temperature !== ""){
                                             if (nbCheville.currentText === "2"){
                                                 if (orientation.currentText === "Vertical"){
-                                                    platineModel.append2dwV(nbCheville.currentText, axis.currentText, l.text, h.text,e.text,noeud.currentText,prod.currentText, mat.currentText,pageGeo.temperature, b.text,orientation.currentText )
+                                                    platineModel.append2dwV(nbCheville.currentText, axis.currentText, l.text, h.text,e.text,noeud.currentText,prod.currentText, mat.currentText,pageGeo.temperature, b.text,orientation.currentText, gammeCheville.currentText, modeleCheville.currentText,
+                                        typeCheville.currentText, profondeurCheville.currentText, norme.currentText, typecharge.currentText, situationinitiale.currentText,
+                                        cx0.text, cx1.text, cz0.text, cz1.text, beton.currentText, classeb.currentText, epaisseurbeton.text, armature.currentText, edf.currentText)
                                                 }
                                                 else{
-                                                    platineModel.append2dwH(nbCheville.currentText, axis.currentText, l.text, h.text, e.text,noeud.currentText,prod.currentText, mat.currentText,pageGeo.temperature, a.text, orientation.currentText )
+                                                    platineModel.append2dwH(nbCheville.currentText, axis.currentText, l.text, h.text, e.text,noeud.currentText,prod.currentText, mat.currentText,pageGeo.temperature, a.text, orientation.currentText, gammeCheville.currentText, modeleCheville.currentText,
+                                        typeCheville.currentText, profondeurCheville.currentText, norme.currentText, typecharge.currentText, situationinitiale.currentText,
+                                        cx0.text, cx1.text, cz0.text, cz1.text, beton.currentText, classeb.currentText, epaisseurbeton.text, armature.currentText, edf.currentText)
                                                 }
                                             }
                                             else{
-                                                platineModel.append4dw(nbCheville.currentText, axis.currentText, l.text, h.text,e.text,noeud.currentText,prod.currentText, mat.currentText,pageGeo.temperature,b.text, a.text )
+                                                platineModel.append4dw(nbCheville.currentText, axis.currentText, l.text, h.text,e.text,noeud.currentText,prod.currentText, mat.currentText,pageGeo.temperature,b.text, a.text, gammeCheville.currentText, modeleCheville.currentText,
+                                        typeCheville.currentText, profondeurCheville.currentText, norme.currentText, typecharge.currentText, situationinitiale.currentText,
+                                        cx0.text, cx1.text, cz0.text, cz1.text, beton.currentText, classeb.currentText, epaisseurbeton.text, armature.currentText, edf.currentText)
                                             }
                                             noeud.model.remove(noeud.currentText)
                                         }
