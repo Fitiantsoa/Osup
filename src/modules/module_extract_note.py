@@ -51,16 +51,16 @@ class General():
 
     def __init__(self, parent):
         self.parent = parent
-        self.title = TextField("ndcTitreTextField", parent)
-        self.client = TextField("ndcClientTextField", parent, defaultText="SOM CALCUL")
-        self.redacteur = TextField("ndcRedacteurTextField", parent)
-        self.verificateur = TextField("ndcVerificateurTextField", parent)
-        self.approbateur = TextField("ndcApprobateurTextField", parent)
-        self.etat = Combobox("ndcEtatComboBox", parent, text="BPO")
-        self.indice = Combobox("ndcIndiceComboBox", parent, text="A")
-        self.date = TextField("ndcDateTextField", parent)
-        self.site = TextField("ndcNomSiteTextField", parent)
-        self.reference = TextField("ndcRefTextField", parent)
+        self.title = TextField("DocNameTF", parent)
+        self.client = TextField("clientTF", parent, defaultText="SOM CALCUL")
+        self.redacteur = TextField("AuthorTF", parent)
+        self.verificateur = TextField("SupervisorTF", parent)
+        self.approbateur = TextField("ApproverTF", parent)
+        self.etat = Combobox("StateCC", parent, text="BPO")
+        self.indice = Combobox("IndexCC", parent, text="A")
+        self.date = TextField("DateTF", parent)
+        self.site = TextField("SiteNameTF", parent)
+        self.reference = TextField("RefTF", parent)
 
     def __getstate__(self):
         return (self.title, self.client, self.redacteur, self.verificateur, self.approbateur, self.etat, self.indice, self.date, self.site, self.reference)

@@ -19,6 +19,7 @@ class ModuleVerif:
         self.fz = TextField("Fz", self.sibling)
         #self.friction_load = TextField("FrictionLoad", self.sibling)
         self.points = TextField("Points", self.sibling)
+        self.folderPath = TextField("FolderPath", self.sibling)
 
         # self.init_cb()
 
@@ -38,7 +39,8 @@ class ModuleVerif:
                 'fx': self.fx._text,
                 'fy': self.fy._text,
                 'fz': self.fz._text,
-                'load_node': self.load_node._currentText
+                'load_node': self.load_node._currentText,
+                'folder_path': self.folderPath._text
             }
 
     def update_from_file(self, data):
@@ -53,6 +55,7 @@ class ModuleVerif:
                 self.fx.update_qml(data["Fx"])
                 self.fy.update_qml(data["Fy"])
                 self.fz.update_qml(data["Fz"])
+                self.folderPath.update_qml(data["folder_path"])
             except:
                 print("Pas de chargement rennseigné dans le fichier Osup")
         #self.load_node.update_qml(data["load_node"])
