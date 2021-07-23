@@ -184,6 +184,7 @@ class OSup(QObject):
             f_comm = open(COMM_FILE, "w")
             f_comm.close()
 
+
     @pyqtSlot()
     def need_to_be_saved(self):
         self.saved = False
@@ -342,7 +343,7 @@ class OSup(QObject):
 
     @pyqtSlot()
     def run_aster(self):
-        # self.run_calculation()
+        self.run_calculation()
         self.display_result()
 
     def run_calculation(self):

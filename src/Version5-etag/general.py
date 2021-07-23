@@ -61,13 +61,14 @@ class General:
         self.inertia = 0
         self.geometrie = 0
         self.calculation_effort = 0
+        self.run()
 
     def run(self):
         self.geo_calculation()
         self.check_data()
-        self.inputdataaster = self.input_data_aster()
-        self.effort_calculation()
-        self.criteria_calculation()
+        # self.inputdataaster = self.input_data_aster()
+        # self.effort_calculation()
+        # self.criteria_calculation()
 
     def input_data_aster(self):
         return {"dowel_property": dowel_property,

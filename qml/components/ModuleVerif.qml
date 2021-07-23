@@ -131,11 +131,63 @@ Rectangle {
                                 onCheckableChanged: {
                                     if (checked){
                                         pageGeo.courbeModule = true
+//
                                     }
                                 }
                             }
                         }
 
+                    }
+                    RowLayout{
+                        id: folder
+                        spacing: 0
+                        anchors.right: parent.right
+                        anchors.left: parent.left
+                        anchors.leftMargin: 15
+//                        Label{
+//                            text : "Dossier de travail:"
+//                            anchors.verticalCenter: parent.verticalCenter
+//                            Layout.preferredWidth: 10
+//                        }
+                        Label {
+                            color: Theme.grey_4
+                            Layout.alignment: Qt.AlignLeft | Qt.AlignBottom
+                            text: qsTr("Dossier du projet : ")
+                            anchors.verticalCenter: parent.verticalCenter
+                            Layout.preferredWidth: 150
+                        }
+                        ButtonTable{
+                            id: buttonFolder
+                            text: "\uF115"
+                            anchors.verticalCenter: parent.verticalCenter
+                            Layout.preferredHeight: 30
+                            Layout.preferredWidth: 30
+                            Layout.alignment: Qt.AlignLeft | Qt.AlignBottom
+                            font.family: "fontello"
+                            onClicked: {dialogFolder.open()
+
+                            }
+                        }
+                        FileDialog {
+                            id:dialogFolder
+                            selectFolder: true
+                            title: "Choisir le dossier de travail";
+//                            folder: StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0]
+                            folder: shortcuts.home
+                            onAccepted: {
+                                folderpath.text = String(dialogFolder.fileUrls[0]).replace("file:///","")
+                            }
+
+                        }
+
+                        CTextField {
+                            objectName:"FolderPath"
+                            id: folderpath
+                            text: "test"
+
+//                            Layout.fillWidth: true
+//                            anchors.verticalCenter: parent.verticalCenter
+                        }
                     }
                     RowLayout{
                         id: node
