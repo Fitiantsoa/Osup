@@ -15,6 +15,7 @@ from src.mocks.comm_file import CommFile
 from src.mocks.export_file import ExportFile
 from src.mocks.result_file import ResultFile
 from src.modules.module_extract_note import NoteDeCalcul
+from src.Version5etag.general import General
 
 path = str(sys.path[0])
 
@@ -100,9 +101,9 @@ class OSup(QObject):
             "verification_module": self.verification_module.get_data(),
             "platine_data" : self.platine_data.get_data(self.geometry_module.get_models()),
             "geo": self.geometry_module.get_models(),
-            "stirrup": self.stirrup_module.get_data()
-        }
-
+            "stirrup": self.stirrup_module.get_data(),
+            "cheville": General(self.platine_data.get_dowel_data()).input_data_aster()
+             }
 
     def update_from_file(self, data):
         self.calculation_condition.update_from_file(data['calculation_condition'])

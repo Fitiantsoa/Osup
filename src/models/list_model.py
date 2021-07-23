@@ -249,11 +249,9 @@ class NodeListModel(ListModel):
         self.encas_list.sort()
         return self.encas_list
 
-
     @pyqtSlot(float, float, float, result=bool)
     def contain(self, x, y, z):
         return bool(len(list(filter(lambda elt: elt["cx"] == x and elt["cy"] == y and elt["cz"] == z, self._data))))
-
 
     def get_next_id(self):
         if not self._data:
@@ -277,21 +275,43 @@ class PlatineListModel(ListModel):
         self._db = None
         self._roles_name_to_int = None
 
+    @pyqtSlot(str,str, int, int, int,str,str,str,int, int, int, str, str, str, str, str, str, str, str, int, int, int, int, str, str, int, str, str, result=bool)
+    def append4dw(self, dowelsNumber, axis, l, h, e,noeud, prod, mat, t, gamme_dowel, modele_dowel, type_dowel, deep_dowel, norme, type_charge, situation_initiale, cx0, cx1, cz0, cz1,
+                  state_concrete, class_concrete, thick_concrete, armature_concrete, edf, b=None, a=None,orientation=None):
 
-    @pyqtSlot(str,str, int, int, int,str,str,str,int, int, int, result=bool)
-    def append4dw(self, dowelsNumber, axis, l, h, e,noeud, prod, mat, t, b=None, a=None,orientation=None):
         return self.insert(self.count, {"id": self.get_next_id(),"dowelsnb": dowelsNumber, "axis": axis, "orientation": '', "l": l, "h": h,
-                                        "e": e, "a": a, 'b': b, 'noeud': noeud, 'prod':prod, 'mat': mat,'t':t})
+                                        "e": e, "a": a, 'b': b, 'noeud': noeud, 'prod':prod, 'mat': mat,'t':t, 'gamme_dowel': gamme_dowel, 'modele_dowel': modele_dowel, 'type_dowel':
+                                        type_dowel, 'deep_dowel': deep_dowel, 'norme': norme,
+                                        'type_charge': type_charge, 'situation_initiale': situation_initiale,
+                                        'cx0': cx0, 'cx1': cx1, 'cz0': cz0, 'cz1': cz1,
+                                        'state_concrete': state_concrete, 'class_concrete': class_concrete,
+                                        'thick_concrete': thick_concrete, 'armature_concrete': armature_concrete, 'EDF': edf})
 
-    @pyqtSlot(str, str, int, int, int, str, str, str, int, int, str, result=bool)
-    def append2dwV(self, dowelsNumber, axis, l, h, e,noeud, prod, mat, t, b, orientation):
+    @pyqtSlot(str, str, int, int, int, str, str, str, int, int, str, str, str, str, str, str, str, str, int, int, int, int, str, str, int, str, str,result=bool)
+    def append2dwV(self, dowelsNumber, axis, l, h, e,noeud, prod, mat, t, b, orientation, gamme_dowel,
+                  modele_dowel, type_dowel, deep_dowel, norme, type_charge, situation_initiale, cx0, cx1, cz0, cz1,
+                  state_concrete, class_concrete, thick_concrete, armature_concrete, edf):
         return self.insert(self.count, {"id": self.get_next_id(),"dowelsnb": dowelsNumber, "axis": axis, "orientation": orientation, "l": l, "h": h,
-                                        "e": e, "a": '', 'b': b, 'noeud': noeud, 'prod':prod, 'mat': mat,'t':t})
+                                        "e": e, "a": '', 'b': b, 'noeud': noeud, 'prod':prod, 'mat': mat,'t':t,
+                                        'gamme_dowel': gamme_dowel, 'modele_dowel': modele_dowel, 'type_dowel':
+                                        type_dowel, 'deep_dowel': deep_dowel, 'norme': norme,
+                                        'type_charge': type_charge, 'situation_initiale': situation_initiale,
+                                        'cx0': cx0, 'cx1': cx1, 'cz0': cz0, 'cz1': cz1,
+                                        'state_concrete': state_concrete, 'class_concrete': class_concrete,
+                                        'thick_concrete': thick_concrete, 'armature_concrete': armature_concrete, 'EDF': edf})
 
-    @pyqtSlot(str, str, int, int, int, str, str, str, int, int, str, result=bool)
-    def append2dwH(self, dowelsNumber, axis, l, h, e, noeud, prod, mat, t, a, orientation):
+    @pyqtSlot(str, str, int, int, int, str, str, str, int, int, str, str, str, str, str, str, str, str, int, int, int, int, str, str, int, str, str,result=bool)
+    def append2dwH(self, dowelsNumber, axis, l, h, e, noeud, prod, mat, t, a, orientation, gamme_dowel,
+                  modele_dowel, type_dowel, deep_dowel, norme, type_charge, situation_initiale, cx0, cx1, cz0, cz1,
+                  state_concrete, class_concrete, thick_concrete, armature_concrete, edf):
         return self.insert(self.count, {"id": self.get_next_id(),"dowelsnb": dowelsNumber, "axis": axis, "orientation": orientation, "l": l, "h": h,
-                                        "e": e, "a": a, 'b': '', 'noeud': noeud, 'prod':prod, 'mat': mat,'t':t})
+                                        "e": e, "a": a, 'b': '', 'noeud': noeud, 'prod':prod, 'mat': mat,'t':t,
+                                        'gamme_dowel': gamme_dowel, 'modele_dowel': modele_dowel, 'type_dowel':
+                                        type_dowel, 'deep_dowel': deep_dowel, 'norme': norme,
+                                        'type_charge': type_charge, 'situation_initiale': situation_initiale,
+                                        'cx0': cx0, 'cx1': cx1, 'cz0': cz0, 'cz1': cz1,
+                                        'state_concrete': state_concrete, 'class_concrete': class_concrete,
+                                        'thick_concrete': thick_concrete, 'armature_concrete': armature_concrete, 'EDF': edf})
 
     def get_next_id(self):
         if not self._data:
