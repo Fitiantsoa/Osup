@@ -22,8 +22,8 @@ class ModulePlatine:
 
         self.sibling.findChild(QObject, "ProdPlatine").activated.connect(self.update_material)
         self.sibling.findChild(QObject, "GammeCheville").activated.connect(self.update_model)
-        self.sibling.findChild(QObject, "ModeleCheville").activated.connect(self.update_dowel_type)
-        self.sibling.findChild(QObject, "TypeCheville").activated.connect(self.update_dowel_deep)
+        self.sibling.findChild(QObject, "ModeleCheville").activated.connect(self.update_model)
+        self.sibling.findChild(QObject, "TypeCheville").activated.connect(self.update_model)
 
         self.init_cb()
         self.init_cd_dowel()
@@ -47,6 +47,28 @@ class ModulePlatine:
         self.nbCheville = []
         self.node_list = []
 
+        # DOWEL PROPERTY
+        self.dx0 = []
+        self.dx1 = []
+        self.dz0 = []
+        self.dz1 = []
+        self.gamme_dowel = []
+        self.modele_dowel = []
+        self.type_dowel = []
+        self.deep_dowel = []
+        self.norme = []
+        self.type_charge = []
+        self.situation_initiale = []
+        self.cx0 = []
+        self.cx1 = []
+        self.cz0 = []
+        self.cz1 = []
+        self.state_concrete = []
+        self.class_concrete = []
+        self.thick_concrete = []
+        self.armature_concrete = []
+        self.edf = []
+
     def reinitialize_platine(self):
         self.axis = []
         self.orientation = []
@@ -67,6 +89,26 @@ class ModulePlatine:
         self.mat = []
         self.t = []
         self.node_list = []
+        self.dx0 = []
+        self.dx1 = []
+        self.dz0 = []
+        self.dz1 = []
+        self.gamme_dowel = []
+        self.modele_dowel = []
+        self.type_dowel = []
+        self.deep_dowel = []
+        self.norme = []
+        self.type_charge = []
+        self.situation_initiale = []
+        self.cx0 = []
+        self.cx1 = []
+        self.cz0 = []
+        self.cz1 = []
+        self.state_concrete = []
+        self.class_concrete = []
+        self.thick_concrete = []
+        self.armature_concrete = []
+        self.edf = []
 
     def init_cb(self):
         self.set_model("ProdPlatine", list(self.material_db["RCC-M 2016"].keys()))
@@ -78,20 +120,15 @@ class ModulePlatine:
     def init_cd_dowel(self):
         self.set_model("GammeCheville", list(self.dowel_db.keys()))
         self.update_model()
-        self.update_dowel_type()
-        self.update_dowel_deep()
 
     def update_model(self):
         self.current_text_model = self.sibling.findChild(QObject, "GammeCheville").property("currentText")
         self.set_model("ModeleCheville", list(self.dowel_db[self.current_text_model].keys()))
-
-    def update_dowel_type(self):
         self.current_text_type = self.sibling.findChild(QObject, "ModeleCheville").property("currentText")
         self.set_model("TypeCheville", list(self.dowel_db[self.current_text_model][self.current_text_type].keys()))
-
-    def update_dowel_deep(self):
         current_text = self.sibling.findChild(QObject, "TypeCheville").property("currentText")
-        self.set_model("ProfondeurCheville", list(self.dowel_db[self.current_text_model][self.current_text_type][current_text].keys()))
+        self.set_model("ProfondeurCheville",
+                       list(self.dowel_db[self.current_text_model][self.current_text_type][current_text].keys()))
 
     def update_material(self):
         current_text = self.sibling.findChild(QObject, "ProdPlatine").property("currentText")
@@ -123,18 +160,48 @@ class ModulePlatine:
             'noeud':self.node_list
         }
 
-    def get_list_value(self,geo_data):
+    def get_dowel_data(self):
+        return {
+            'nbCheville': self.nbCheville,
+            'Lx': self.l,
+            'Lz': self.h,
+            'tfix': self.e,
+            'dx0': self.dx0,
+            'dx1': self.dx1,
+            'dz0': self.dz0,
+            'dz1': self.dz1,
+            'sx0': self.a,
+            'sz0': self.b,
+            'gamme': self.gamme_dowel,
+            'modele': self.modele_dowel,
+            'type': self.type_dowel,
+            'hef': self.deep_dowel,
+            'norme': self.norme,
+            'TypeCharge': self.type_charge,
+            'txt': self.situation_initiale,
+            'cx0': self.cx0,
+            'cx1': self.cx1,
+            'cz0': self.cz0,
+            'cz1': self.cz1,
+            'etat': self.state_concrete,
+            'typebeton': self.class_concrete,
+            'h': self.thick_concrete,
+            'armature': self.armature_concrete,
+            'EDF': self.edf,
+            'orientation': self.orientation
+            }
+
+    def get_list_value(self, geo_data):
         self.reinitialize_platine()
         node_plat_list = []
-        print(self.data)
+        print("platine  data",self.data)
         for data in self.data:
             self.nbCheville.append(data['dowelsnb'])
             self.axis.append(data['axis'])
-            print(self.axis)
             self.orientation.append(data['orientation'])
             self.l.append(float(data['l']))
             self.h.append(float(data['h']))
-            self.e.append(float(float(data['e'])))
+            self.e.append(float(data['e']))
             self.b.append(float(data['b']))
             self.a.append(float(data['a']))
             self.prod.append(data['prod'])
@@ -142,6 +209,43 @@ class ModulePlatine:
             self.node_list.append(data['noeud'])
             prod = data['prod']
             mat = data['mat']
+            self.gamme_dowel.append(data['gamme_dowel'])
+            self.modele_dowel.append(data['modele_dowel'])
+            self.type_dowel.append(data['type_dowel'])
+            self.deep_dowel.append(float(data['deep_dowel']))
+            self.norme.append(data['norme'])
+            self.type_charge.append(data['type_charge'])
+            self.situation_initiale.append(data['situation_initiale'])
+            self.cx0.append(data['cx0'])
+            self.cx1.append(data['cx1'])
+            self.cz0.append(data['cz0'])
+            self.cz1.append(data['cz1'])
+            if data['state_concrete'] == "Fissuré":
+                self.state_concrete.append("Fissure")
+            else:
+                self.state_concrete.append("Non fissure")
+            self.class_concrete.append(data['class_concrete'])
+            self.thick_concrete.append(data['thick_concrete'])
+            self.armature_concrete.append(data['armature_concrete'])
+            self.edf.append(data['EDF'])
+
+            if float(data['dowelsnb']) == 4:
+                self.dx0.append((float(data['l']) - float(data['a']))/2)
+                self.dx1.append((float(data['l']) - float(data['a']))/2)
+                self.dz0.append((float(data['h']) - float(data['b']))/2)
+                self.dz1.append((float(data['h']) - float(data['b']))/2)
+            elif float(data['dowelsnb']) == 2 and data['orientation'] == 'Horizontal':
+                self.dx0.append((float(data['l']) - float(data['a'])) / 2)
+                self.dx1.append((float(data['l']) - float(data['a'])) / 2)
+                self.dz0.append((float(data['h'])) / 2)
+                self.dz1.append((float(data['h'])) / 2)
+
+            elif float(data['dowelsnb']) == 2 and data['orientation'] == 'Vertical':
+                self.dx0.append(float(data['l']) / 2)
+                self.dx1.append(float(data['l']) / 2)
+                self.dz0.append((float(data['h']) - float(data['b'])) / 2)
+                self.dz1.append((float(data['h']) - float(data['b'])) / 2)
+
             if float(data['t']) >= 20:
                 t = str(float(data['t']))
             else:
@@ -198,7 +302,6 @@ class ModulePlatine:
                             dim = data['sec'].split()[1]
                             self.bprofile.append(float(self.profile_db["REC"][dim]['b']))
                             self.hprofile.append(float(self.profile_db["REC"][dim]['h']))
-
 
     def new_file(self):
         self.platine_list_view.reset()

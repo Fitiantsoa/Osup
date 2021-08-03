@@ -1,14 +1,16 @@
 from src.constantes import *
 from src.utils import sort_beam_by, read_json
 
+
 class Calculation_var():
 
-    def __init__(self,prop_data, plat_data):
+    def __init__(self,prop_data, plat_data, dowel_data):
         self.material_database = read_json(MATERIAL_DB)
         self.section_database = read_json(PROFILE_DB)
         self.beams = prop_data['beam_list']
         self.node = prop_data['nodes']
         self.platine_data = plat_data
+        self.dowel_data = dowel_data
 
 
     def get_material_val(self):
@@ -72,5 +74,6 @@ class Calculation_var():
     def get_value(self):
         return{
             'profile':{'beam':self.beams,'mat': self.get_material_val(), 'sec': self.get_section_val()},
-            'platine': self.platine_data
+            'platine': self.platine_data,
+            "chevilles": self.dowel_data
         }

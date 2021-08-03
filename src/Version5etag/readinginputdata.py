@@ -1,20 +1,19 @@
-from src.constantes import *
+from src.Version5etag.database import Database
 
 
 class ReadingInputData:
-    def __init__(self, norme, dowel_property, data_board_dowel, data_concrete):
-        self.gammedowel = dowel_property.get("gamme")
-        self.typedowel = dowel_property.get("type")
-        self.modeledowel = dowel_property.get("modele")
-        self.deepdowel = dowel_property.get("deep_dowel")
-        self.hef = float(dowel_property.get("deep_dowel"))
-        self.norme = norme
-        self.tfix = data_board_dowel.get("tfix")
+    def __init__(self, data_dowel):
+        print('data', data_dowel)
+        self.gammedowel = data_dowel.get("gamme")
+        self.typedowel = data_dowel.get("type")
+        self.modeledowel = data_dowel.get("modele")
+        self.hef = data_dowel.get("hef")
+        self.norme = data_dowel.get("norme")
+        self.tfix = data_dowel.get("tfix")
         self.nom = []
-        self.opendata = self.open_database()
-        self.datadowel = self.opendata.get("datadowel")
-        self.datadowelosup = self.opendata.get("datadowelosup")
-        self.typebeton = data_concrete.get("typebeton")
+        self.opendata = Database().open_database()
+        self.datadowelosup = self.opendata.get("datadowel")
+        self.typebeton = data_dowel.get("typebeton")
         self.fulldata = self.get_dowel_data()
 
         self.read_input_data()
@@ -68,7 +67,7 @@ class ReadingInputData:
         return malist
 
     def get_dowel_data(self):
-        return self.datadowelosup[self.gammedowel][self.modeledowel][self.typedowel][self.deepdowel]
+        return self.datadowelosup[self.gammedowel][self.modeledowel][self.typedowel][str(self.hef)]
 
     def get_dowel_property(self, propriete):
         return self.fulldata['{}'.format(propriete)]
@@ -92,18 +91,3 @@ class ReadingInputData:
         q = self.data_recovery(self.nom, "Classe de resistance", self.dataconcrete).index(self.typebeton)
         prop = self.dataconcrete[q]['{}'.format(propriete)]
         return prop
-
-    # def open_database(self):
-    #     with open(DOWEL_DB, "r") as f:
-    #         datadowel = json.load(f)
-    #
-    #     with open("concretedatabase.json", "r") as f:
-    #         dataconcrete_ec2 = json.load(f)
-    #
-    #     with open("concretedatabaseetag.json", "r") as f:
-    #         dataconcrete_etag = json.load(f)
-    #
-    #     return {"dataconcrete_ec2": dataconcrete_ec2,
-    #             "dataconcrete_etag": dataconcrete_etag,
-    #             "datadowel": datadowel
-    #             }

@@ -1,4 +1,4 @@
-from mathematiques import Mathematique
+from src.Version5etag.mathematiques import Mathematique
 import numpy as np
 import math
 

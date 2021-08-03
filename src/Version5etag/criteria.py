@@ -1,7 +1,7 @@
 import math
 import numpy as np
-from arithmetique import Arithmetique
-from readinginputdata import ReadingInputData
+from src.Version5etag.arithmetique import Arithmetique
+from src.Version5etag.readinginputdata import ReadingInputData
 
 
 class Criteria:
@@ -20,9 +20,9 @@ class Criteria:
 
         self.data_board_dowel = inputdataaster.get("data_board_dowel")
         self.sx0 = self.data_board_dowel.get("sx0")
-        self.sx1 = self.data_board_dowel.get("sx1")
+        self.sx1 = 0
         self.sz0 = self.data_board_dowel.get("sz0")
-        self.sz1 = self.data_board_dowel.get("sz1")
+        self.sz1 = 0
         self.cx0 = self.data_board_dowel.get("cx0")
         self.cx1 = self.data_board_dowel.get("cx1")
         self.cz0 = self.data_board_dowel.get("cz0")

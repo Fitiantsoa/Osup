@@ -2,34 +2,27 @@ import numpy as np
 
 
 class Geometrie:
-    def __init__(self, Nbfixa, data_board_dowel, effort, dnom, inputdata, hef):
-        self.NbFixa = Nbfixa
-        self.data_board_dowel = data_board_dowel
-        self.Lx = data_board_dowel.get("Lx")
-        self.Lz = data_board_dowel.get("Lz")
-        self.Mx = effort.get("Mx")
-        self.Mz = effort.get("Mz")
-        self.N = effort.get("N")
-        self.T = effort.get("T")
-        self.Vx = effort.get("Vx")
-        self.Vz = effort.get("Vz")
+    def __init__(self, dnom, inputdata, data_dowel):
+        self.NbFixa = int(data_dowel.get("nbCheville"))
+        self.data_board_dowel = data_dowel
+        self.Lx = data_dowel.get("Lx")
+        self.Lz = data_dowel.get("Lz")
+        self.sx1 = 0
+        self.sz1 = 0
         self.position_fixing = self.calculation_position_fixing()
         self.PosFix = self.position_fixing[2]
         self.CentreGeo0 = self.position_fixing[0]
         self.CentreGeo1 = self.position_fixing[1]
-        self.geometric_center = self.effort_geometric_center()
-        self.Mzb = self.geometric_center[4]
-        self.Mxb = self.geometric_center[3]
         self.dnom = dnom
         self.ccrN = inputdata.get("ccrN")
         self.scrN = inputdata.get("scrN")
-        self.hef = hef
+        self.hef = data_dowel.get("hef")
         self.DistFixBord = self.calculation_distance_fixing_edge()[0]
-        self.change = self.change_origin("")
 
     def calculation_position_fixing(self):
 
         global CentreGeo1, CentreGeo0
+        print(self.NbFixa)
         CentreGeo0 = 0
         CentreGeo1 = 0
         PosFix = np.zeros((self.NbFixa, 2))
@@ -61,75 +54,6 @@ class Geometrie:
         CentreGeo1 = CentreGeo1 / self.NbFixa
         CentreGeo0 = CentreGeo0 / self.NbFixa
         return CentreGeo0, CentreGeo1, PosFix
-
-    def change_origin(self, PosCmax2):  # Verifier et correcte
-        global PosCmax, PosCmax1
-
-        PosFix_bis = np.zeros((self.NbFixa, 2))
-        PosCmax = 0
-        PosCmax1 = 0
-
-        if PosCmax2 == "":
-            if self.Mxb != 0 and self.Mzb != 0:
-                if self.Mxb > 0 and self.Mzb > 0:
-                    PosCmax = 0
-                    PosCmax1 = self.Lz
-                elif self.Mxb > 0 > self.Mzb:
-                    PosCmax = self.Lx
-                    PosCmax1 = self.Lz
-                elif self.Mxb < 0 < self.Mzb:
-                    PosCmax = 0
-                    PosCmax1 = 0
-                elif self.Mxb < 0 and self.Mzb < 0:
-                    PosCmax = self.Lx
-                    PosCmax1 = 0
-            elif self.Mxb != 0 and self.Mzb == 0:
-                if self.Mxb > 0:
-                    PosCmax = self.Lx / 2
-                    PosCmax1 = self.Lz
-                else:
-                    PosCmax = self.Lx / 2
-                    PosCmax1 = 0
-
-            elif self.Mxb == 0 and self.Mzb != 0:
-                if self.Mzb > 0:
-                    PosCmax = 0
-                    PosCmax1 = self.Lz / 2
-                else:
-                    PosCmax = self.Lx
-                    PosCmax1 = self.Lz / 2
-        else:
-            PosCmax = PosCmax2[0]
-            PosCmax1 = PosCmax2[1]
-
-        for i in range(self.NbFixa):
-            if self.Mxb != 0 and self.Mzb != 0:
-                PosFix_bis[i, 0] = abs(self.PosFix[i, 0] - PosCmax)
-                PosFix_bis[i, 1] = abs(self.PosFix[i, 1] - PosCmax1)
-
-            elif self.Mxb != 0 and self.Mzb == 0:
-                PosFix_bis[i, 0] = self.PosFix[i, 0] - PosCmax
-                PosFix_bis[i, 1] = abs(self.PosFix[i, 1] - PosCmax1)
-            elif self.Mxb == 0 and self.Mzb != 0:
-                PosFix_bis[i, 0] = abs(self.PosFix[i, 0] - PosCmax)
-                PosFix_bis[i, 1] = self.PosFix[i, 1] - PosCmax1
-
-        return PosFix_bis, PosCmax, PosCmax1
-
-    def effort_geometric_center(self):
-        Ix = 0
-        Iz = 0
-
-        for j in range(self.NbFixa):
-            Ix = Ix + (self.PosFix[j, 1] - self.CentreGeo1) ** 2
-            Iz = Iz + (self.PosFix[j, 0] - self.CentreGeo0) ** 2
-        Iy = Ix + Iz
-
-        Mxb = self.Mx - (self.Lz / 2 - self.CentreGeo1) * (-self.N)
-        Tb = self.T + (self.Lz / 2 - self.CentreGeo1) * self.Vx - (self.Lx / 2 - self.CentreGeo0) * self.Vz
-        Mzb = self.Mz + (self.Lx / 2 - self.CentreGeo0) * (-self.N)
-        #print(Ix, Iy, Iz, Mxb, Mzb, Tb)
-        return Ix, Iy, Iz, Mxb, Mzb, Tb
 
     def calculation_position_edge(self):
         PosBord = np.zeros((2, 2))
@@ -215,14 +139,14 @@ class Geometrie:
     def calculation_smin(self):
         smin = self.data_board_dowel.get("sx0")
 
-        if smin >= self.data_board_dowel.get("sx1") != 0:
-            smin = self.data_board_dowel.get("sx1")
+        if smin >= self.sx1 != 0:
+            smin = self.sx1
 
         if smin >= self.data_board_dowel.get("sz0") != 0:
             smin = self.data_board_dowel.get("sz0")
 
-        if smin >= self.data_board_dowel.get("sz1") != 0:
-            smin = self.data_board_dowel.get("sz1")
+        if smin >= self.sz1 != 0:
+            smin = self.sz1
 
         return smin
 
@@ -254,20 +178,33 @@ class Geometrie:
 
     def inertia(self):
         return {
-            "Mxb": self.Mxb,
-            "Mzb": self.Mzb,
-            "Ix": self.geometric_center[0],
-            "Iy": self.geometric_center[1],
-            "Iz": self.geometric_center[2],
-            "Tb": self.geometric_center[5],
-            "PosFix": self.PosFix,
+            "PosFix": self.matrix_into_list(self.PosFix),
             "CentreGeo0": self.CentreGeo0,
             "CentreGeo1": self.CentreGeo1,
-            "DistFixBord": self.DistFixBord,
-            "DistFixFix": self.calculation_distance_fixing_fixing(),
-            "PosCmax": self.change[1],
-            "PosCmax1": self.change[2],
-            "PosFix_bis": self.change[0],
+            "DistFixBord": self.list_matrix_into_list(self.DistFixBord),
+            "DistFixFix": self.list_matrix_into_list(self.calculation_distance_fixing_fixing()),
             "c": self.calculation_cmin(""),
             "s": self.calculation_smin(),
-            "NbFixaBord": self.calculation_distance_fixing_edge()[1]}
+            "NbFixaBord": self.vector_into_list(self.calculation_distance_fixing_edge()[1])}
+
+    def matrix_into_list(self, matrix):
+        list = []
+        for i in range(len(matrix)):
+            for j in range(2):
+                list.append(matrix[i, j])
+        return list
+
+    def list_matrix_into_list(self, matrix):
+        list = []
+        for i in range(len(matrix)):
+            for j in range(2):
+                for k in range(2):
+                    list.append(matrix[i, j, k])
+        return list
+
+    def vector_into_list(self, matrix):
+        list = []
+        for i in range(len(matrix)):
+            for j in range(1):
+                list.append(matrix[i, j])
+        return list

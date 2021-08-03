@@ -1,18 +1,18 @@
 
 class Verification:
-    def __init__(self, NbFixa, inertia, data, readinputdata, data_board_dowel, data_concrete):
-        self.Lx = data_board_dowel.get("Lx")
-        self.Lz = data_board_dowel.get("Lz")
-        self.h = data_concrete.get("h")
-        self.NbFixa = NbFixa
-        self.sx0 = data_board_dowel.get("sx0")
-        self.sx1 = data_board_dowel.get("sx1")
-        self.sz0 = data_board_dowel.get("sz0")
-        self.sz1 = data_board_dowel.get("sz1")
-        self.cx0 = data_board_dowel.get("cx0")
-        self.cx1 = data_board_dowel.get("cx1")
-        self.cz0 = data_board_dowel.get("cz0")
-        self.cz1 = data_board_dowel.get("cz1")
+    def __init__(self, inertia, data, readinputdata, data_dowel):
+        self.Lx = data_dowel.get("Lx")
+        self.Lz = data_dowel.get("Lz")
+        self.h = data_dowel.get("h")
+        self.NbFixa = data_dowel.get("nbCheville")
+        self.sx0 = data_dowel.get("sx0")
+        self.sx1 = 0
+        self.sz0 = data_dowel.get("sz0")
+        self.sz1 = 0
+        self.cx0 = data_dowel.get("cx0")
+        self.cx1 = data_dowel.get("cx1")
+        self.cz0 = data_dowel.get("cz0")
+        self.cz1 = data_dowel.get("cz1")
         self.smin = data.get("smin")
         self.c_smin = data.get("c_smin")
         self.cmin = data.get("cmin")
@@ -22,12 +22,12 @@ class Verification:
         self.dmin = data.get("dmin")
         self.tmin = data.get("tmin")
         self.tmax = data.get("tmax")
-        self.tfix = data_board_dowel.get("tfix")
+        self.tfix = data_dowel.get("tfix")
         self.hmin = readinputdata.get("hmin")
-        self.dx0 = data_board_dowel.get("dx0")
-        self.dx1 = data_board_dowel.get("dx1")
-        self.dz0 = data_board_dowel.get("dz0")
-        self.dz1 = data_board_dowel.get("dz1")
+        self.dx0 = data_dowel.get("dx0")
+        self.dx1 = data_dowel.get("dx1")
+        self.dz0 = data_dowel.get("dz0")
+        self.dz1 = data_dowel.get("dz1")
         self.verification_anchors()
 
     def verification_anchors(self):
@@ -141,8 +141,7 @@ class Verification:
             self.ok3 = True
 
             if self.s < self.s_cmin and self.c < self.c_smin:
-                if self.cx0 < self.c_smin - 0.5 * (self.sx0 - self.smin) or self.sx0 < self.s_cmin - 2 * (self.cx0 -\
-                        self.cmin):
+                if self.cx0 < self.c_smin - 0.5 * (self.sx0 - self.smin) or self.sx0 < self.s_cmin - 2 * (self.cx0 - self.cmin):
                     print("Erreur : entraxe et distance au bord trop faibles (sx>= {} mm ou cx>= {} mm)".format(
                         self.s_cmin - 2 * (self.cx0 - self.cmin), self.c_smin - 0.5 * (self.sx0 - self.smin)))
                     self.ok3 = False
