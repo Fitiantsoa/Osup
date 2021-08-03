@@ -3,16 +3,16 @@ from src.Version5etag.database import Database
 
 class ReadingInputData:
     def __init__(self, data_dowel):
+        print('data', data_dowel)
         self.gammedowel = data_dowel.get("gamme")
         self.typedowel = data_dowel.get("type")
         self.modeledowel = data_dowel.get("modele")
-        self.hef = float(data_dowel.get("deep_dowel"))
+        self.hef = data_dowel.get("hef")
         self.norme = data_dowel.get("norme")
         self.tfix = data_dowel.get("tfix")
         self.nom = []
         self.opendata = Database().open_database()
-        self.datadowel = self.opendata.get("datadowel")
-        self.datadowelosup = self.opendata.get("datadowelosup")
+        self.datadowelosup = self.opendata.get("datadowel")
         self.typebeton = data_dowel.get("typebeton")
         self.fulldata = self.get_dowel_data()
 

@@ -275,9 +275,9 @@ class PlatineListModel(ListModel):
         self._db = None
         self._roles_name_to_int = None
 
-    @pyqtSlot(str,str, int, int, int,str,str,str,int, int, int, str, str, str, str, str, str, str, str, int, int, int, int, str, str, int, str, str, result=bool)
+    @pyqtSlot(str,str, int, int, int,str,str,str,int, str, str, str, str, str, str, str, int, int, int, int, str, str, int, str, bool, str, str, result=bool)
     def append4dw(self, dowelsNumber, axis, l, h, e,noeud, prod, mat, t, gamme_dowel, modele_dowel, type_dowel, deep_dowel, norme, type_charge, situation_initiale, cx0, cx1, cz0, cz1,
-                  state_concrete, class_concrete, thick_concrete, armature_concrete, edf, b=None, a=None,orientation=None):
+                  state_concrete, class_concrete, thick_concrete, armature_concrete, edf, b, a):
 
         return self.insert(self.count, {"id": self.get_next_id(),"dowelsnb": dowelsNumber, "axis": axis, "orientation": '', "l": l, "h": h,
                                         "e": e, "a": a, 'b': b, 'noeud': noeud, 'prod':prod, 'mat': mat,'t':t, 'gamme_dowel': gamme_dowel, 'modele_dowel': modele_dowel, 'type_dowel':
@@ -287,7 +287,7 @@ class PlatineListModel(ListModel):
                                         'state_concrete': state_concrete, 'class_concrete': class_concrete,
                                         'thick_concrete': thick_concrete, 'armature_concrete': armature_concrete, 'EDF': edf})
 
-    @pyqtSlot(str, str, int, int, int, str, str, str, int, int, str, str, str, str, str, str, str, str, int, int, int, int, str, str, int, str, str,result=bool)
+    @pyqtSlot(str, str, int, int, int, str, str, str, int, int, str, str, str, str, str, str, str, str, int, int, int, int, str, str, int, str, bool, result=bool)
     def append2dwV(self, dowelsNumber, axis, l, h, e,noeud, prod, mat, t, b, orientation, gamme_dowel,
                   modele_dowel, type_dowel, deep_dowel, norme, type_charge, situation_initiale, cx0, cx1, cz0, cz1,
                   state_concrete, class_concrete, thick_concrete, armature_concrete, edf):
@@ -300,7 +300,7 @@ class PlatineListModel(ListModel):
                                         'state_concrete': state_concrete, 'class_concrete': class_concrete,
                                         'thick_concrete': thick_concrete, 'armature_concrete': armature_concrete, 'EDF': edf})
 
-    @pyqtSlot(str, str, int, int, int, str, str, str, int, int, str, str, str, str, str, str, str, str, int, int, int, int, str, str, int, str, str,result=bool)
+    @pyqtSlot(str, str, int, int, int, str, str, str, int, int, str, str, str, str, str, str, str, str, int, int, int, int, str, str, int, str, bool,result=bool)
     def append2dwH(self, dowelsNumber, axis, l, h, e, noeud, prod, mat, t, a, orientation, gamme_dowel,
                   modele_dowel, type_dowel, deep_dowel, norme, type_charge, situation_initiale, cx0, cx1, cz0, cz1,
                   state_concrete, class_concrete, thick_concrete, armature_concrete, edf):
@@ -329,7 +329,6 @@ class PlatineListModel(ListModel):
             elt = {"id": self.get_next_id(), "dowelsnb": model['nbCheville'][i], "axis": model['axis'][i], "orientation": model['orientation'][i], "l": model['l'][i],
              "h": model['h'][i],"e": model['e'][i], "a": model['a'][i], 'b': model['b'][i], 'noeud': model['noeud'][i], 'prod': model['prod'][i], 'mat': model['mat'][i], 't': model['t'][i]}
             self.insert(self.count, elt)
-
 
 
 class BeamListModel(ListModel):

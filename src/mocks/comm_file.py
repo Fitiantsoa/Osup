@@ -8,10 +8,11 @@ class CommFile:
         self.calc_cond= data['calculation_condition']
         self.verif_mod = data['verification_module']
         self.plat_data = data['platine_data']
+        self.dowel_data = data["cheville"]
         self.list_liaison = self.liaison_ddl(data['geo']['node_rep'], data['geo']['beam_list'],data['verification_module']['load_node'])
         self.beam_group = data['geo']['beam_group']
         self.node_group = data['geo']['node_group']
-        self.calc_var = Calculation_var( data['geo'],self.plat_data)
+        self.calc_var = Calculation_var( data['geo'],self.plat_data, self.dowel_data)
         self.material_database = read_json(MATERIAL_DB)
         self.section_database = read_json(PROFILE_DB)
         self.loads = []
@@ -38,6 +39,7 @@ class CommFile:
         self.content.append("from Utilitai.Osup.constant import *")
         self.content.append("from Utilitai.OsupMAJ.ratioPlatine import RatioPlatine")
         self.content.append("from Utilitai.OsupMAJ.ratio import Ratio")
+        self.content.append("from Utilitai.OsupMAJ.criteria import Criteria")
         self.content.append("import time")
         self.content.append(f"value = {self.calc_var.get_value()}")
         self.content.append(f'niveau = "{self.calc_cond["level"]}"')

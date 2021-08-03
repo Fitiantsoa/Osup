@@ -14,14 +14,14 @@ import PlatineListModel 1.0
 Rectangle {
     id: osupModulePlatine
     width: parent.width
-    height: title.height+corps.height
-    color:"transparent"
+    height: title.height + corps.height + 600
+    color:"pink"
 
     Rectangle {
         id:title
         width: parent.width
         height:  25
-        color: "transparent"
+        color: "grey"
         anchors.top: parent.top
         anchors.topMargin: 0
         MouseArea {
@@ -61,6 +61,7 @@ Rectangle {
         border.width: 1
         border.color: Theme.grey_2
         radius: 4
+        color: "black"
         anchors.right: parent.right
         anchors.rightMargin: 60
         anchors.left: parent.left
@@ -71,7 +72,7 @@ Rectangle {
         states: [
             State {
                 name: "expanded"
-                PropertyChanges { target: corps; height: 450}
+                PropertyChanges { target: corps; height: rectlistview.height + table.height} // A MODIFIER LE HEIGHT
                 PropertyChanges { target: indicateur; text:"\uE815" }
             },
             State {
@@ -103,7 +104,7 @@ Rectangle {
                 Rectangle {
                     width: parent.width
                     height: parent.height
-                    color: "transparent"
+                    color: "cyan"
                     RowLayout{
                         width: parent.width
                         height: parent.height
@@ -204,10 +205,6 @@ Rectangle {
                             Layout.maximumWidth: 100
                             Layout.minimumWidth: 100
                         }
-                        Rectangle {
-                            color: "transparent"
-                            Layout.fillWidth: true
-                        }
                         RowLayout{
                             id: rowLayout
                             anchors.verticalCenter: parent.verticalCenter
@@ -269,7 +266,7 @@ Rectangle {
             }
         }
 
-        Column {
+        RowLayout{
             height: parent.height
             width: parent.width - 40
             //            anchors.left: parent.left
@@ -282,16 +279,19 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.leftMargin: 20
-                width: parent.width
-                anchors.topMargin: 5
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 5
-                color: "transparent"
+                width: rectLeftpart.width + table.width  //parent.width
+                color: "brown"
+                height: rectLeftpart.height
+                //anchors.topMargin: 5
+                //anchors.bottom: rectLeftpart.height
+                //anchors.bottomMargin: 5
                 Row{
                     anchors.fill: parent
                     Rectangle{
-                        height : parent.height
-                        width : (parent.width-320)/2
+                        id: rectLeftpart
+                        height : 500 //parent.height
+                        width : (osupModulePlatine.width / 3) //(parent.width-320)/2
+                        color: "purple"
                         Column{
                             anchors.fill: parent
                             spacing: 0
@@ -305,6 +305,7 @@ Rectangle {
                                         height : 30
                                         anchors.left: parent.left
                                         anchors.right: parent.right
+                                        color: "orange"
                                         RowLayout{
                                             anchors.fill: parent
                                             Label{
@@ -512,17 +513,13 @@ Rectangle {
 
                         }
                     }
-Rectangle{
-                        color: Theme.grey_3
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: 1
-                        height: parent.height - 10
-                    }
+
                     Rectangle{
-                        height : parent.height
-                        width : ((parent.width)/2) + 100
+                        height : 500 //parent.height
+                        width : (2 * osupModulePlatine.width / 3) - 100 // ((parent.width)/2) + 150
+                        color: "red"
                         id : table
-                        Column{
+                        ColumnLayout{
                             anchors.fill: parent
                             anchors.margins: 20
                             spacing: -1
@@ -540,12 +537,19 @@ Rectangle{
                                     font.bold:true
                                     }
                             }
+                            Rectangle{
+                                    height : 30
+                                    width : table.width
+                                    color: "yellow"
+                                    id : platinedim
                             RowLayout{
                                 spacing: 15
                                 anchors.right: parent.right
                                 anchors.left: parent.left
                                 anchors.leftMargin: 15
                                 anchors.rightMargin: 20
+
+
                                 Label{
                                     text: "L (mm) :"
                                     Layout.preferredWidth: 50
@@ -611,8 +615,10 @@ Rectangle{
                                     Layout.preferredWidth: 50
                                     validator: IntValidator{}
                                 }
+                                }
 
                             }
+
                             RowLayout{
                                 spacing: 15
                                 anchors.right: parent.right
@@ -627,6 +633,11 @@ Rectangle{
                                     font.bold:true
                                     }
                                 }
+                                Rectangle{
+                                    height : 30
+                                    width : table.width
+                                    color: "yellow"
+                                    id : materiauprop
                             RowLayout{
                                 spacing: 15
                                 anchors.right: parent.right
@@ -641,7 +652,7 @@ Rectangle{
                                 CComboBox{
                                     id: beton
                                     objectName: "Beton"
-                                    width: 150
+                                    implicitWidth: 100
                                     model : ["Fissuré", "Non fissuré"]
 
                                 }
@@ -656,7 +667,7 @@ Rectangle{
                                 }
                                 CComboBox{
                                     id: classeb
-                                    width:150
+                                    implicitWidth:100
                                     objectName: "ClasseB"
                                     model: ["C20/25", "C25/30", "C30/37", "C35/45", "C40/50", "C45/55", "C50/60"]
 
@@ -679,12 +690,18 @@ Rectangle{
                                 }
                                 CComboBox{
                                     id: armature
-                                    width:150
+                                    implicitWidth:50
                                     objectName: "armature"
                                     model: ["Oui", "Non"]
 
                                 }
                                 }
+                                }
+                                Rectangle{
+                                    height : 30
+                                    width : table.width
+                                    color: "yellow"
+                                    id : materiauprop2
                             RowLayout{
                                 spacing: 10
                                 anchors.right: parent.right
@@ -700,7 +717,7 @@ Rectangle{
                                 CComboBox{
                                     id: prod
                                     objectName: "ProdPlatine"
-                                    width: 150
+                                    implicitWidth: 100
 
                                 }
                                 Label{
@@ -711,7 +728,7 @@ Rectangle{
                                 CComboBox{
                                     id: mat
                                     objectName: "MatPlatine"
-                                    width: 150
+                                    implicitWidth: 100
 
                                 }
                                 Label{
@@ -719,8 +736,9 @@ Rectangle{
                                     Layout.preferredWidth: 50
                                     color : Theme.grey_6
                                 }
-
+                                }
                             }
+
                             RowLayout{
                                 spacing: 15
                                 anchors.right: parent.right
@@ -734,20 +752,23 @@ Rectangle{
                                     font.bold:true
                                     }
                             }
+                                  Rectangle{
+                                    height : 30
+                                    width : table.width
+                                    color: "yellow"
+                                    id : rectetude
                             RowLayout{
                                 spacing: 15
                                 anchors.right: parent.right
                                 anchors.left: parent.left
                                 anchors.leftMargin: 15
                                 anchors.rightMargin: 20
-
                                 CCheckBox{
                                             objectName: "EDF"
                                             id:edf
                                             text: "EDF"
                                             checked: true
                                         }
-
                                 Label{
                                     text: "Norme utilisée:"
                                     Layout.preferredWidth: 100
@@ -757,14 +778,13 @@ Rectangle{
 
                                 CComboBox{
                                     id: norme
-                                    implicitWidth: 100
+                                    implicitWidth: 120
                                     objectName: "Norme"
                                     model: ["Eurocode 2", "ETAG"]
-
                                 }
                                 Label{
                                     text: "Type de charge:"
-                                    Layout.preferredWidth: 50
+                                    Layout.preferredWidth: 100
                                     color : Theme.grey_6
                                     font.bold:true
                                     }
@@ -774,6 +794,7 @@ Rectangle{
                                     objectName: "TypeCharge"
                                     model: ["Statique ou quasi-statique", "Sismique C1", "Sismique C2"]
 
+                                }
                                 }
                                 }
                                 RowLayout{
@@ -812,6 +833,11 @@ Rectangle{
                                     font.bold:true
                                 }
                             }
+                            Rectangle{
+                                    height : 30
+                                    width : table.width
+                                    color: "yellow"
+                                    id : chevilleselect
                             RowLayout{
                                 spacing: 10
                                 anchors.right: parent.right
@@ -850,7 +876,7 @@ Rectangle{
                                 }
                                 CComboBox{
                                     id: typeCheville
-                                    implicitWidth: 50
+                                    implicitWidth: 100
                                     objectName: "TypeCheville"
                                     model: ["M8", "M10", "M12", "M16", "M20", "M24"]
 
@@ -862,12 +888,13 @@ Rectangle{
                                 }
                                 CComboBox{
                                     id: profondeurCheville
-                                    implicitWidth: 50
+                                    implicitWidth: 75
                                     objectName: "ProfondeurCheville"
                                     model: ["60", "80", "100"]
 
                                 }
 
+                            }
                             }
 
                             RowLayout{
@@ -884,14 +911,31 @@ Rectangle{
                                     font.bold:true
                                 }
                             }
-
+                            Rectangle{
+                                    height : 30
+                                    width : table.width
+                                    color: "yellow"
+                                    id : distbord
                             RowLayout{
                                 spacing: 10
+                                width: table.width / 2
                                 anchors.right: parent.right
                                 anchors.left: parent.left
                                 anchors.leftMargin: 15
                                 anchors.rightMargin: 20
                                 height: 30
+                                Label{
+                                    text : "cx0 (mm):"
+                                    Layout.preferredWidth: 50
+                                    color : Theme.grey_6
+                                }
+                                CTextField{
+                                    id: cx0
+                                    objectName: "cx0"
+                                    placeholderText: qsTr("1e+15")
+                                    Layout.preferredWidth: 50
+                                    validator: IntValidator{}
+                                }
                                 Label{
                                     text : "cx1 (mm):"
                                     Layout.preferredWidth: 50
@@ -904,14 +948,29 @@ Rectangle{
                                     Layout.preferredWidth: 50
                                     validator: IntValidator{}
                                 }
+                                }
+                                }
+                                Rectangle{
+                                    height : 30
+                                    width : table.width
+                                    color: "yellow"
+                                    id : distbord2
+                                RowLayout{
+                                spacing: 10
+                                width: table.width / 2
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 15
+                                anchors.rightMargin: 20
+                                height: 30
                                 Label{
-                                    text : "cx2 (mm):"
+                                    text : "cz0 (mm):"
                                     Layout.preferredWidth: 50
                                     color : Theme.grey_6
                                 }
                                 CTextField{
-                                    id: cx2
-                                    objectName: "cx2"
+                                    id: cz0
+                                    objectName: "cz0"
                                     placeholderText: qsTr("1e+15")
                                     Layout.preferredWidth: 50
                                     validator: IntValidator{}
@@ -928,18 +987,7 @@ Rectangle{
                                     Layout.preferredWidth: 50
                                     validator: IntValidator{}
                                 }
-                                Label{
-                                    text : "cz2 (mm):"
-                                    Layout.preferredWidth: 50
-                                    color : Theme.grey_6
-                                }
-                                CTextField{
-                                    id: cz2
-                                    objectName: "cz2"
-                                    placeholderText: qsTr("1e+15")
-                                    Layout.preferredWidth: 50
-                                    validator: IntValidator{}
-                                }
+                            }
                             }
 
 
@@ -965,18 +1013,18 @@ Rectangle{
                                                 if (orientation.currentText === "Vertical"){
                                                     platineModel.append2dwV(nbCheville.currentText, axis.currentText, l.text, h.text,e.text,noeud.currentText,prod.currentText, mat.currentText,pageGeo.temperature, b.text,orientation.currentText, gammeCheville.currentText, modeleCheville.currentText,
                                         typeCheville.currentText, profondeurCheville.currentText, norme.currentText, typecharge.currentText, situationinitiale.currentText,
-                                        cx0.text, cx1.text, cz0.text, cz1.text, beton.currentText, classeb.currentText, epaisseurbeton.text, armature.currentText, edf.currentText)
+                                        cx0.text, cx1.text, cz0.text, cz1.text, beton.currentText, classeb.currentText, epaisseurbeton.text, armature.currentText, edf.checked)
                                                 }
                                                 else{
                                                     platineModel.append2dwH(nbCheville.currentText, axis.currentText, l.text, h.text, e.text,noeud.currentText,prod.currentText, mat.currentText,pageGeo.temperature, a.text, orientation.currentText, gammeCheville.currentText, modeleCheville.currentText,
                                         typeCheville.currentText, profondeurCheville.currentText, norme.currentText, typecharge.currentText, situationinitiale.currentText,
-                                        cx0.text, cx1.text, cz0.text, cz1.text, beton.currentText, classeb.currentText, epaisseurbeton.text, armature.currentText, edf.currentText)
+                                        cx0.text, cx1.text, cz0.text, cz1.text, beton.currentText, classeb.currentText, epaisseurbeton.text, armature.currentText, edf.checked)
                                                 }
                                             }
                                             else{
-                                                platineModel.append4dw(nbCheville.currentText, axis.currentText, l.text, h.text,e.text,noeud.currentText,prod.currentText, mat.currentText,pageGeo.temperature,b.text, a.text, gammeCheville.currentText, modeleCheville.currentText,
+                                                platineModel.append4dw(nbCheville.currentText, axis.currentText, l.text, h.text,e.text,noeud.currentText,prod.currentText, mat.currentText,pageGeo.temperature, gammeCheville.currentText, modeleCheville.currentText,
                                         typeCheville.currentText, profondeurCheville.currentText, norme.currentText, typecharge.currentText, situationinitiale.currentText,
-                                        cx0.text, cx1.text, cz0.text, cz1.text, beton.currentText, classeb.currentText, epaisseurbeton.text, armature.currentText, edf.currentText)
+                                        cx0.text, cx1.text, cz0.text, cz1.text, beton.currentText, classeb.currentText, epaisseurbeton.text, armature.currentText, edf.checked, b.text, a.text)
                                             }
                                             noeud.model.remove(noeud.currentText)
                                         }
@@ -992,24 +1040,22 @@ Rectangle{
                         }
                     }
                 }
-
             }
             Rectangle{
+                id : rectlistview
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.leftMargin: 20
                 width: parent.width
-                anchors.topMargin: 400
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 10
+                height: test1.height + 30
+                anchors.topMargin: rectButton.height
+                //anchors.bottom: parent.bottom
+                //anchors.bottomMargin: 10
+                color : "green"
+
                 Rectangle {
-                    width: parent.width
-                    height: 1
-                    color: Theme.grey_3
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-                Rectangle {
-                    color:"transparent"
+                    id: test1
+                    color:"yellow"
                     height: 30 + platineModel.count*30
                     anchors.top: parent.top
                     anchors.topMargin: 10
@@ -1020,7 +1066,7 @@ Rectangle{
                         spacing: 10
                         Rectangle {
                             id: platineHeader
-                            color : "transparent"
+                            color : "red"
                             height: 30
                             width: parent.width
                             Row{
@@ -1097,8 +1143,8 @@ Rectangle{
                             model: platineModel
                             delegate: listDelegatePlatine
                             onCountChanged: {
-                                osupModulePlatine.height = 450 + platineModel.count*30
-                                corps.height = 200 + osupModulePlatine.height
+                                osupModulePlatine.height = 150 + rectLeftpart.height + platineModel.count*30
+                                corps.height = osupModulePlatine.height - 50
                             }
                             ScrollIndicator.vertical: ScrollIndicator { }
                         }

@@ -115,6 +115,7 @@ class OSup(QObject):
     @pyqtSlot(str)
     def save_to_file_as(self, file_name):
         self.file_name = file_name.lstrip("file:///")
+        print("saved data", self.get_saved_data()['cheville'])
         try:
             with open(self.file_name, "w") as fic:
                 fic.write(json.dumps([self.version, self.get_saved_data()]))
