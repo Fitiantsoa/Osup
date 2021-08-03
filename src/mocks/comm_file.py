@@ -1,11 +1,9 @@
 from src.constantes import *
 from src.utils import sort_beam_by, read_json
 from src.modules.calculation_module import Calculation_var
-
+from src.mocks.result_file import ResultFile
 
 class CommFile:
-
-
     def __init__(self, data):
         self.calc_cond= data['calculation_condition']
         self.verif_mod = data['verification_module']
@@ -19,6 +17,7 @@ class CommFile:
         self.loads = []
         self.meshes = []
         self.content = []
+        self.result_file = ResultFile("")
 
     def write(self):
         self.__read_meshes()
@@ -85,13 +84,22 @@ class CommFile:
             mat_name = mat[0].replace("≤","")
             mat_name = mat_name[0:7]
             self.content.append(str(mat_name.replace(" ",""))+"=DEFI_MATERIAU(ELAS=")
-
+            Su = self.material_database['RCC-M 2016'][mat[1]][mat[0]][mat[2]]['Su']
+            Sy = self.material_database['RCC-M 2016'][mat[1]][mat[0]][mat[2]]['Sy']
+            S = self.material_database['RCC-M 2016'][mat[1]][mat[0]][mat[2]]['S']
             if mat[1] != 'RIGIDE':
-                self.content.append( "\t_F(E =" + str(self.material_database['RCC-M 2016'][mat[1]][mat[0]][mat[2]]['E'] * 10 ** 3) + ",")
-                self.content.append("\t\tNU = 0.3, RHO =7.85e-09,),\n")
+                E = self.material_database['RCC-M 2016'][mat[1]][mat[0]][mat[2]]['E'] * 10 ** 3
+                rho = 7.85e-09
+                nu = 0.3
+                self.content.append( "\t_F(E =" + str(E) + ",")
+                self.content.append(f"\t\tNU = 0.3, RHO ={rho},),\n")
+                print("test")
+                if self.verif_mod['methode'] != 'courbe':
+                    self.result_file.append_material(mat[0], E, rho, nu, Sy, Su, S)
             else:
                 self.content.append("\t_F(E =" + str(self.material_database['RCC-M 2016'][mat[1]][mat[0]]['20.0']['E'] * 10 ** 3) + ",")
                 self.content.append("\t\tNU = 0.3, RHO = 0 ,),\n")
+                self.result_file.append_material(mat_name, E, 0, 0.3, Sy, Su, S)
             self.content.append(");\n")
 
         self.content.append("material=AFFE_MATERIAU(MAILLAGE=mesh,")
@@ -137,17 +145,22 @@ class CommFile:
             AY = round(A/float(self.section_database[sec][dim]["wy"]),4)
             AZ = round(A/float(self.section_database[sec][dim]["wz"]),4)
             JX = round(float(self.section_database[sec][dim]["ig"])*10**4,4)
+            Welz = float(self.section_database[sec][dim]["welz"])
+            Wely = float(self.section_database[sec][dim]["wely"])
+            Igr = float(self.section_database[sec][dim]["igr"])
             if sec[0] != "H":
-                RY = round(IZ / (float(self.section_database[sec][dim]["welz"]) * 10**3),4)
-                RZ = round(IY / (float(self.section_database[sec][dim]["wely"]) * 10**3),4)
+                RY = round(IZ / ( Welz * 10**3),4)
+                RZ = round(IY / ( Wely * 10**3),4)
             else:
-                RZ = round(IZ/ (float(self.section_database[sec][dim]["welz"])* 10**3),4 )
-                RY = round(IY / (float(self.section_database[sec][dim]["wely"])* 10**3),4)
-            RT = round(JX / (float(self.section_database[sec][dim]["igr"]) * 10**3),4)
+                RZ = round(IZ/ (Welz * 10**3),4 )
+                RY = round(IY / (Wely * 10**3),4)
+            RT = round((JX / Igr * 10**3),4)
             self.content.append("\t\t_F(GROUP_MA=('"+ str("','".join(gp_sect[sect])) + "',),")
             self.content.append("\t\tSECTION = 'GENERALE',")
             self.content.append("\t\tCARA=('A','IY','IZ','AY','AZ','JX','RY','RZ','RT',),")
             self.content.append("\t\tVALE=({},{},{},{},{},{},{},{},{},),),".format(A,IY,IZ,AY,AZ,JX,RY,RZ,RT))
+            if self.verif_mod['methode'] != 'courbe':
+                self.result_file.append_section(sect.replace(" ",""),A,IY,IZ,AY,AZ,JX,Wely,Welz,Igr)
         self.content.append("\t),")
         if gp_or.keys != []:
             for orientation in gp_or.keys():
@@ -285,10 +298,17 @@ class CommFile:
 
     def __post_treatment(self):
         fx = self.verif_mod['fx']
-        fy = self.verif_mod['fy']
-        fz = self.verif_mod['fz']
+        if self.verif_mod['fy'] != "":
+            fy = self.verif_mod['fy']
+        else:
+            fy = 0
+        if self.verif_mod['fz'] != "":
+            fz = self.verif_mod['fz']
+        else:
+            fz = 0
         osup_file = open(DICHOTOMIE_RATIO, 'r')
         lines = osup_file.readlines()
+        rslt_file = self.verif_mod['folder_path'] + "/result.osup"
         for line in lines:
             if "***********load*********" in line:
                 line = ""
@@ -299,7 +319,12 @@ class CommFile:
                 if fz != "":
                     line += f'FZ = {fz},'
                 line += "),"
+            if "*************result_file*********" in line:
+                line = f"result_file = '{rslt_file}'"
             self.content.append(line)
+        self.content.append(f"result_file = '{rslt_file}'")
+        self.result_file.write_load(fx, fy, fz, self.calc_cond["level"])
+        self.result_file.create_result_file(rslt_file) #On écrit qu'un seul chargement par fichier
 
 
 

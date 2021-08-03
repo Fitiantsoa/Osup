@@ -21,8 +21,7 @@ class Geometrie:
         self.Mzb = self.geometric_center[4]
         self.Mxb = self.geometric_center[3]
         self.dnom = dnom
-        self.ccrN = inputdata.get("ccrN")
-        self.scrN = inputdata.get("scrN")
+        self.ccrN = inputdata[1]
         self.hef = hef
         self.DistFixBord = self.calculation_distance_fixing_edge()[0]
         self.change = self.change_origin("")
@@ -141,6 +140,23 @@ class Geometrie:
         PosBord[1, 1] = (self.Lz - self.data_board_dowel.get("dz1")) + self.data_board_dowel.get("cz1")
 
         return PosBord
+
+    def calculation_number_edge(self, scrn):
+        NbBord = 0
+        ccrN = 0.5 * scrn
+        if self.data_board_dowel.get("cx0") <= ccrN:
+            NbBord = NbBord + 1
+
+        if self.data_board_dowel.get("cx1") <= ccrN:
+            NbBord = NbBord + 1
+
+        if self.data_board_dowel.get("cz0") <= ccrN:
+            NbBord = NbBord + 1
+
+        if self.data_board_dowel.get("cz1") <= ccrN:
+            NbBord = NbBord + 1
+
+        return NbBord
 
     def calculation_distance_fixing_fixing(self):
         DistFixFix = np.zeros((self.NbFixa, 2, 2))
@@ -269,5 +285,5 @@ class Geometrie:
             "PosCmax1": self.change[2],
             "PosFix_bis": self.change[0],
             "c": self.calculation_cmin(""),
-            "s": self.calculation_smin(),
-            "NbFixaBord": self.calculation_distance_fixing_edge()[1]}
+            "s": self.calculation_smin()
+        }

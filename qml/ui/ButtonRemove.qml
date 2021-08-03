@@ -5,20 +5,17 @@ import "../theme.js" as Theme
 //Implementation of the Button control.
 Item {
     id: button
-    width: 20
-    height: 20
+    width: 25
+    height: 25
     property alias text: label.text;
     property alias font: label.font;
     property color color: Theme.primary
     property color hoverColor: Theme.primary
     property color pressColor: Theme.primary
-    property color fontColor : "white"
     property int borderWidth: 0
     property int borderRadius: 100
     scale: state === "Pressed" ? 0.9 : 1.0
-//    onEnabledChanged: state = ""
     signal clicked
-
     //define a scale animation
     Behavior on scale {
         NumberAnimation {
@@ -26,16 +23,13 @@ Item {
             easing.type: Easing.InOutQuad
         }
     }
-
     //Rectangle to draw the button
     Rectangle {
         id: rectangleButton
         radius:borderRadius
         anchors.fill: parent
-        color: button.enabled ? button.color : button.color
+        color: button.enabled ? button.color : "transparent"
         border.width: borderWidth
-        //border.color: "black"
-
         Text {
             id: label
             font.pixelSize: 15
@@ -50,11 +44,10 @@ Item {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             font.bold:true
-            color:fontColor
+            color:"white"
         }
     }
-
-    //change the color of the button in different button states
+    //change the color of the button in differen button states
     states: [
         State {
             name: "Hovering"
@@ -71,7 +64,6 @@ Item {
             }
        }
     ]
-
     //define transmission for the states
     transitions: [
         Transition {
@@ -87,7 +79,6 @@ Item {
             ColorAnimation { duration: 10 }
         }
     ]
-
     //Mouse area to react on click events
     MouseArea {
         hoverEnabled: true
@@ -95,6 +86,7 @@ Item {
         onEntered: button.state='Hovering'
         onExited: button.state=''
         onClicked: button.clicked()
+        cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor
         onPressed: button.state="Pressed"
         onReleased: {
             if (containsMouse)

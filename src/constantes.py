@@ -11,6 +11,7 @@ PROFILE_DB = os.getcwd() + "/databases/profile(2).json"
 STIRRUP_DB = os.getcwd() + "/databases/stirrup.json"
 DOWEL_DB = os.getcwd() + "/databases/basededonneechevilleosup.json"
 
+
 BEAMS_GROUP_SUFFIX = ""
 NODE_GROUP_SUFFIX = ""
 

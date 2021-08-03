@@ -1,9 +1,9 @@
 
 class Verification:
-    def __init__(self, h, NbFixa, inertia, data, tfix, readinputdata, data_board_dowel):
+    def __init__(self, NbFixa, inertia, data, readinputdata, data_board_dowel, data_concrete):
         self.Lx = data_board_dowel.get("Lx")
         self.Lz = data_board_dowel.get("Lz")
-        self.h = h
+        self.h = data_concrete.get("h")
         self.NbFixa = NbFixa
         self.sx0 = data_board_dowel.get("sx0")
         self.sx1 = data_board_dowel.get("sx1")
@@ -22,8 +22,8 @@ class Verification:
         self.dmin = data.get("dmin")
         self.tmin = data.get("tmin")
         self.tmax = data.get("tmax")
-        self.tfix = tfix
-        self.hmin = readinputdata[4]
+        self.tfix = data_board_dowel.get("tfix")
+        self.hmin = readinputdata.get("hmin")
         self.dx0 = data_board_dowel.get("dx0")
         self.dx1 = data_board_dowel.get("dx1")
         self.dz0 = data_board_dowel.get("dz0")

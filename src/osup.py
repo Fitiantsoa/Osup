@@ -104,7 +104,6 @@ class OSup(QObject):
         }
 
 
-
     def update_from_file(self, data):
         self.calculation_condition.update_from_file(data['calculation_condition'])
         self.geometry_module.update_from_file(data['geo'])
@@ -184,6 +183,7 @@ class OSup(QObject):
             f_geo.close()
             f_comm = open(COMM_FILE, "w")
             f_comm.close()
+
 
     @pyqtSlot()
     def need_to_be_saved(self):
@@ -343,7 +343,7 @@ class OSup(QObject):
 
     @pyqtSlot()
     def run_aster(self):
-        # self.run_calculation()
+        self.run_calculation()
         self.display_result()
 
     def run_calculation(self):
