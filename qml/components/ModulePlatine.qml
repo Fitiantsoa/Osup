@@ -15,13 +15,13 @@ Rectangle {
     id: osupModulePlatine
     width: parent.width
     height: title.height + corps.height + 600
-    color:"pink"
+    color:"transparent"
 
     Rectangle {
         id:title
         width: parent.width
         height:  25
-        color: "grey"
+        color: "transparent"
         anchors.top: parent.top
         anchors.topMargin: 0
         MouseArea {
@@ -61,7 +61,7 @@ Rectangle {
         border.width: 1
         border.color: Theme.grey_2
         radius: 4
-        color: "black"
+        //color: "transparent"
         anchors.right: parent.right
         anchors.rightMargin: 60
         anchors.left: parent.left
@@ -104,7 +104,7 @@ Rectangle {
                 Rectangle {
                     width: parent.width
                     height: parent.height
-                    color: "cyan"
+                    color: "transparent"
                     RowLayout{
                         width: parent.width
                         height: parent.height
@@ -280,7 +280,7 @@ Rectangle {
                 anchors.top: parent.top
                 anchors.leftMargin: 20
                 width: rectLeftpart.width + table.width  //parent.width
-                color: "brown"
+                color: "transparent"
                 height: rectLeftpart.height
                 //anchors.topMargin: 5
                 //anchors.bottom: rectLeftpart.height
@@ -291,7 +291,7 @@ Rectangle {
                         id: rectLeftpart
                         height : 500 //parent.height
                         width : (osupModulePlatine.width / 3) //(parent.width-320)/2
-                        color: "purple"
+                        color: "transparent"
                         Column{
                             anchors.fill: parent
                             spacing: 0
@@ -305,7 +305,7 @@ Rectangle {
                                         height : 30
                                         anchors.left: parent.left
                                         anchors.right: parent.right
-                                        color: "orange"
+                                        color: "transparent"
                                         RowLayout{
                                             anchors.fill: parent
                                             Label{
@@ -517,7 +517,7 @@ Rectangle {
                     Rectangle{
                         height : 500 //parent.height
                         width : (2 * osupModulePlatine.width / 3) - 100 // ((parent.width)/2) + 150
-                        color: "red"
+                        color: "transparent"
                         id : table
                         ColumnLayout{
                             anchors.fill: parent
@@ -540,7 +540,7 @@ Rectangle {
                             Rectangle{
                                     height : 30
                                     width : table.width
-                                    color: "yellow"
+                                    color: "transparent"
                                     id : platinedim
                             RowLayout{
                                 spacing: 15
@@ -636,13 +636,25 @@ Rectangle {
                                 Rectangle{
                                     height : 30
                                     width : table.width
-                                    color: "yellow"
+                                    color: "transparent"
                                     id : materiauprop
                             RowLayout{
                                 spacing: 15
                                 anchors.right: parent.right
                                 anchors.left: parent.left
                                 anchors.leftMargin: 15
+                                anchors.rightMargin: 20
+                                height: 30
+                                Rectangle{
+                                    height : 30
+                                    width : table.width / 4
+                                    color: "transparent"
+                                    id : rectetat
+                            RowLayout{
+                                spacing: 0
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 0
                                 anchors.rightMargin: 20
                                 height: 30
                                 Label{
@@ -656,6 +668,20 @@ Rectangle {
                                     model : ["Fissuré", "Non fissuré"]
 
                                 }
+                                }
+                                }
+                                Rectangle{
+                                    height : 30
+                                    width : table.width / 4
+                                    color: "transparent"
+                                    id : rectclass
+                            RowLayout{
+                                spacing: 0
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 0
+                                anchors.rightMargin: 20
+                                height: 30
 //                                Label{
 //                                    text : " :"
 //                                    Layout.preferredWidth: 50
@@ -672,6 +698,20 @@ Rectangle {
                                     model: ["C20/25", "C25/30", "C30/37", "C35/45", "C40/50", "C45/55", "C50/60"]
 
                                 }
+                                }
+                                }
+                                Rectangle{
+                                    height : 30
+                                    width : table.width / 4
+                                    color: "transparent"
+                                    id : rectepaisseur
+                            RowLayout{
+                                spacing: 0
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 0
+                                anchors.rightMargin: 20
+                                height: 30
                                 Label{
                                     text : "Epaisseur (mm) :"
                                     color : Theme.grey_6
@@ -683,6 +723,20 @@ Rectangle {
                                     Layout.preferredWidth: 50
                                     validator: IntValidator{}
                                 }
+                                }
+                                }
+                                Rectangle{
+                                    height : 30
+                                    width : table.width / 4
+                                    color: "transparent"
+                                    id : rectarmature
+                            RowLayout{
+                                spacing: 0
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 0
+                                anchors.rightMargin: 20
+                                height: 30
 
                                 Label{
                                     text : "Armature :"
@@ -697,10 +751,12 @@ Rectangle {
                                 }
                                 }
                                 }
+                                }
+                                }
                                 Rectangle{
                                     height : 30
-                                    width : table.width
-                                    color: "yellow"
+                                    width : 3 * table.width / 4
+                                    color: "transparent"
                                     id : materiauprop2
                             RowLayout{
                                 spacing: 10
@@ -708,6 +764,18 @@ Rectangle {
                                 anchors.left: parent.left
                                 anchors.leftMargin: 15
                                 anchors.rightMargin: 20
+                                height: 30
+                                Rectangle{
+                                    height : 30
+                                    width : table.width / 4
+                                    color: "transparent"
+                                    id : rectprod
+                            RowLayout{
+                                spacing: 0
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 0
+                                anchors.rightMargin: 0
                                 height: 30
                                 Label{
                                     text: "Production :"
@@ -720,21 +788,54 @@ Rectangle {
                                     implicitWidth: 100
 
                                 }
+                                }
+                                }
+                                Rectangle{
+                                    height : 30
+                                    width : table.width / 4
+                                    color: "transparent"
+                                    id : rectmateriaux
+                            RowLayout{
+                                spacing: 0
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 0
+                                anchors.rightMargin: 20
+                                height: 30
                                 Label{
+                                    id: labmateriaux
                                     text : "Matériau :"
                                     Layout.preferredWidth: 50
                                     color : Theme.grey_6
                                 }
                                 CComboBox{
                                     id: mat
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: labmateriaux.width + 40
                                     objectName: "MatPlatine"
                                     implicitWidth: 100
 
                                 }
+                                }
+                                }
+                                Rectangle{
+                                    height : 30
+                                    width : table.width / 4
+                                    color: "transparent"
+                                    id : recttemp
+                            RowLayout{
+                                spacing: 0
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 0
+                                anchors.rightMargin: 20
+                                height: 30
                                 Label{
                                     text : "Température  : " + pageGeo.temperature + "  °C"
                                     Layout.preferredWidth: 50
                                     color : Theme.grey_6
+                                }
+                                }
                                 }
                                 }
                             }
@@ -754,14 +855,25 @@ Rectangle {
                             }
                                   Rectangle{
                                     height : 30
-                                    width : table.width
-                                    color: "yellow"
+                                    width : table.width/2
+                                    color: "transparent"
                                     id : rectetude
+                            RowLayout{
+                                spacing: 0
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 15
+                                anchors.rightMargin: 20
+                                Rectangle{
+                                    height : 30
+                                    width : table.width/4
+                                    color: "transparent"
+                                    id : rectedf
                             RowLayout{
                                 spacing: 15
                                 anchors.right: parent.right
                                 anchors.left: parent.left
-                                anchors.leftMargin: 15
+                                anchors.leftMargin: 0
                                 anchors.rightMargin: 20
                                 CCheckBox{
                                             objectName: "EDF"
@@ -769,34 +881,54 @@ Rectangle {
                                             text: "EDF"
                                             checked: true
                                         }
+                                        }
+                                        }
+                                Rectangle{
+                                    height : 30
+                                    width : table.width/4
+                                    color: "transparent"
+                                    id : rectnorme
+                            RowLayout{
+                                spacing: 0
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 0
+                                anchors.rightMargin: 20
                                 Label{
+                                    id: labnorme
                                     text: "Norme utilisée:"
                                     Layout.preferredWidth: 100
                                     color : Theme.grey_6
-                                    font.bold:true
                                     }
 
                                 CComboBox{
                                     id: norme
-                                    implicitWidth: 120
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: labnorme.width + 5
+                                    implicitWidth: 100
                                     objectName: "Norme"
                                     model: ["Eurocode 2", "ETAG"]
                                 }
-                                Label{
-                                    text: "Type de charge:"
-                                    Layout.preferredWidth: 100
-                                    color : Theme.grey_6
-                                    font.bold:true
-                                    }
-                                CComboBox{
-                                    id: typecharge
-                                    implicitWidth: 150
-                                    objectName: "TypeCharge"
-                                    model: ["Statique ou quasi-statique", "Sismique C1", "Sismique C2"]
-
                                 }
                                 }
                                 }
+                                }
+                                Rectangle{
+                                    height : 30
+                                    width : table.width / 2
+                                    color: "transparent"
+                                    id : etude2
+                                RowLayout{
+                                spacing: 0
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 0
+                                anchors.rightMargin: 20
+                                Rectangle{
+                                    height : 30
+                                    width : table.width / 4
+                                    color: "transparent"
+                                    id : typechargerect
                                 RowLayout{
                                 spacing: 15
                                 anchors.right: parent.right
@@ -804,17 +936,49 @@ Rectangle {
                                 anchors.leftMargin: 15
                                 anchors.rightMargin: 20
                                 Label{
+                                    id: labcharge
+                                    text: "Type de charge:"
+                                    Layout.preferredWidth: 100
+                                    color : Theme.grey_6
+                                    }
+                                CComboBox{
+                                    id: typecharge
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: labcharge.width + 5
+                                    implicitWidth: 150
+                                    objectName: "TypeCharge"
+                                    model: ["Statique ou quasi-statique", "Sismique C1", "Sismique C2"]
+                                }
+                                }
+                                }
+                                Rectangle{
+                                    height : 30
+                                    width : table.width / 4
+                                    color: "transparent"
+                                    id : situationrect
+                                RowLayout{
+                                spacing: 15
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 15
+                                anchors.rightMargin: 20
+                                Label{
+                                    id: situationlabel
                                     text: "Situation initiale:"
                                     Layout.preferredWidth: 100
                                     color : Theme.grey_6
-                                    font.bold:true
                                     }
                                 CComboBox{
                                     id: situationinitiale
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: situationlabel.width + 5
                                     implicitWidth: 200
                                     objectName: "SituationInitiale"
                                     model: ["Situations permanentes et transitoires", "Situations accidentelles"]
 
+                                }
+                                }
+                                }
                                 }
 
 
@@ -835,14 +999,26 @@ Rectangle {
                             }
                             Rectangle{
                                     height : 30
-                                    width : table.width
-                                    color: "yellow"
+                                    width : table.width / 2
+                                    color: "transparent"
                                     id : chevilleselect
                             RowLayout{
                                 spacing: 10
                                 anchors.right: parent.right
                                 anchors.left: parent.left
                                 anchors.leftMargin: 15
+                                anchors.rightMargin: 20
+                                height: 30
+                                Rectangle{
+                                    height : 30
+                                    width : chevilleselect2.width / 4
+                                    color: "transparent"
+                                    id : gammerect
+                                RowLayout{
+                                spacing: 0
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 0
                                 anchors.rightMargin: 20
                                 height: 30
                                 Label{
@@ -857,6 +1033,20 @@ Rectangle {
                                     model: ["HILTI", "Würth", "SPIT"]
 
                                 }
+                                }
+                                }
+                                Rectangle{
+                                    height : 30
+                                    width : chevilleselect2.width / 4
+                                    color: "transparent"
+                                    id : modelerect
+                                RowLayout{
+                                spacing: 0
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 15
+                                anchors.rightMargin: 20
+                                height: 30
                                 Label{
                                     text: "Modèle chevilles :"
                                     Layout.preferredWidth: 100
@@ -867,20 +1057,65 @@ Rectangle {
                                     implicitWidth: 100
                                     objectName: "ModeleCheville"
                                     model: ["HSL 3-G", "HST3", "HDA-T", "HDA-P"]
-
                                 }
+                                }
+                                }
+                                }
+                                }
+                                Rectangle{
+                                    height : 30
+                                    width : table.width / 2
+                                    color: "transparent"
+                                    id : chevilleselect2
+                                RowLayout{
+                                spacing: 10
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 15
+                                anchors.rightMargin: 20
+                                height: 30
+
+                                Rectangle{
+                                    height : 30
+                                    width : chevilleselect2.width / 4
+                                    color: "transparent"
+                                    id : typerect
+                                RowLayout{
+                                spacing: 0
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 0
+                                anchors.rightMargin: 20
+                                height: 30
                                 Label{
+                                    id : typelab
                                     text: "Type chevilles :"
                                     Layout.preferredWidth: 80
                                     color : Theme.grey_6
                                 }
                                 CComboBox{
                                     id: typeCheville
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: typelab.width + 15
                                     implicitWidth: 100
                                     objectName: "TypeCheville"
                                     model: ["M8", "M10", "M12", "M16", "M20", "M24"]
 
                                 }
+                                }
+                                }
+                                Rectangle{
+                                    height : 30
+                                    width : chevilleselect2.width / 4
+                                    color: "transparent"
+                                    id : profrect
+                                RowLayout{
+                                spacing: 5
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 15
+                                anchors.rightMargin: 20
+                                height: 30
                                 Label{
                                     text: "Profondeur ancrage :"
                                     Layout.preferredWidth: 100
@@ -894,6 +1129,8 @@ Rectangle {
 
                                 }
 
+                            }
+                            }
                             }
                             }
 
@@ -914,7 +1151,7 @@ Rectangle {
                             Rectangle{
                                     height : 30
                                     width : table.width
-                                    color: "yellow"
+                                    color: "transparent"
                                     id : distbord
                             RowLayout{
                                 spacing: 10
@@ -948,21 +1185,6 @@ Rectangle {
                                     Layout.preferredWidth: 50
                                     validator: IntValidator{}
                                 }
-                                }
-                                }
-                                Rectangle{
-                                    height : 30
-                                    width : table.width
-                                    color: "yellow"
-                                    id : distbord2
-                                RowLayout{
-                                spacing: 10
-                                width: table.width / 2
-                                anchors.right: parent.right
-                                anchors.left: parent.left
-                                anchors.leftMargin: 15
-                                anchors.rightMargin: 20
-                                height: 30
                                 Label{
                                     text : "cz0 (mm):"
                                     Layout.preferredWidth: 50
@@ -1046,27 +1268,27 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.leftMargin: 20
-                width: parent.width
+                width: table.width + rectLeftpart.width
                 height: test1.height + 30
                 anchors.topMargin: rectButton.height
                 //anchors.bottom: parent.bottom
                 //anchors.bottomMargin: 10
-                color : "green"
+                color : "transparent"
 
                 Rectangle {
                     id: test1
-                    color:"yellow"
+                    color:"transparent"
                     height: 30 + platineModel.count*30
                     anchors.top: parent.top
                     anchors.topMargin: 10
-                    width: parent.width
+                    width: table.width + rectLeftpart.width
                     Column {
                         height: parent.height
                         width: parent.width
                         spacing: 10
                         Rectangle {
                             id: platineHeader
-                            color : "red"
+                            color : "transparent"
                             height: 30
                             width: parent.width
                             Row{
@@ -1076,61 +1298,61 @@ Rectangle {
                                     text: "N° platine"
                                     font.bold: true
                                     color: Theme.grey_6
-                                    width: 100
+                                    width: 140
                                 }
                                 Text {
                                     text: "Nombre de chevilles"
                                     font.bold: true
                                     color: Theme.grey_6
-                                    width: 100
+                                    width: 140
                                 }
                                 Text {
                                     text: "Axe normal"
                                     font.bold: true
                                     color: Theme.grey_6
-                                    width: 100
+                                    width: 145
                                 }
                                 Text {
                                     text: "Orientation"
                                     font.bold: true
                                     color: Theme.grey_6
-                                    width: 100
+                                    width: 145
                                 }
                                 Text {
                                     text: "L (mm)"
                                     font.bold: true
                                     color: Theme.grey_6
-                                    width: 100
+                                    width: 145
                                 }
                                 Text {
                                     text: "H (mm)"
                                     font.bold: true
                                     color: Theme.grey_6
-                                    width: 100
+                                    width: 145
                                 }
                                 Text {
                                     text: "e (mm)"
                                     font.bold: true
                                     color: Theme.grey_6
-                                    width: 100
+                                    width: 145
                                 }
                                 Text {
                                     text: "a (mm)"
                                     font.bold: true
                                     color: Theme.grey_6
-                                    width: 100
+                                    width: 145
                                 }
                                 Text {
                                     text: "b (mm)"
                                     font.bold: true
                                     color: Theme.grey_6
-                                    width: 100
+                                    width: 145
                                 }
                                 Text {
                                     text: "Noeud"
                                     font.bold: true
                                     color: Theme.grey_6
-                                    width: 100
+                                    width: 145
                                 }
 
                             }
