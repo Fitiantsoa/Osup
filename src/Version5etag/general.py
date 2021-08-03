@@ -39,7 +39,6 @@ class General:
         self.list_dnom = []
         self.dowelname = []
         self.orientation = data_dowel.get['orientation']
-
         self.run()
 
     def run(self):

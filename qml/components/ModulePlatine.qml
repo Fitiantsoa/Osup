@@ -867,8 +867,23 @@ Rectangle {
                                     implicitWidth: 100
                                     objectName: "ModeleCheville"
                                     model: ["HSL 3-G", "HST3", "HDA-T", "HDA-P"]
-
                                 }
+                                }
+                                }
+                                Rectangle{
+                                    height : 30
+                                    width : table.width
+                                    color: "yellow"
+                                    id : chevilleselect2
+                                RowLayout{
+                                spacing: 10
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                anchors.leftMargin: 15
+                                anchors.rightMargin: 20
+                                height: 30
+
+
                                 Label{
                                     text: "Type chevilles :"
                                     Layout.preferredWidth: 80
@@ -948,21 +963,8 @@ Rectangle {
                                     Layout.preferredWidth: 50
                                     validator: IntValidator{}
                                 }
-                                }
-                                }
-                                Rectangle{
-                                    height : 30
-                                    width : table.width
-                                    color: "yellow"
-                                    id : distbord2
-                                RowLayout{
-                                spacing: 10
-                                width: table.width / 2
-                                anchors.right: parent.right
-                                anchors.left: parent.left
-                                anchors.leftMargin: 15
-                                anchors.rightMargin: 20
-                                height: 30
+
+
                                 Label{
                                     text : "cz0 (mm):"
                                     Layout.preferredWidth: 50
@@ -1046,7 +1048,7 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.leftMargin: 20
-                width: parent.width
+                width: table.width + rectLeftpart.width
                 height: test1.height + 30
                 anchors.topMargin: rectButton.height
                 //anchors.bottom: parent.bottom
@@ -1059,7 +1061,7 @@ Rectangle {
                     height: 30 + platineModel.count*30
                     anchors.top: parent.top
                     anchors.topMargin: 10
-                    width: parent.width
+                    width: table.width + rectLeftpart.width
                     Column {
                         height: parent.height
                         width: parent.width
