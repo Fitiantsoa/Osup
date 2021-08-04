@@ -30,7 +30,6 @@ class ModulePlatine:
 
         self.data = self.platine_list_view._model._data
         self.axis = []
-        self.orientation = []
         self.l = []
         self.h = []
         self.e = []
@@ -83,7 +82,6 @@ class ModulePlatine:
         self.Sy = []
         self.Su = []
         self.inertieY = []
-        self.orientation = []
         self.nbCheville = []
         self.prod = []
         self.mat = []
@@ -114,8 +112,8 @@ class ModulePlatine:
         self.set_model("ProdPlatine", list(self.material_db["RCC-M 2016"].keys()))
         self.update_material()
 
-    def update_from_file(self, data):
-        self.platine_list_view.set_model_data(data)
+    def update_from_file(self, data_platine, data_cheville):
+        self.platine_list_view.set_model_data([data_platine, data_cheville])
 
     def init_cd_dowel(self):
         self.set_model("GammeCheville", list(self.dowel_db.keys()))
@@ -188,7 +186,7 @@ class ModulePlatine:
             'h': self.thick_concrete,
             'armature': self.armature_concrete,
             'EDF': self.edf,
-            'orientation': self.orientation
+            'axis': self.axis
             }
 
     def get_list_value(self, geo_data):

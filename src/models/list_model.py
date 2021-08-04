@@ -323,11 +323,20 @@ class PlatineListModel(ListModel):
     def get_ids(self):
         return list(x["id"] for x in self._data)
 
-    def set_model(self,model):
+    def set_model(self,list):
         self.clear()
-        for i in range(len(model['nbCheville'])):
-            elt = {"id": self.get_next_id(), "dowelsnb": model['nbCheville'][i], "axis": model['axis'][i], "orientation": model['orientation'][i], "l": model['l'][i],
-             "h": model['h'][i],"e": model['e'][i], "a": model['a'][i], 'b': model['b'][i], 'noeud': model['noeud'][i], 'prod': model['prod'][i], 'mat': model['mat'][i], 't': model['t'][i]}
+        platine_model = list[0]
+        cheville_model = list[1]
+        print(list[0], list[1])
+        for i in range(len(platine_model['nbCheville'])):
+            elt = {"id": self.get_next_id(), "dowelsnb": platine_model['nbCheville'][i], "axis": platine_model['axis'][i], "orientation": platine_model['orientation'][i], "l": platine_model['l'][i],
+             "h": platine_model['h'][i],"e": platine_model['e'][i], "a": platine_model['a'][i], 'b': platine_model['b'][i], 'noeud': platine_model['noeud'][i], 'prod': platine_model['prod'][i], 'mat': platine_model['mat'][i],
+            't': platine_model['t'][i], 'nbCheville': cheville_model['nbCheville'][i], 'Lx': cheville_model['Lx'][i], 'Lz': cheville_model['Lz'][i], 'tfix': cheville_model['tfix'][i],
+            'dx0': cheville_model['dx0'][i], 'dx1': cheville_model['dx1'][i], 'dz0': cheville_model['dz0'][i], 'dz1': cheville_model['dz1'][i], 'sx0': cheville_model['sx0'][i], 'sz0': cheville_model['sz0'],
+            'gamme': cheville_model['gamme'][i], 'modele': cheville_model['modele'][i], 'type': cheville_model['type'][i], 'hef': cheville_model['hef'][i], 'norme': cheville_model['norme'],
+            'TypeCharge': cheville_model['TypeCharge'][i], 'txt': cheville_model['txt'][i], 'cx0': cheville_model['cx0'][i], 'cx1': cheville_model['cx1'][i], 'cz0': cheville_model['cz0'],
+            'cz1': cheville_model['cz1'][i], 'etat': cheville_model['etat'][i], 'typebeton': cheville_model['typebeton'][i],
+            'armature': cheville_model['armature'][i], 'EDF': cheville_model['EDF'][i]}
             self.insert(self.count, elt)
 
 

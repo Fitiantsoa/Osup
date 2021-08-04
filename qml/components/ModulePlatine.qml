@@ -1213,7 +1213,6 @@ Rectangle {
                             }
 
 
-
                             RowLayout{
                                 spacing: 10
                                 anchors.right: parent.right

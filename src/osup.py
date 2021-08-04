@@ -102,13 +102,15 @@ class OSup(QObject):
             "platine_data" : self.platine_data.get_data(self.geometry_module.get_models()),
             "geo": self.geometry_module.get_models(),
             "stirrup": self.stirrup_module.get_data(),
-            "cheville": General(self.platine_data.get_dowel_data()).input_data_aster()
+            "cheville": General(self.platine_data.get_dowel_data()).input_data_aster(),
+            "input_data_dowel": self.platine_data.get_dowel_data()
+
              }
 
     def update_from_file(self, data):
         self.calculation_condition.update_from_file(data['calculation_condition'])
         self.geometry_module.update_from_file(data['geo'])
-        self.platine_data.update_from_file(data['platine_data'])
+        self.platine_data.update_from_file(data['platine_data'], data['input_data_dowel'])
         self.stirrup_module.update_from_file(data['stirrup'])
         self.verification_module.update_from_file(data['verification_module'])
 
@@ -392,6 +394,8 @@ class OSup(QObject):
             self.result_window.load_result(self.result_file.get_plot_data(),"Profilé")
             self.result_file.load(result_file, "platine")
             self.result_window.load_result(self.result_file.get_plot_data(), "Platine")
+            self.result_file.load(result_file, "cheville")
+            self.result_window.load_result(self.result_file.get_plot_data(), "Cheville")
             if self.data_stirrup == {}:
                 self.result_window.load_result(self.result_file.get_dict_data(self.get_saved_data()["verification_module"]['points'],self.get_saved_data()["stirrup"]["plot_data"]), "Etrier")
             else:

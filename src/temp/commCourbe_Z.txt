@@ -1703,7 +1703,7 @@ osupFile.write(f'{dash}\nFX 			FY 			FZ 			ratio max\n')
 osupFile.write(f'0		{round(fyMax,2)}		{round(f*fyMax,2)}\n')
 fyMax_init = fyMax
 osupFile.close()
-ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+
 sv.fzCourbeMin.append(0)
 sv.fyCourbeMin.append(fyMax)
 
@@ -1914,7 +1914,7 @@ for i in range(1,n):
     osupFile = open(platineFile,"a")
     osupFile.write(f'{round(fx,3)}		{round(fy,3)}		{round(f*((fy**2+fx**2)**0.5),3)}		{round(ratioMax,3)}		\n')
     osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    
     sv.fzCourbeMin.append(fx)
     sv.fyCourbeMin.append(fy)
 osupFile = open(platineFile,"a")
@@ -2281,7 +2281,7 @@ for i in range(1,n):
     osupFile = open(platineFile,"a")
     osupFile.write(f'{round(fx,3)}		{round(fy,3)}		{round(f*((fy**2+fx**2)**0.5),3)}		{round(ratioMax,3)}\n')
     osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    
     sv.fzCourbeMin.append(fx)
     sv.fyCourbeMin.append(fy)
 osupFile = open(platineFile,"a")
@@ -2739,7 +2739,7 @@ for i in range(1,n):
     osupFile = open(platineFile,"a")
     osupFile.write(f'{round(fx,3)}		{round(fy,3)}		{round(f*((fy**2+fx**2)**0.5),3)}		{round(ratioMax,3)}\n')
     osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    
     sv.fzCourbeMin.append(fx)
     sv.fyCourbeMin.append(fy)
 osupFile = open(platineFile,"a")
@@ -3050,7 +3050,7 @@ for i in range(1,n):
     osupFile = open(platineFile,"a")
     osupFile.write(f'{round(fx,3)}		{round(fy,3)}		{round(f*((fy**2+fx**2)**0.5),3)}		{round(ratioMax,3)}\n')
     osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    
     sv.fzCourbeMin.append(fx)
     sv.fyCourbeMin.append(fy)
 ratioPlatine.get_data(chevilleFile)
@@ -3503,13 +3503,12 @@ while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
     DETRUIRE(CONCEPT=_F(NOM=stat,),);
     DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
 #------------------------------------------------------------------------------------------
-osupFile = open(platineFile,"w")
+osupFile = open(chevilleFile,"w")
 osupFile.write(f'{version}\n')
-osupFile.write(f'{dash}\nFX 			FY 			FZ 			ratio max\n')
-osupFile.write(f'0		{round(fyMax,2)}		{round(f*fyMax,2)}\n')
-fyMax_init = fyMax
+osupFile.write(f'{dash}\nFX 			FY 			FZ 			ruptcombibet 			ruptacicombi  			ratiotrac  			ratiocisa\n')
 osupFile.close()
-ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+ratio_cheville.write_osup_result(chevilleFile, 0, fyMax, fyMax*f)
+fyMax_init = fyMax
 sv.fzCourbeMin.append(0)
 sv.fyCourbeMin.append(fyMax)
 
@@ -3709,17 +3708,16 @@ for i in range(1,n):
         DETRUIRE(CONCEPT=_F(NOM=stat,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
     #-----------------------------------------------------------------------------------------
-    osupFile = open(platineFile,"a")
-    osupFile.write(f'{round(fx,3)}		{round(fy,3)}		{round(f*((fy**2+fx**2)**0.5),3)}		{round(ratioMax,3)}		\n')
-    osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    ratio_cheville.write_osup_result(chevilleFile, fx, fy, f*((fy**2+fx**2)**0.5))    
     sv.fzCourbeMin.append(fx)
     sv.fyCourbeMin.append(fy)
-osupFile = open(platineFile,"a")
+    
+osupFile = open(chevilleFile, "a")
 osupFile.write(f'{round(fxMax,2)}		0		{round(f*fxMax,2)}\n')
 osupFile.close()
 sv.fzCourbeMin.append(fxMax)
 sv.fyCourbeMin.append(0)
+
 
 #-------------------------------------QUADRANT 2 fz<0 fx<0 ---------------------------------------------
 #----------------------------- fyMax --------------------------------
@@ -4062,17 +4060,17 @@ for i in range(1,n):
         DETRUIRE(CONCEPT=_F(NOM=stat,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
     #-----------------------------------------------------------------------------------------
-    osupFile = open(platineFile,"a")
-    osupFile.write(f'{round(fx,3)}		{round(fy,3)}		{round(f*((fy**2+fx**2)**0.5),3)}		{round(ratioMax,3)}\n')
-    osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    ratio_cheville.write_osup_result(chevilleFile, fx, fy, f*((fy**2+fx**2)**0.5))
+    
     sv.fzCourbeMin.append(fx)
     sv.fyCourbeMin.append(fy)
-osupFile = open(platineFile,"a")
+    
+osupFile = open(chevilleFile,"a")
 osupFile.write(f'0		{round(fyMin,3)}		{round(f*-fyMin,3)}\n')
 osupFile.close()
 sv.fzCourbeMin.append(0)
 sv.fyCourbeMin.append(fyMin)
+
 #----------------------------------QUADRANT 3 fz <0 , fx < 0-------------------------------
 #----------------------------- fxMin --------------------------------
 fxMin = -fzMax/f
@@ -4502,13 +4500,11 @@ for i in range(1,n):
         DETRUIRE(CONCEPT=_F(NOM=stat,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
     #-----------------------------------------------------------------------------------------
-    osupFile = open(platineFile,"a")
-    osupFile.write(f'{round(fx,3)}		{round(fy,3)}		{round(f*((fy**2+fx**2)**0.5),3)}		{round(ratioMax,3)}\n')
-    osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    ratio_cheville.write_osup_result(chevilleFile, fx, fy, f*((fy**2+fx**2)**0.5))
     sv.fzCourbeMin.append(fx)
     sv.fyCourbeMin.append(fy)
-osupFile = open(platineFile,"a")
+
+osupFile = open(chevilleFile,"a")
 osupFile.write(f'{round(fxMin ,3)}		0		{round(f*(fxMin ),3)}		\n')
 osupFile.close()
 sv.fzCourbeMin.append(fxMin)
@@ -4806,19 +4802,23 @@ for i in range(1,n):
         DETRUIRE(CONCEPT=_F(NOM=stat,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
     #-----------------------------------------------------------------------------------------
-    osupFile = open(platineFile,"a")
-    osupFile.write(f'{round(fx,3)}		{round(fy,3)}		{round(f*((fy**2+fx**2)**0.5),3)}		{round(ratioMax,3)}\n')
-    osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    ratio_cheville.write_osup_result(chevilleFile,fx, fy, f*((fy**2+fx**2)**0.5))
+    
     sv.fzCourbeMin.append(fx)
     sv.fyCourbeMin.append(fy)
-ratioPlatine.get_data(chevilleFile)
+        
+ratio_cheville.write_osup_result(chevilleFile, 0, fyMax, fyMax*f)
+fyMax_init = fyMax
+
+sv.fzCourbeMin.append(0)
+sv.fyCourbeMin.append(fyMax)
+
 import matplotlib.pyplot as plt
 sv.timefin = time.time()
 print("Temps total = ",sv.timefin-sv.timeInit)
 plt.plot(sv.fzCourbeMin,sv.fyCourbeMin) 
 plt.show()
-osupFile = open(platineFile,"a")
+osupFile = open(chevilleFile,"a")
 osupFile.write(f'0		{round(fyMax_init,2)}		{round(f*fyMax_init,2)}\n')
 osupFile.close()
 FIN()    
