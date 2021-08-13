@@ -66,6 +66,28 @@ Page{
                     }
                 }
             }
+            Rectangle {
+                height: 100
+                width: 200
+                color: "transparent"
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                Text {
+                    color: Theme.grey_6
+                    text: qsTr("Commencer un calcul avec SoFix")
+                    anchors.top: parent.top
+                    anchors.topMargin: 5
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    font.pixelSize: Theme.title_3
+                    MouseArea{
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor
+                        onClicked:{
+                            loader.currentIndex=2;
+                        }
+                    }
+                }
+            }
             Rectangle{
                 id:recent
                 width: 700

@@ -41,34 +41,34 @@ TAB_eff=POST_RELEVE_T(ACTION=_F(OPERATION='EXTRACTION',
 								
 ),);
 
-# contrainte = TABDEP1.EXTR_TABLE()
-# Sn = contrainte.SN
-# Svy = contrainte.SVY
-# Svz = contrainte.SVZ
-# Smfy = contrainte.SMFY
-# Smfz = contrainte.SMFZ
-# Smt = contrainte.SMT
+contrainte = TABDEP1.EXTR_TABLE()
+Sn = contrainte.SN
+Svy = contrainte.SVY
+Svz = contrainte.SVZ
+Smfy = contrainte.SMFY
+Smfz = contrainte.SMFZ
+Smt = contrainte.SMT
 # *************result_file*********
-# ratio = Ratio(value,niveau, Sn, Svy, Svz, Smt, Smfy, Smfz)
-# ratioMax = ratio.maxRatio()
-# ratio.write_result(result_file)
-# print("ratioMax",ratioMax)
+ratio = Ratio(value,niveau, Sn, Svy, Svz, Smt, Smfy, Smfz)
+ratioMax = ratio.maxRatio()
+ratio.write_result(result_file)
+print("ratioMax",ratioMax)
 # ratioPlatine = RatioPlatine(value)
-torseur = TAB_eff.EXTR_TABLE()
-dx = torseur.DX
-dy = torseur.DY
-dz = torseur.DZ
-drx = torseur.DRX
-dry = torseur.DRY
-drz = torseur.DRZ
-print(dx, dy, dz, drx, dry, drz)
+# torseur = TAB_eff.EXTR_TABLE()
+# dx = torseur.DX
+# dy = torseur.DY
+# dz = torseur.DZ
+# drx = torseur.DRX
+# dry = torseur.DRY
+# drz = torseur.DRZ
+# print(dx, dy, dz, drx, dry, drz)
 # nbChevilles = value['platine']['nbCheville']
 # ratioMax = []
-# # for i in range(len(nbChevilles)):
-	# # if nbChevilles[i] =='2':                 
-		# # maxRatio.append(ratioPlatine.ratio2chevilles(niveau, dx, dy, dz, drx, dry, drz,i))
-	# # if nbChevilles[i] =='4':
-		# # maxRatio.append(ratioPlatine.ratio4chevilles(niveau, dx, dy, dz, drx, dry, drz,i))
+# for i in range(len(nbChevilles)):
+	# # # if nbChevilles[i] =='2':                 
+		# # # maxRatio.append(ratioPlatine.ratio2chevilles(niveau, dx, dy, dz, drx, dry, drz,i))
+	# # # if nbChevilles[i] =='4':
+		# # # maxRatio.append(ratioPlatine.ratio4chevilles(niveau, dx, dy, dz, drx, dry, drz,i))
 
 # for i in range(len(nbChevilles)):
     # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
@@ -77,6 +77,62 @@ print(dx, dy, dz, drx, dry, drz)
 # print("Maximum", maxRatio)
 # ratioPlatine.write_result(dx, dy,dz, drx, dry, drz, maxRatio,result_file)
 # ratioMax = max(maxRatio)
+# IMPR_TABLE (TABLE=TABDEP1,)
+# IMPR_TABLE (TABLE=TAB_eff,)
+ratioPlatine = RatioPlatine(value)
+
+torseur = TAB_eff.EXTR_TABLE()
+
+dx = torseur.DX
+
+dy = torseur.DY
+
+dz = torseur.DZ
+
+drx = torseur.DRX
+
+dry = torseur.DRY
+
+drz = torseur.DRZ
+
+print(dx, dy, dz, drx, dry, drz)
+
+nbChevilles = value['platine']['nbCheville']
+
+ratioMax = []
+
+
+for i in range(len(nbChevilles)):
+
+	if nbChevilles[i] =='2':                 
+
+		ratioMax.append(ratioPlatine.ratio2chevilles(niveau, dx, dy, dz, drx, dry, drz,i))
+
+	if nbChevilles[i] =='4':
+		
+		ratioMax.append(ratioPlatine.ratio4chevilles(niveau, dx, dy, dz, drx, dry, drz,i))
+
+maxRatio1 = max(ratioMax)
+
+ratioPlatine.write_result(dx, dy,dz, drx, dry, drz, ratioMax,result_file)
+
+print("Maximum", maxRatio1)
+
+ratioMax = []
+
+for i in range(len(nbChevilles)):
+
+    ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+
+    ratioMax.append(ratio_cheville.calculation_criteria_traction_shearing())
+
+maxRatio2 = max(ratioMax)
+
+print("Maximum", maxRatio2)
+
+
+
 IMPR_TABLE (TABLE=TABDEP1,)
+
 IMPR_TABLE (TABLE=TAB_eff,)
 FIN()

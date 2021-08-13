@@ -4,43 +4,46 @@ import math
 
 
 class CalculationEffort:
-    def __init__(self, inputdataaster):
-        self.effort = inputdataaster.get("effort")
-        self.N = self.effort.get("N")
-        self.Mx = self.effort.get("Mx")
-        self.Mz = self.effort.get("Mz")
-        self.Vx = self.effort.get("Vx")
-        self.Vz = self.effort.get("Vz")
+    def __init__(self, geo, i, Vx, N, Vz, Mx, T, Mz, PosFix, effortcenter, origin):
+        #print("geo", geo)
+        self.data_dowel = geo['datadowel']
+        #print("datadowel", self.data_dowel)
+        self.N = N
+        self.Mx = Mx
+        self.Mz = Mz
+        self.Vx = Vx
+        self.Vz = Vz
+        self.T = T
+        self.NbFixa = int(self.data_dowel.get("nbCheville")[i])
 
-        self.inertia = inputdataaster.get("inertia")
-        self.Mzb = self.inertia.get("Mzb")
-        self.Mxb = self.inertia.get("Mxb")
-        self.PosFix = self.inertia.get("PosFix")
-        self.CentreGeo1 = self.inertia.get("CentreGeo1")
-        self.CentreGeo0 = self.inertia.get("CentreGeo0")
-        self.Ix = self.inertia.get("Ix")
-        self.Iy = self.inertia.get("Iy")
-        self.Iz = self.inertia.get("Iz")
-        self.Tb = self.inertia.get("Tb")
-        self.PosCmax = self.inertia.get("PosCmax")
-        self.PosCmax1 = self.inertia.get("PosCmax1")
-        self.PosFix_bis = self.inertia.get("PosFix_bis")
+        self.Lx = self.data_dowel.get("Lx")[i]
+        self.Lz = self.data_dowel.get("Lz")[i]
 
-        self.NbFixa = inputdataaster.get("NbFixa")
+        self.PosFix = PosFix
+        self.CentreGeo1 = geo.get("CentreGeo1")[i]
+        self.CentreGeo0 = geo.get("CentreGeo0")[i]
+        #print("centre", self.CentreGeo1, self.PosFix[0, 1])
+
+        self.Mzb = effortcenter[5]
+        self.Mxb = effortcenter[3]
+        self.Ix = effortcenter[0]
+        self.Iy = effortcenter[1]
+        self.Iz = effortcenter[2]
+        self.Tb = effortcenter[4]
+
+        self.PosCmax = origin[1]
+        self.PosCmax1 = origin[2]
+        self.PosFix_bis = origin[0]
+
         self.eN = [0, 0]
-
-        self.data_board_dowel = inputdataaster.get("data_board_dowel")
-        self.Lx = self.data_board_dowel.get("Lx")
-        self.Lz = self.data_board_dowel.get("Lz")
 
         self.Vedx = np.zeros((self.NbFixa, 1))
         self.Vedz = np.zeros((self.NbFixa, 1))
         self.Ved = np.zeros((self.NbFixa, 1))
         self.NEd = np.zeros((self.NbFixa, 1))
 
-        self.inputdata = inputdataaster.get("inputdata")
-        self.nd = self.inputdata.get("nd")
-        self.Ar = self.inputdata.get("Ar")
+        self.nd = geo.get("nd")[i]
+        self.Ar = geo.get("Ar")[i]
 
         self.NbFixTraction = 0
         self.NEdg = 0
@@ -248,19 +251,19 @@ class CalculationEffort:
             if k2 == 1 and k3 != k2:
                 self.PosCmax = 0
                 self.PosCmax1 = 0
-                self.PosFix_bis = self.geometrie.change_origin(self.PosCmax)
+                self.PosFix_bis = self.change_origin([self.PosCmax, self.PosCmax1])[0]
             elif k2 == 2 and k3 != k2:
                 self.PosCmax = self.Lx
                 self.PosCmax1 = 0
-                self.PosFix_bis = self.geometrie.change_origin(self.PosCmax)
+                self.PosFix_bis = self.change_origin([self.PosCmax, self.PosCmax1])[0]
             elif k2 == 3 and k3 != k2:
                 self.PosCmax = 0
                 self.PosCmax1 = self.Lz
-                self.PosFix_bis = self.geometrie.change_origin(self.PosCmax)
+                self.PosFix_bis = self.change_origin([self.PosCmax, self.PosCmax1])[0]
             elif k2 == 4 and k3 != k2:
                 self.PosCmax = self.Lx
                 self.PosCmax1 = self.Lz
-                self.PosFix_bis = self.geometrie.change_origin(self.PosCmax)
+                self.PosFix_bis = self.change_origin([self.PosCmax, self.PosCmax1])[0]
             k1 = 0
             while self.Convergence is False and lref0 + k1 * lrefp < math.sin(alpha0 + math.atan(self.Lz / self.Lx)) * \
                     math.sqrt(self.Lx ** 2 + self.Lz ** 2):
@@ -269,15 +272,15 @@ class CalculationEffort:
                 k = self.newton_biaxial(self.PosFix_bis, alpha, lref)
 
                 k1 = k1 + 1
-            pm = k[0]
-            alpha = k[1]
-            lref = k[2]
             k2 = k2 + 1
-
         if self.Convergence is False:
             print("La méthode de Newton n'a pas convergée")
             self.errorOccured = True
             return self.errorOccured
+
+        pm = k[0]
+        alpha = k[1]
+        lref = k[2]
 
         L = self.distance_dowel_biaxial(self.PosFix_bis, alpha, lref)
 
@@ -659,6 +662,7 @@ class CalculationEffort:
         global Nedg
         self.errorOccured = False
         self.Convergence = False
+        Nedg = 0
 
         NEd = np.zeros((self.NbFixa, 1))
         self.NbFixTraction = 0
@@ -862,3 +866,58 @@ class CalculationEffort:
             if self.A0 * PosFix_bis[j, 0] + self.A1 * PosFix_bis[j, 1] + self.A2 <= 0:
                 L[j, 0] = 0
         return L
+
+    def change_origin(self, PosCmax2):  # Verifier et correcte
+        global PosCmax, PosCmax1
+
+        PosFix_bis = np.zeros((self.NbFixa, 2))
+        PosCmax = 0
+        PosCmax1 = 0
+
+        if PosCmax2 == "":
+            if self.Mxb != 0 and self.Mzb != 0:
+                if self.Mxb > 0 and self.Mzb > 0:
+                    PosCmax = 0
+                    PosCmax1 = self.Lz
+                elif self.Mxb > 0 > self.Mzb:
+                    PosCmax = self.Lx
+                    PosCmax1 = self.Lz
+                elif self.Mxb < 0 < self.Mzb:
+                    PosCmax = 0
+                    PosCmax1 = 0
+                elif self.Mxb < 0 and self.Mzb < 0:
+                    PosCmax = self.Lx
+                    PosCmax1 = 0
+            elif self.Mxb != 0 and self.Mzb == 0:
+                if self.Mxb > 0:
+                    PosCmax = self.Lx / 2
+                    PosCmax1 = self.Lz
+                else:
+                    PosCmax = self.Lx / 2
+                    PosCmax1 = 0
+
+            elif self.Mxb == 0 and self.Mzb != 0:
+                if self.Mzb > 0:
+                    PosCmax = 0
+                    PosCmax1 = self.Lz / 2
+                else:
+                    PosCmax = self.Lx
+                    PosCmax1 = self.Lz / 2
+        else:
+            PosCmax = PosCmax2[0]
+            PosCmax1 = PosCmax2[1]
+
+        for i in range(self.NbFixa):
+            if self.Mxb != 0 and self.Mzb != 0:
+                PosFix_bis[i, 0] = abs(self.PosFix[i, 0] - PosCmax)
+                PosFix_bis[i, 1] = abs(self.PosFix[i, 1] - PosCmax1)
+
+            elif self.Mxb != 0 and self.Mzb == 0:
+                PosFix_bis[i, 0] = self.PosFix[i, 0] - PosCmax
+                PosFix_bis[i, 1] = abs(self.PosFix[i, 1] - PosCmax1)
+            elif self.Mxb == 0 and self.Mzb != 0:
+                PosFix_bis[i, 0] = abs(self.PosFix[i, 0] - PosCmax)
+                PosFix_bis[i, 1] = self.PosFix[i, 1] - PosCmax1
+
+        return PosFix_bis, PosCmax, PosCmax1
+

@@ -225,9 +225,13 @@ class ResultWindow(QWidget):
                 plat_data = {'DataX': curve_data[1:data_y_id], 'DataY': curve_data[data_y_id+1:]}
                 self.load_result(plat_data, "Platine")
                 # data["Platine"]={"all": line}
-            else:
+            elif j == 3:
                 etr_data = {'DataX': curve_data[1:data_y_id], 'DataY': curve_data[data_y_id+1:]}
                 self.load_result(etr_data, "Etriers")
+                # data["Chevilles"] = {"all":line}
+            else:
+                chev_data = {'DataX': curve_data[1:data_y_id], 'DataY': curve_data[data_y_id+1:]}
+                self.load_result(chev_data, "Cheville")
                 # data["Chevilles"] = {"all":line}
 
     def exportResult(self):
@@ -247,8 +251,14 @@ class ResultWindow(QWidget):
         cp_file.write("\n")
         cp_file.close()
         self.copyFile(PLATINE_RSLT.replace("'",""), fname[0], "PL")
+        cp_file = open(fname[0], "a")
+        cp_file.write("CHEVILLE")
+        cp_file.write("\n")
+        cp_file.close()
+        self.copyFile(CHEVILLE_RSLT.replace("'", ""), fname[0], "CH")
         frslt_data = fname[0].split(".")[0] + "." + fname[0].split(".")[1] + ".rslt"
         frslt = open(frslt_data, "w")
+
         for data in self.curve_data:
             frslt.write(str(data))
             frslt.write("\n")

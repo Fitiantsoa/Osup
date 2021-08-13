@@ -38,22 +38,43 @@ class General:
         self.NbFixaBord = []
         self.list_dnom = []
         self.dowelname = []
-        self.orientation = data_dowel.get['orientation']
+        self.axis = data_dowel.get('axis')
+        self.result_sofix = []
 
         self.run()
 
     def run(self):
-        for i in range(len(self.data_dowel['Lx'])):
-            data_dowel_general = self.input_data_general(i)
-            self.dowel_name = data_dowel_general.get('dowelname')
-            self.data = ReadingInputData(data_dowel_general)
-            self.dnom = float(self.data.get_dowel_property('Diametre de percage dnom=d0 (mm)'))
-            self.readinputdata = self.data.read_input_data()
-            self.get_data_geo(self.dnom, self.readinputdata, self.geo_calculation(i), self.dowel_name)
-            self.check_data(i)
-        #  self.inputdataaster = self.input_data_aster()
-        #  self.effort_calculation()
-        #  self.criteria_calculation()
+        calcul = self.data_dowel.get("calcul")[0]
+        #print(calcul)
+        if calcul == "Sofix":
+            for i in range(len(self.data_dowel['Lx'])):
+                data_dowel_general = self.input_data_general(i)
+                self.dowel_name = data_dowel_general.get('dowelname')
+                self.data = ReadingInputData(data_dowel_general)
+                self.dnom = float(self.data.get_dowel_property('Diametre de percage dnom=d0 (mm)'))
+                self.readinputdata = self.data.read_input_data()
+                self.get_data_geo(self.dnom, self.readinputdata, self.geo_calculation(i), self.dowel_name)
+                self.check_data(i)
+                geo = self.input_data_aster()
+                #self.effort_calculation(geo, i)
+                Criteria(geo, i)
+                self.result_sofix.append(Criteria(geo, i).calculation_criteria_traction_shearing())
+
+
+
+        elif calcul == "Osup":
+            for i in range(len(self.data_dowel['Lx'])):
+                data_dowel_general = self.input_data_general(i)
+                self.dowel_name = data_dowel_general.get('dowelname')
+                self.data = ReadingInputData(data_dowel_general)
+                self.dnom = float(self.data.get_dowel_property('Diametre de percage dnom=d0 (mm)'))
+                self.readinputdata = self.data.read_input_data()
+                self.get_data_geo(self.dnom, self.readinputdata, self.geo_calculation(i), self.dowel_name)
+                self.check_data(i)
+
+
+    def critere_sofix(self):
+        return self.result_sofix
 
     def input_data_aster(self):
         return {"dnom": self.list_dnom,
@@ -78,7 +99,7 @@ class General:
                 "s": self.s,
                 "NbFixaBord": self.NbFixaBord,
                 "modele": self.dowelname,
-                "orientation": self.orientation
+                "orientation": self.axis
                 }
 
     def get_data_geo(self, val1, list1, list2, dowelname):
@@ -107,6 +128,23 @@ class General:
         self.dowelname.append(dowelname)
 
     def input_data_general(self, i):
+        try:
+            Vx = self.data_dowel['Vx'][i]
+            N = self.data_dowel['N'][i]
+            Vz = self.data_dowel['Vz'][i]
+            Mx = self.data_dowel['Mx'][i]
+            T = self.data_dowel['T'][i]
+            Mz = self.data_dowel['Mz'][i]
+            orientation = self.data_dowel['orientation'][i]
+        except:
+            Vx = None
+            N = None
+            Vz = None
+            Mx = None
+            T = None
+            Mz = None
+            orientation = None
+
         return {'nbCheville': int(self.data_dowel['nbCheville'][i]),
                 'Lx': self.data_dowel['Lx'][i],
                 'Lz': self.data_dowel['Lz'][i],
@@ -132,9 +170,16 @@ class General:
                 'typebeton': self.data_dowel['typebeton'][i],
                 'h': self.data_dowel['h'][i],
                 'armature': self.data_dowel['armature'][i],
+                'orientation': orientation,
                 'EDF': self.data_dowel['EDF'][i],
                 'dowelname': "{} {} {}".format(self.data_dowel["gamme"][i], self.data_dowel["modele"][i],
-                                            self.data_dowel["type"][i])
+                                            self.data_dowel["type"][i]),
+                'Vx': Vx,
+                'N': N,
+                'Vz': Vz,
+                'Mx': Mx,
+                'T': T,
+                'Mz': Mz,
                 }
 
     def geo_calculation(self, i):
@@ -146,10 +191,10 @@ class General:
         self.data = self.data.get_dowel_full_property()
         Verification(self.inertia, self.data, self.readinputdata, self.input_data_general(i))
 
-   # def effort_calculation(self):
-#        self.calculation_effort = CalculationEffort(self.inputdataaster)
-#        self.resultTrac = self.calculation_effort.traction()
-#        self.resultShearing = self.calculation_effort.shearing()
+    # def effort_calculation(self, geo, i):
+    #     self.calculation_effort = CalculationEffort(geo, i)
+    #     self.resultTrac = self.calculation_effort.traction()
+    #     self.resultShearing = self.calculation_effort.shearing()
 
-#    def criteria_calculation(self):
-#        Criteria(self.inputdataaster, self.resultTrac, self.resultShearing)
+    # def criteria_calculation(self, geo, i, data_dowel_general):
+    #     Criteria(self.resultTrac, self.resultShearing, geo, i, data_dowel_general)

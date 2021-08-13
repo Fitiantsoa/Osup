@@ -6,6 +6,7 @@ from src.utils import read_json
 from src.modules.components import ListView, Combobox
 from src.models.list_model import PlatineListModel
 
+
 class ModulePlatine:
     objectName= "modulePlatine"
 
@@ -30,7 +31,6 @@ class ModulePlatine:
 
         self.data = self.platine_list_view._model._data
         self.axis = []
-        self.orientation = []
         self.l = []
         self.h = []
         self.e = []
@@ -68,6 +68,7 @@ class ModulePlatine:
         self.thick_concrete = []
         self.armature_concrete = []
         self.edf = []
+        self.calcul = []
 
     def reinitialize_platine(self):
         self.axis = []
@@ -83,7 +84,6 @@ class ModulePlatine:
         self.Sy = []
         self.Su = []
         self.inertieY = []
-        self.orientation = []
         self.nbCheville = []
         self.prod = []
         self.mat = []
@@ -109,13 +109,14 @@ class ModulePlatine:
         self.thick_concrete = []
         self.armature_concrete = []
         self.edf = []
+        self.calcul = []
 
     def init_cb(self):
         self.set_model("ProdPlatine", list(self.material_db["RCC-M 2016"].keys()))
         self.update_material()
 
-    def update_from_file(self, data):
-        self.platine_list_view.set_model_data(data)
+    def update_from_file(self, data_platine, data_cheville):
+        self.platine_list_view.set_model_data([data_platine, data_cheville])
 
     def init_cd_dowel(self):
         self.set_model("GammeCheville", list(self.dowel_db.keys()))
@@ -137,11 +138,11 @@ class ModulePlatine:
     def set_model(self, objectName, value):
         self.sibling.findChild(QObject, objectName).setProperty("model", value)
 
-    def get_data(self,geo_data):
+    def get_data(self, geo_data):
         self.get_list_value(geo_data)
         return {
             'nbCheville': self.nbCheville,
-            'axis':self.axis,
+            'axis': self.axis,
             'orientation': self.orientation,
             'l': self.l,
             'h': self.h,
@@ -188,7 +189,8 @@ class ModulePlatine:
             'h': self.thick_concrete,
             'armature': self.armature_concrete,
             'EDF': self.edf,
-            'orientation': self.orientation
+            'axis': self.axis,
+            'calcul': self.calcul
             }
 
     def get_list_value(self, geo_data):
@@ -209,24 +211,25 @@ class ModulePlatine:
             self.node_list.append(data['noeud'])
             prod = data['prod']
             mat = data['mat']
-            self.gamme_dowel.append(data['gamme_dowel'])
-            self.modele_dowel.append(data['modele_dowel'])
-            self.type_dowel.append(data['type_dowel'])
-            self.deep_dowel.append(float(data['deep_dowel']))
+            self.gamme_dowel.append(data['gamme'])
+            self.modele_dowel.append(data['modele'])
+            self.type_dowel.append(data['type'])
+            self.deep_dowel.append(float(data['hef']))
             self.norme.append(data['norme'])
-            self.type_charge.append(data['type_charge'])
-            self.situation_initiale.append(data['situation_initiale'])
+            self.type_charge.append(data['TypeCharge'])
+            self.situation_initiale.append(data['txt'])
             self.cx0.append(data['cx0'])
             self.cx1.append(data['cx1'])
             self.cz0.append(data['cz0'])
             self.cz1.append(data['cz1'])
-            if data['state_concrete'] == "Fissuré":
+            self.calcul.append(data['calcul'])
+            if data['etat'] == "Fissuré":
                 self.state_concrete.append("Fissure")
             else:
                 self.state_concrete.append("Non fissure")
-            self.class_concrete.append(data['class_concrete'])
-            self.thick_concrete.append(data['thick_concrete'])
-            self.armature_concrete.append(data['armature_concrete'])
+            self.class_concrete.append(data['typebeton'])
+            self.thick_concrete.append(data['h'])
+            self.armature_concrete.append(data['armature'])
             self.edf.append(data['EDF'])
 
             if float(data['dowelsnb']) == 4:

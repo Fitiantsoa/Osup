@@ -5,7 +5,7 @@ from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType
 
 from src.osup import OSup
 from src.modules.console import *
-from src.models.list_model import RecentFileListModel, NodeListModel, BeamListModel, PlatineListModel, StirrupListModel, FamilyListModel
+from src.models.list_model import RecentFileListModel, NodeListModel, BeamListModel, PlatineListModel, StirrupListModel, FamilyListModel, SofixListModel
 from src.models.tree_model import MaterialTreeModel, ProfileTreeModel
 
 
@@ -33,8 +33,10 @@ if __name__ == "__main__":
     qmlRegisterType(NodeListModel, "NodeListModel", 1, 0, "NodeListModel")
     qmlRegisterType(BeamListModel, "BeamListModel", 1, 0, "BeamListModel")
     qmlRegisterType(PlatineListModel, "PlatineListModel", 1, 0, "PlatineListModel")
+    qmlRegisterType(PlatineListModel, "PlatineListModelSoFix", 1, 0, "PlatineListModelSoFix")
     qmlRegisterType(StirrupListModel, "StirrupListModel", 1, 0, "StirrupListModel")
     qmlRegisterType(FamilyListModel, "FamilyListModel", 1, 0, "FamilyListModel")
+    qmlRegisterType(SofixListModel, "SofixListModel", 1, 0, "SofixListModel")
 
     qmlRegisterType(MaterialTreeModel, "MaterialTreeModel", 1, 0, "MaterialTreeModel")
     qmlRegisterType(ProfileTreeModel, "ProfileTreeModel", 1, 0, "ProfileTreeModel")
