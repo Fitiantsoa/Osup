@@ -26,6 +26,8 @@ ASTER = os.getcwd() + "/code-aster_v2019_std-win64//v2019//bin//as_run --test os
 PROFILE_RSLT = ("'" + TEMP + "profile(2).Osup" + "'").replace("\\","/")
 PLATINE_RSLT = ("'" + TEMP + "platine(2).Osup" + "'").replace("\\","/")
 CHEVILLE_RSLT = ("'" + TEMP + "cheville(2).Osup" + "'").replace("\\","/")
+RIGIDITE_PLAT_RSLT = ("'" + TEMP + "rigidie_plat(2).Osup" + "'").replace("\\","/")
+FLECHE_RSLT = ("'" + TEMP + "fleche(2).Osup" + "'").replace("\\","/")
 
 COMM_FILE = os.getcwd() + "/code-aster_v2019_std-win64/v2019/14.4/share/aster/tests/osup.comm"
 EXPORT_FILE = os.getcwd() + "/code-aster_v2019_std-win64/v2019/14.4/share/aster/tests/osup.export"
