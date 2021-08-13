@@ -280,12 +280,13 @@ class PlatineListModel(ListModel):
                   state_concrete, class_concrete, thick_concrete, armature_concrete, edf, b, a):
 
         return self.insert(self.count, {"id": self.get_next_id(),"dowelsnb": dowelsNumber, "axis": axis, "orientation": '', "l": l, "h": h,
-                                        "e": e, "a": a, 'b': b, 'noeud': noeud, 'prod':prod, 'mat': mat,'t':t, 'gamme_dowel': gamme_dowel, 'modele_dowel': modele_dowel, 'type_dowel':
-                                        type_dowel, 'deep_dowel': deep_dowel, 'norme': norme,
-                                        'type_charge': type_charge, 'situation_initiale': situation_initiale,
+                                        "e": e, "a": a, 'b': b, 'noeud': noeud, 'prod':prod, 'mat': mat,'t':t, 'gamme': gamme_dowel, 'modele': modele_dowel, 'type':
+                                        type_dowel, 'hef': deep_dowel, 'norme': norme,
+                                        'TypeCharge': type_charge, 'txt': situation_initiale,
                                         'cx0': cx0, 'cx1': cx1, 'cz0': cz0, 'cz1': cz1,
-                                        'state_concrete': state_concrete, 'class_concrete': class_concrete,
-                                        'thick_concrete': thick_concrete, 'armature_concrete': armature_concrete, 'EDF': edf})
+                                        'etat': state_concrete, 'typebeton': class_concrete,
+                                        'thick_concrete': thick_concrete, 'armature': armature_concrete, 'EDF': edf,
+                                        'calcul': "Osup"})
 
     @pyqtSlot(str, str, int, int, int, str, str, str, int, int, str, str, str, str, str, str, str, str, int, int, int, int, str, str, int, str, bool, result=bool)
     def append2dwV(self, dowelsNumber, axis, l, h, e,noeud, prod, mat, t, b, orientation, gamme_dowel,
@@ -293,12 +294,12 @@ class PlatineListModel(ListModel):
                   state_concrete, class_concrete, thick_concrete, armature_concrete, edf):
         return self.insert(self.count, {"id": self.get_next_id(),"dowelsnb": dowelsNumber, "axis": axis, "orientation": orientation, "l": l, "h": h,
                                         "e": e, "a": '', 'b': b, 'noeud': noeud, 'prod':prod, 'mat': mat,'t':t,
-                                        'gamme_dowel': gamme_dowel, 'modele_dowel': modele_dowel, 'type_dowel':
-                                        type_dowel, 'deep_dowel': deep_dowel, 'norme': norme,
-                                        'type_charge': type_charge, 'situation_initiale': situation_initiale,
+                                        'gamme': gamme_dowel, 'modele': modele_dowel, 'type':
+                                        type_dowel, 'hef': deep_dowel, 'norme': norme,
+                                        'TypeCharge': type_charge, 'txt': situation_initiale,
                                         'cx0': cx0, 'cx1': cx1, 'cz0': cz0, 'cz1': cz1,
-                                        'state_concrete': state_concrete, 'class_concrete': class_concrete,
-                                        'thick_concrete': thick_concrete, 'armature_concrete': armature_concrete, 'EDF': edf})
+                                        'etat': state_concrete, 'typebeton': class_concrete,
+                                        'thick_concrete': thick_concrete, 'armature': armature_concrete, 'EDF': edf, 'calcul': "Osup"})
 
     @pyqtSlot(str, str, int, int, int, str, str, str, int, int, str, str, str, str, str, str, str, str, int, int, int, int, str, str, int, str, bool,result=bool)
     def append2dwH(self, dowelsNumber, axis, l, h, e, noeud, prod, mat, t, a, orientation, gamme_dowel,
@@ -306,12 +307,55 @@ class PlatineListModel(ListModel):
                   state_concrete, class_concrete, thick_concrete, armature_concrete, edf):
         return self.insert(self.count, {"id": self.get_next_id(),"dowelsnb": dowelsNumber, "axis": axis, "orientation": orientation, "l": l, "h": h,
                                         "e": e, "a": a, 'b': '', 'noeud': noeud, 'prod':prod, 'mat': mat,'t':t,
-                                        'gamme_dowel': gamme_dowel, 'modele_dowel': modele_dowel, 'type_dowel':
-                                        type_dowel, 'deep_dowel': deep_dowel, 'norme': norme,
-                                        'type_charge': type_charge, 'situation_initiale': situation_initiale,
+                                        'gamme': gamme_dowel, 'modele': modele_dowel, 'type':
+                                        type_dowel, 'hef': deep_dowel, 'norme': norme,
+                                        'TypeCharge': type_charge, 'txt': situation_initiale,
                                         'cx0': cx0, 'cx1': cx1, 'cz0': cz0, 'cz1': cz1,
-                                        'state_concrete': state_concrete, 'class_concrete': class_concrete,
-                                        'thick_concrete': thick_concrete, 'armature_concrete': armature_concrete, 'EDF': edf})
+                                        'etat': state_concrete, 'typebeton': class_concrete,
+                                        'thick_concrete': thick_concrete, 'armature': armature_concrete, 'EDF': edf, 'calcul': "Osup"})
+
+    @pyqtSlot(str, int, int, int, str, str, str, str, str, str, str, int, int, int, int, str, str, int, str, bool, str, str, int, int, int, int, int, int, result=bool)
+    def append4dw_sofix(self, dowelsNumber, l, h, e, gamme_dowel, modele_dowel, type_dowel,
+                  deep_dowel, norme, type_charge, situation_initiale, cx0, cx1, cz0, cz1,
+                  state_concrete, class_concrete, thick_concrete, armature_concrete, edf, b, a, Vx, N, Vz, Mx, T, Mz):
+
+        return self.insert(self.count,
+                           {"id": self.get_next_id(), "dowelsnb": dowelsNumber, "orientation": '', "l": l,
+                            "h": h, "e": e, "a": a, 'b': b, 'gamme': gamme_dowel, 'modele': modele_dowel, 'type':
+                            type_dowel, 'hef': deep_dowel, 'norme': norme, 'TypeCharge': type_charge,
+                            'txt': situation_initiale, 'cx0': cx0, 'cx1': cx1, 'cz0': cz0, 'cz1': cz1,
+                            'etat': state_concrete, 'typebeton': class_concrete,
+                            'thick_concrete': thick_concrete, 'armature': armature_concrete, 'EDF': edf,
+                            'calcul': "Sofix", 'Vx': Vx, 'N': N, 'Vz': Vz, 'Mx': Mx, 'T': T, 'Mz': Mz})
+
+    @pyqtSlot(str, int, int, int, int, str, str, str, str, str, str, str, str, int, int, int,
+              int, str, str, int, str, bool, int, int, int, int, int, int, result=bool)
+    def append2dwV_sofix(self, dowelsNumber, l, h, e, b, orientation, gamme_dowel,
+                   modele_dowel, type_dowel, deep_dowel, norme, type_charge, situation_initiale, cx0, cx1, cz0, cz1,
+                   state_concrete, class_concrete, thick_concrete, armature_concrete, edf, Vx, N, Vz, Mx, T, Mz):
+        return self.insert(self.count, {"id": self.get_next_id(), "dowelsnb": dowelsNumber,
+                                        "orientation": orientation, "l": l, "h": h,
+                                        "e": e, "a": '', 'b': b, 'gamme': gamme_dowel, 'modele': modele_dowel, 'type':
+                                        type_dowel, 'hef': deep_dowel, 'norme': norme,
+                                        'TypeCharge': type_charge, 'txt': situation_initiale,
+                                        'cx0': cx0, 'cx1': cx1, 'cz0': cz0, 'cz1': cz1,
+                                        'etat': state_concrete, 'typebeton': class_concrete,
+                                        'thick_concrete': thick_concrete, 'armature': armature_concrete, 'EDF': edf,
+                                        'calcul': "Sofix", 'Vx': Vx, 'N': N, 'Vz': Vz, 'Mx': Mx, 'T': T, 'Mz': Mz})
+
+    @pyqtSlot(str, int, int, int, int, str, str, str, str, str, str, str, str, int, int, int,
+              int, str, str, int, str, bool, int, int, int, int, int, int, result=bool)
+    def append2dwH_sofix(self, dowelsNumber, l, h, e, a, orientation, gamme_dowel,
+                   modele_dowel, type_dowel, deep_dowel, norme, type_charge, situation_initiale, cx0, cx1, cz0, cz1,
+                   state_concrete, class_concrete, thick_concrete, armature_concrete, edf, Vx, N, Vz, Mx, T, Mz):
+        return self.insert(self.count, {"id": self.get_next_id(), "dowelsnb": dowelsNumber,
+                                        "orientation": orientation, "l": l, "h": h,
+                                        "e": e, "a": a, 'b': '', 'gamme': gamme_dowel, 'modele': modele_dowel, 'type':
+                                        type_dowel, 'hef': deep_dowel, 'norme': norme,  'TypeCharge': type_charge,
+                                        'txt': situation_initiale, 'cx0': cx0, 'cx1': cx1, 'cz0': cz0, 'cz1': cz1,
+                                        'etat': state_concrete, 'typebeton': class_concrete,
+                                        'thick_concrete': thick_concrete, 'armature': armature_concrete, 'EDF': edf,
+                                        'calcul': "Sofix", 'Vx': Vx, 'N': N, 'Vz': Vz, 'Mx': Mx, 'T': T, 'Mz': Mz})
 
     def get_next_id(self):
         if not self._data:
@@ -332,11 +376,11 @@ class PlatineListModel(ListModel):
             elt = {"id": self.get_next_id(), "dowelsnb": platine_model['nbCheville'][i], "axis": platine_model['axis'][i], "orientation": platine_model['orientation'][i], "l": platine_model['l'][i],
              "h": platine_model['h'][i],"e": platine_model['e'][i], "a": platine_model['a'][i], 'b': platine_model['b'][i], 'noeud': platine_model['noeud'][i], 'prod': platine_model['prod'][i], 'mat': platine_model['mat'][i],
             't': platine_model['t'][i], 'nbCheville': cheville_model['nbCheville'][i], 'Lx': cheville_model['Lx'][i], 'Lz': cheville_model['Lz'][i], 'tfix': cheville_model['tfix'][i],
-            'dx0': cheville_model['dx0'][i], 'dx1': cheville_model['dx1'][i], 'dz0': cheville_model['dz0'][i], 'dz1': cheville_model['dz1'][i], 'sx0': cheville_model['sx0'][i], 'sz0': cheville_model['sz0'],
-            'gamme': cheville_model['gamme'][i], 'modele': cheville_model['modele'][i], 'type': cheville_model['type'][i], 'hef': cheville_model['hef'][i], 'norme': cheville_model['norme'],
-            'TypeCharge': cheville_model['TypeCharge'][i], 'txt': cheville_model['txt'][i], 'cx0': cheville_model['cx0'][i], 'cx1': cheville_model['cx1'][i], 'cz0': cheville_model['cz0'],
+            'dx0': cheville_model['dx0'][i], 'dx1': cheville_model['dx1'][i], 'dz0': cheville_model['dz0'][i], 'dz1': cheville_model['dz1'][i], 'sx0': cheville_model['sx0'][i], 'sz0': cheville_model['sz0'][i],
+            'gamme': cheville_model['gamme'][i], 'modele': cheville_model['modele'][i], 'type': cheville_model['type'][i], 'hef': cheville_model['hef'][i], 'norme': cheville_model['norme'][i],
+            'TypeCharge': cheville_model['TypeCharge'][i], 'txt': cheville_model['txt'][i], 'cx0': cheville_model['cx0'][i], 'cx1': cheville_model['cx1'][i], 'cz0': cheville_model['cz0'][i],
             'cz1': cheville_model['cz1'][i], 'etat': cheville_model['etat'][i], 'typebeton': cheville_model['typebeton'][i],
-            'armature': cheville_model['armature'][i], 'EDF': cheville_model['EDF'][i]}
+            'armature': cheville_model['armature'][i], 'EDF': cheville_model['EDF'][i], 'calcul': cheville_model['calcul'][i]}
             self.insert(self.count, elt)
 
 
@@ -482,6 +526,37 @@ class StirrupListModel(ListModel):
     @pyqtSlot(int, result=str)
     def get_name(self, index):
         return self._data[index]['nom']
+
+class SofixListModel(ListModel):
+    def __init__(self, name, parent=None, *args):
+        super(SofixListModel, self).__init__(parent)
+        self._name = name
+        self._data = []
+        self._roles = None
+        self._db = None
+        self._roles_name_to_int = None
+
+
+    def set_model(self,model):
+        print("modeeeel", model)
+        dict = {}
+        dict['Vx'] = str(round(model['Vx'], 4))
+        dict['N'] = str(round(model['N'], 4))
+        dict['Vz'] = str(round(model['Vz'], 4))
+        dict['Mx'] = str(round(model['Mx'], 4))
+        dict['T'] = str(round(model['T'], 4))
+        dict['Mz'] = str(round(model['Mz'], 4))
+        dict['ruptacier'] = str(round(model['ruptacier'],4))
+        dict['ruptExtGliss'] = str(round(model['ruptExtGliss'], 4))
+        dict['ruptConeBet'] = str(round(model['ruptConeBet'], 4))
+        dict['ruptFendBet'] = str(round(model['ruptFendBet'], 4))
+        dict['ruptAcierSansBrasLevier'] = str(round(model['ruptAcierSansBrasLevier'], 4))
+        dict['ruptEffetLevier'] = str(round(model['ruptEffetLevier'], 4))
+        dict['ruptBordBet'] = str(round(model['ruptBordBet'], 4))
+        dict['ruptCombiAcier'] = str(round(model['ruptCombiAcier'], 4))
+        dict['ruptCombiBet'] = str(round(model['ruptCombiBet'], 4))
+        return self.insert(self.count, dict)
+
 
 class FamilyListModel(ListModel):
     def __init__(self, name, parent=None, *args):

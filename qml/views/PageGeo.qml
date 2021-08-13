@@ -21,6 +21,7 @@ Page{
     property var node_list
     property var load_node_list
     property var rccm: conditioncaclul.rccm
+    property var oab: conditioncaclul.lvlA
     property var temperature: 20
     property var porte: 0
     property bool verifTemp: false
@@ -148,7 +149,38 @@ Page{
                                }
                             }
                         }
-
+                    }
+                    Image{
+                        width: 20
+                        height: 20
+                        anchors.right: parent.right
+                        source:"../../assets/images/return-icon-512x467-dbhl6xy5.png"
+                        MouseArea{
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor
+                            onClicked:{
+                                loader.currentIndex=0;
+                            }
+                        }
+                    }
+                    Text {
+                        text: "Retour à la page principale"
+                        font.bold: true
+                        anchors.top: parent.top
+                        anchors.topMargin: 5
+                        anchors.right: parent.right
+                        anchors.rightMargin: 40
+                        color: Theme.grey_6
+                        width: 140
+                        MouseArea{
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor
+                            onClicked:{
+                                loader.currentIndex=0;
+                            }
+                        }
                     }
                     MessageDialog{
                         id: messageDialogErrorFre

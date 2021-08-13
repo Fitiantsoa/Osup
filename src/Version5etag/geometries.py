@@ -5,6 +5,7 @@ class Geometrie:
     def __init__(self, dnom, inputdata, data_dowel):
         self.NbFixa = int(data_dowel.get("nbCheville"))
         self.data_board_dowel = data_dowel
+        self.orientation = data_dowel.get("orientation")
         self.Lx = data_dowel.get("Lx")
         self.Lz = data_dowel.get("Lz")
         self.sx1 = 0
@@ -40,10 +41,15 @@ class Geometrie:
             PosFix[3, 0] = PosFix[0, 0] + self.data_board_dowel.get("sx0")
             PosFix[3, 1] = PosFix[0, 1] + self.data_board_dowel.get("sz0")
 
-        elif self.NbFixa == 2:
+        elif self.NbFixa == 2 and self.orientation == "Vertical":
+            PosFix[0, 0] = self.data_board_dowel.get("dz0")
+            PosFix[0, 1] = self.data_board_dowel.get("dx0")
+            PosFix[1, 0] = PosFix[0, 0] + self.data_board_dowel.get("sz0")
+            PosFix[1, 1] = PosFix[0, 1]
+
+        elif self.NbFixa == 2 and self.orientation == "Horizontal":
             PosFix[0, 0] = self.data_board_dowel.get("dx0")
             PosFix[0, 1] = self.data_board_dowel.get("dz0")
-
             PosFix[1, 0] = PosFix[0, 0] + self.data_board_dowel.get("sx0")
             PosFix[1, 1] = PosFix[0, 1]
 
@@ -60,7 +66,7 @@ class Geometrie:
 
         PosBord[0, 0] = self.data_board_dowel.get("dx0") - self.data_board_dowel.get("cx0")
         PosBord[0, 1] = (self.Lx - self.data_board_dowel.get("dx1")) + self.data_board_dowel.get("cx1")
-
+        print(self.data_board_dowel.get("dz0"), self.data_board_dowel.get("cz0"), self.data_board_dowel)
         PosBord[1, 0] = self.data_board_dowel.get("dz0") - self.data_board_dowel.get("cz0")
         PosBord[1, 1] = (self.Lz - self.data_board_dowel.get("dz1")) + self.data_board_dowel.get("cz1")
 
@@ -137,16 +143,23 @@ class Geometrie:
         return DistFixBord, NbFixBord
 
     def calculation_smin(self):
-        smin = self.data_board_dowel.get("sx0")
-
-        if smin >= self.sx1 != 0:
-            smin = self.sx1
-
-        if smin >= self.data_board_dowel.get("sz0") != 0:
+        global smin
+        self.orientation = self.data_board_dowel.get("orientation")
+        if self.NbFixa == 2 and self.orientation == "Vertical":
             smin = self.data_board_dowel.get("sz0")
+        elif self.NbFixa == 2 and self.orientation == "Horizontal":
+            smin = self.data_board_dowel.get("sx0")
+        elif self.NbFixa == 4:
+            smin = self.data_board_dowel.get("sx0")
 
-        if smin >= self.sz1 != 0:
-            smin = self.sz1
+            if smin >= self.sx1 != 0:
+                smin = self.sx1
+
+            if smin >= float(self.data_board_dowel.get("sz0")) != 0:
+                smin = float(self.data_board_dowel.get("sz0"))
+
+            if smin >= self.sz1 != 0:
+                smin = self.sz1
 
         return smin
 
@@ -208,3 +221,4 @@ class Geometrie:
             for j in range(1):
                 list.append(matrix[i, j])
         return list
+
