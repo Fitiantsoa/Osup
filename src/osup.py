@@ -6,6 +6,7 @@ from src.modules.db_module import DbMenu
 from src.modules.calculation_condition import CalculationCondition
 from src.modules.module_verif import ModuleVerif
 from src.modules.modulePlatine import ModulePlatine
+from src.modules.modulePlatineSofix import ModulePlatineSofix
 from src.modules.calculation_module import Calculation_var
 from src.modules.geometry import Geometry
 from src.modules.stirrup import Stirrup
@@ -46,6 +47,7 @@ class OSup(QObject):
         self.geometry_module = Geometry(parent)
         self.verification_module = ModuleVerif(parent)
         self.platine_data = ModulePlatine(parent)
+        self.platine_sofix_data = ModulePlatineSofix(parent)
         self.stirrup_module = Stirrup(parent)
         self.result_window = None
         self.need_to_be_saved_init()
@@ -54,6 +56,7 @@ class OSup(QObject):
         self.create_result_file()
         self.created_file = False
         self.note = NoteDeCalcul(parent, app)
+        self.result_sofix = 0
 
     def unhandled_exception(self, ex_cls, ex, tb):
         import traceback
@@ -104,8 +107,25 @@ class OSup(QObject):
             "stirrup": self.stirrup_module.get_data(),
             "cheville": General(self.platine_data.get_dowel_data()).input_data_aster(),
             "input_data_dowel": self.platine_data.get_dowel_data()
-
              }
+
+    @pyqtSlot(result=list)
+    def get_saved_data_sofix(self):
+        return [
+            {"cheville": General(self.platine_sofix_data.get_dowel_data()).input_data_aster(),
+             "input_data_dowel": self.platine_sofix_data.get_dowel_data()}
+             ]
+
+    @pyqtSlot()
+    def resultSopfix(self):
+        self.platine_sofix_data.get_data(General(self.platine_sofix_data.get_dowel_data()).critere_sofix())
+
+    @staticmethod
+    def dict_criteria(criteria):
+        return {
+            'ruptacier': criteria[0],
+            'ruptEffetLevier': criteria[1]
+        }
 
     def update_from_file(self, data):
         self.calculation_condition.update_from_file(data['calculation_condition'])
@@ -188,6 +208,9 @@ class OSup(QObject):
             f_comm = open(COMM_FILE, "w")
             f_comm.close()
 
+    @pyqtSlot()
+    def resetSofix(self):
+        self.platine_sofix_data.reset_result_sofix()
 
     @pyqtSlot()
     def need_to_be_saved(self):
@@ -289,6 +312,12 @@ class OSup(QObject):
     @pyqtSlot()
     def update_widget(self):
         self.app.processEvents(QEventLoop.ExcludeUserInputEvents)
+
+    @pyqtSlot(result=dict)
+    def run_sofix(self):
+        result_sofix = self.get_saved_data_sofix().get('cheville')
+        return result_sofix
+        #print(self.result_sofix)
 
 
     @pyqtSlot(str, result=bool)

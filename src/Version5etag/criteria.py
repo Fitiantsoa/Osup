@@ -2,141 +2,210 @@ import math
 import numpy as np
 from src.Version5etag.arithmetique import Arithmetique
 from src.Version5etag.readinginputdata import ReadingInputData
+from src.Version5etag.effortcalculation import CalculationEffort
+from src.Version5etag.database import Database
 
 
 class Criteria:
-    def __init__(self, inputdataaster, resultTrac, resultCisail):
-        self.NbFixa = inputdataaster.get("NbFixa")
-        self.TypeCharge = inputdataaster.get("TypeCharge")
-        self.norme = inputdataaster.get("norme")
-        self.modele = inputdataaster.get("modele")
-        self.hef = inputdataaster.get("hef")
-        self.dnom = inputdataaster.get("dnom")
-        self.EDF = inputdataaster.get("EDF")
-        self.txt = inputdataaster.get("txt")
 
-        self.dowel_property = inputdataaster.get("dowel_property")
-        self.gamme = self.dowel_property.get("gamme")
+    def __init__(self, geo, i):
+        self.data_dowel = geo.get("datadowel")
+        self.Mx = self.data_dowel.get('Mx')[i] * 1000
+        self.Mz = self.data_dowel.get('Mz')[i] * 1000
+        self.N = - self.data_dowel.get('N')[i]
+        self.T = self.data_dowel.get('T')[i] * 1000
+        self.Vx = self.data_dowel.get('Vx')[i]
+        self.Vz = self.data_dowel.get('Vz')[i]
 
-        self.data_board_dowel = inputdataaster.get("data_board_dowel")
-        self.sx0 = self.data_board_dowel.get("sx0")
+        self.NbFixa = int(self.data_dowel.get("nbCheville")[i])
+        self.TypeCharge = self.data_dowel.get("TypeCharge")[i]
+        self.norme = self.data_dowel.get("norme")[i]
+        self.modele = self.data_dowel.get("modele")[i]
+        self.type = self.data_dowel.get("type")[i]
+        self.EDF = self.data_dowel.get("EDF")[i]
+        self.hef = self.EDF_profondeur_ancrage(self.data_dowel.get("hef")[i])
+        self.dnom = geo.get("dnom")[i]
+        self.txt = self.data_dowel.get("txt")[i]
+
+        self.gamme = self.data_dowel.get("gamme")[i]
+
+        self.sx0 = self.data_dowel.get("sx0")[i]
         self.sx1 = 0
-        self.sz0 = self.data_board_dowel.get("sz0")
+        self.sz0 = self.data_dowel.get("sz0")[i]
         self.sz1 = 0
-        self.cx0 = self.data_board_dowel.get("cx0")
-        self.cx1 = self.data_board_dowel.get("cx1")
-        self.cz0 = self.data_board_dowel.get("cz0")
-        self.cz1 = self.data_board_dowel.get("cz1")
-        self.Lx = self.data_board_dowel.get("Lx")
-        self.Lz = self.data_board_dowel.get("Ly")
-        self.tfix = self.data_board_dowel.get("tfix")
+        self.cx0 = self.data_dowel.get("cx0")[i]
+        self.cx1 = self.data_dowel.get("cx1")[i]
+        self.cz0 = self.data_dowel.get("cz0")[i]
+        self.cz1 = self.data_dowel.get("cz1")[i]
+        self.Lx = self.data_dowel.get("Lx")[i]
+        self.Lz = self.data_dowel.get("Lz")[i]
+        self.tfix = self.data_dowel.get("tfix")[i]
+        self.orientation = self.data_dowel.get("orientation")[i]
 
-        self.effort = inputdataaster.get("effort")
-        self.Mx = self.effort.get('Mx')
-        self.Mz = self.effort.get('Mz')
-        self.N = self.effort.get('N')
-        self.T = self.effort.get('T')
-        self.Vx = self.effort.get('Vx')
-        self.Vz = self.effort.get('Vz')
+        self.h = self.data_dowel.get("h")[i]
+        self.etat = self.data_dowel.get("etat")[i]
+        self.armature = self.data_dowel.get("armature")[i]
+        self.typebeton = self.data_dowel.get("typebeton")[i]
 
-        self.data_concrete = inputdataaster.get("data_concrete")
-        self.h = self.data_concrete.get("h")
-        self.etat = self.data_concrete.get("etat")
-        self.armature = self.data_concrete.get("armature")
-        self.typebeton = self.data_concrete.get("typebeton")
+        self.PosFix = self.list_into_matrix(geo.get("PosFix")[i])
+        self.DistFixBord = self.list_into_list_matrix(geo.get("DistFixBord")[i])
+        self.DistFixFix = self.list_into_list_matrix(geo.get("DistFixFix")[i])
 
-        self.resultshearing = resultCisail
-        self.Ved = self.resultshearing.get('Ved')
-        self.VEdg = self.resultshearing.get('VEdg')
-        self.Vedx = self.resultshearing.get('Vedx')
-        self.Vedz = self.resultshearing.get('Vedz')
-        self.VEgdx = self.resultshearing.get('VEdgx')
-        self.VEgdz = self.resultshearing.get('VEdgz')
-        self.eV0 = self.resultshearing.get("eV0")
-        self.eV1 = self.resultshearing.get("eV1")
-        self.eV = [self.eV0, self.eV1]
+        self.CentreGeo0 = geo.get("CentreGeo0")[i]
+        self.CentreGeo1 = geo.get("CentreGeo1")[i]
 
-        self.NEd = resultTrac.get("NEd")
-        self.NEdg = resultTrac.get("NEdg")
-        self.eN = resultTrac.get("eN")
-        self.z = resultTrac.get("z")
-        self.CEd = resultTrac.get("CEd")
+        effort_center = self.effort_geometric_center()
+        self.Ix = effort_center[0]
+        self.Iy = effort_center[1]
+        self.Iz = effort_center[2]
+        self.Tb = effort_center[5]
+        self.Mzb = effort_center[4]
+        self.Mxb = effort_center[3]
 
-        self.inertia = inputdataaster.get("inertia")
-        self.PosFix = self.inertia.get("PosFix")
-        self.DistFixBord = self.inertia.get("DistFixBord")
-        self.DistFixFix = self.inertia.get("DistFixFix")
-        self.Iy = self.inertia.get("Iy")
-        self.Tb = self.inertia.get("Tb")
-        self.CentreGeo0 = self.inertia.get("CentreGeo0")
-        self.CentreGeo1 = self.inertia.get("CentreGeo1")
+        self.origin = self.change_origin("")
 
-        self.Recuperationproprietecheville = ReadingInputData(self.norme, self.dowel_property, self.data_board_dowel,
-                                                              self.data_concrete)
+        self.scrn = geo.get("scrn")[i]
+        self.ccrN = geo.get("ccrN")[i]
+        self.scrsp = geo.get("scrsp")[i]
+        self.ccrsp = geo.get("ccrsp")[i]
+        self.hmin = geo.get("hmin")[i]
+        self.fck = geo.get('fck')[i]
+        self.k8 = geo.get('k8')[i]
+        self.aeq_groupe = geo.get('aeq_groupe')[i]
+        self.aeq_isolee = geo.get('aeq_groupe')[i]
+        self.calculationEffort = CalculationEffort(geo, i, self.Vx, self.N, self.Vz, self.Mx, self.T, self.Mz,
+                                                   self.PosFix, effort_center, self.origin)
+        self.opendata = Database().open_database()
+        self.datadowelosup = self.opendata.get("datadowel")
+        self.fulldata = self.get_dowel_data()
+        self.nom = []
 
-        self.inputdata = inputdataaster.get("inputdata")
-        self.scrn = self.inputdata.get("scrn")
-        self.ccrN = self.inputdata.get("ccrN")
-        self.scrsp = self.inputdata.get("scrsp")
-        self.ccrsp = self.inputdata.get("ccrsp")
-        self.hmin = self.inputdata.get("hmin")
-        self.fck = self.inputdata.get('fck')
-        self.k8 = self.inputdata.get('k8')
-        self.aeq_groupe = self.inputdata.get('aeq_groupe')
-        self.aeq_isolee = self.inputdata.get('aeq_groupe')
+        self.resultshearing = self.calculationEffort.shearing()
+        self.resultTrac = self.calculationEffort.traction()
 
-        self.calculation_criteria_traction_shearing()
+        if self.resultshearing is None or self.resultTrac is None:
+            pass
+        else:
+            self.Ved = self.resultshearing.get('Ved')
+            self.VEdg = self.resultshearing.get('VEdg')
+            self.Vedx = self.resultshearing.get('Vedx')
+            self.Vedz = self.resultshearing.get('Vedz')
+            self.VEgdx = self.resultshearing.get('VEdgx')
+            self.VEgdz = self.resultshearing.get('VEdgz')
+            self.eV0 = self.resultshearing.get("eV0")
+            self.eV1 = self.resultshearing.get("eV1")
+            self.PosFix_bis = self.resultshearing.get("PosFix_bis")
+            self.eV = [self.eV0, self.eV1]
+            self.NEd = self.resultTrac.get("NEd")
+            self.NEdg = self.resultTrac.get("NEdg")
+            self.eN = self.resultTrac.get("eN")
+            self.z = self.resultTrac.get("z")
+            self.CEd = self.resultTrac.get("CEd")
+
+    def EDF_profondeur_ancrage(self, hef):
+        if self.EDF == "Oui" and (self.TypeCharge == "Sismique C1" or self.TypeCharge == "Sismique C2"):
+            self.hef = 1.5 * hef
+            return self.hef
+        else:
+            return hef
+
+    def data_recovery(self, malist, donnee, dico):
+        malist = []
+        for h in dico:
+            malist.append(h.get("{}".format(donnee)))
+        return malist
+
+    def get_dowel_data(self):
+        return self.datadowelosup[self.gamme][self.modele][self.type][str(self.hef)]
+
+    def get_dowel_property(self, propriete):
+        return self.fulldata['{}'.format(propriete)]
+
+    def get_dowel_full_property(self):
+        return {
+            "smin": float(self.get_dowel_property('Entraxe minimum smin (mm)')),
+            "c_smin": float(self.get_dowel_property('Entraxe minimum c >= (mm)')),
+            "cmin": float(self.get_dowel_property('Distance au bord minimum cmin (mm)')),
+            "s_cmin": float(self.get_dowel_property('Distance au bord minimum s >= (mm)')),
+            "dmin": float(self.get_dowel_property('Distance minimum au bord de la platine (mm)')),
+            "tmin": float(self.get_dowel_property('Epaisseur a fixer tfix1 (mm)')),
+            "tmax": float(self.get_dowel_property('Epaisseur a fixer tfix2 (mm)'))
+        }
+
+    def get_concrete_property(self, propriete):
+        if self.norme == "ETAG":
+            self.dataconcrete = self.opendata.get("dataconcrete_etag")
+        else:
+            self.dataconcrete = self.opendata.get("dataconcrete_ec2")
+        q = self.data_recovery(self.nom, "Classe de resistance", self.dataconcrete).index(self.typebeton)
+        prop = self.dataconcrete[q]['{}'.format(propriete)]
+        return prop
 
     def calculation_criteria_traction_shearing(self):
-        global ruptbetcombi, ruptaciercombi
-        a = self.calculation_criteria_traction()
-        b = self.calculation_criteria_shearing()
-        print(a, b)
-
-        if a[3] == "Vérification non nécessaire":
-            a3 = 0
+        if self.resultshearing is None or self.resultTrac is None:
+            return "Non convergence"
         else:
-            a3 = a[3]
+            a = self.calculation_criteria_traction()
+            b = self.calculation_criteria_shearing()
+            print(a, b)
+            try:
+                print("test b1", b[1][0])
+                b1 = b[1][0]
+            except:
+                b1 = b[1]
 
-        betaN = max(max(a[0]), a[1], max(a[2]), a3)
-        betaV = max(max(b[0]), b[1], b[2])
+            if a[3] == "Vérification non nécessaire":
+                a3 = 0
+            else:
+                a3 = a[3]
 
-        if (self.N != 0 or self.Mx != 0 or self.Mz != 0) and (self.Vx != 0 or self.Vz != 0 or self.T != 0):
+            self.betaN = max(max(a[0]), a[1], max(a[2]), a3)
+            self.betaV = max(max(b[0]), b1, b[2])
+
+            # if (self.N != 0 or self.Mx != 0 or self.Mz != 0) and (self.Vx != 0 or self.Vz != 0 or self.T != 0):
             if self.TypeCharge == "Statique ou quasi-statique":
                 if self.norme == "ETAG":
-                    if max(a[0]) < max(a[1], max(a[2]), a3) and max(b[0]) < max(b[1], b[2]):
-                        cas = betaN ** 1.5 + betaV ** 1.5
+                    if max(a[0]) < max(a[1], max(a[2]), a3) and max(b[0]) < max(b1, b[2]):
+                        cas = self.betaN ** 1.5 + self.betaV ** 1.5
                     else:
-                        cas = betaN ** 2 + betaV ** 2
-                    ruptaciercombi = min((betaN + betaV) / 1.2, cas)
-                    ruptbetcombi = "Non calculé pour l'ETAG"
+                        cas = self.betaN ** 2 + self.betaV ** 2
+                    self.ruptaciercombi = min((self.betaN + self.betaV) / 1.2, cas)
+                    self.ruptbetcombi = "Non calculé pour l'ETAG"
                 else:
-                    ruptaciercombi = max(a[0]) ** 2 + max(b[0]) ** 2
+                    self.ruptaciercombi = max(a[0]) ** 2 + max(b[0]) ** 2
                     if self.EDF == "Oui":
-                        ruptbetcombi = max(a[1] ** 1.5, (max(a[2])) ** 1.5, a3 ** 1.5) + max(b[2] ** 1.5, b[1] ** 1.5)
+                        self.ruptbetcombi = max(a[1] ** 1.5, (max(a[2])) ** 1.5, a3 ** 1.5) + max(b[2] ** 1.5,
+                                                                                                  b1 ** 1.5)
                     else:
-                        ruptbetcombi = (max(a[1], (max(a[2])), a3) + max(b[2], b[1])) / 1.2
+                        self.ruptbetcombi = (max(a[1], (max(a[2])), a3) + max(b[2], b1)) / 1.2
 
             elif self.TypeCharge == "Sismique C2" or self.TypeCharge == "Sismique C1":
                 if self.norme == "ETAG":
-                    ruptbetcombi = "Non calculé pour l'ETAG"
-                    ruptaciercombi = max(a[0]) + max(b[0])
+                    self.ruptbetcombi = "Non calculé pour l'ETAG"
+                    self.ruptaciercombi = max(a[0]) + max(b[0])
                 else:
-                    ruptaciercombi = max(a[0]) + max(b[0])
-                    ruptbetcombi = max(a[1], (max(a[2])), a3) + max(b[2], b[1])
+                    self.ruptaciercombi = max(a[0]) + max(b[0])
+                    self.ruptbetcombi = max(a[1], (max(a[2])), a3) + max(b[2], b1)
 
-        else:
-            ruptbetcombi = "Non calculé"
-            ruptaciercombi = "Non calculé"
-            #for j in range(self.NbFixa):
+            # else:
+            #    ruptbetcombi = "Non calculé"
+            #    ruptaciercombi = "Non calculé"
+            # for j in range(self.NbFixa):
             #    ctritraccisail0[j, 0] = a[0][j] ** 2 + b[0][j] ** 2
-            #ctritraccisail2 = a[1] ** 1.5 + b[2] ** 1.5
+            #    ctritraccisail2 = a[1] ** 1.5 + b[2] ** 1.5
 
-        print(ruptbetcombi, ruptaciercombi)
-        return ruptbetcombi, ruptaciercombi, a, b
+            # print(self.ruptbetcombi, self.ruptaciercombi)
+            print("critere", max(self.ruptbetcombi, self.ruptaciercombi, self.betaN, self.betaV), "effort", self.Vx,
+                  self.N,
+                  self.Vz, self.Mx, self.T, self.Mz)
+            # return ruptbetcombi, ruptaciercombi, a, b
+            return [max(a[0]), a[1], max(a[2]), a[3], max(b[0]), b1, b[2], self.ruptaciercombi, self.ruptbetcombi,
+                    max(self.ruptbetcombi, self.ruptaciercombi, self.betaN, self.betaV), self.Vx, - self.N, self.Vz,
+                    self.Mx / 1000, self.T / 1000, self.Mz / 1000]
 
     def calculation_criteria_shearing(self):
-        if self.TypeCharge == "Statique ou quasi-statique" or (self.norme == "ETAG" and self.TypeCharge == "Sismique C2" or self.TypeCharge == "Sismique C1"):
+        if self.TypeCharge == "Statique ou quasi-statique" or (
+                self.norme == "ETAG" and self.TypeCharge == "Sismique C2" or self.TypeCharge == "Sismique C1"):
             return self.rupture_steel_fixation_without_lever_arm(), self.rupture_concrete_with_lever_arm("", ""), \
                    self.rupture_edge_concrete("", "")
         elif self.TypeCharge == "Sismique C2" and self.norme == "EC2":
@@ -150,19 +219,20 @@ class Criteria:
         if self.N == 0 and self.Mx == 0 and self.Mz == 0:
             return [0, 0, 0, 0], 0, [0, 0, 0, 0], 0
         else:
-            if self.TypeCharge == "Statique ou quasi-statique" or (self.norme == "ETAG" and self.TypeCharge == "Sismique C2" or self.TypeCharge == "Sismique C1"):
+            if self.TypeCharge == "Statique ou quasi-statique" or (
+                    self.norme == "ETAG" and self.TypeCharge == "Sismique C2" or self.TypeCharge == "Sismique C1"):
                 return self.rupture_steel_fixing(), self.rupture_cone_concrete(), self.rupture_extraction(), \
-                    self.rupture_splitting()
+                       self.rupture_splitting()
             elif self.TypeCharge == "Sismique C2" and self.norme == "EC2":
                 return self.rupture_steel_fixing_C2(), self.rupture_cone_concrete_C2(), self.rupture_extraction_C2(), \
-                    self.rupture_splitting_C2()
+                       self.rupture_splitting_C2()
             elif self.TypeCharge == "Sismique C1" and self.norme == "EC2":
                 return self.rupture_steel_fixing_C1(), self.rupture_cone_concrete_C1(), self.rupture_extraction_C1(), \
-                    self.rupture_splitting_C1()
+                       self.rupture_splitting_C1()
 
     def rupture_steel_fixation_without_lever_arm(self):
-        gamma = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier sans bras de levier - gamma Ms,V'))
-        VRKs = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier sans bras de levier - VRk,s (N)'))
+        gamma = float(self.get_dowel_property('Rupture acier sans bras de levier - gamma Ms,V'))
+        VRKs = float(self.get_dowel_property('Rupture acier sans bras de levier - VRk,s (N)'))
         Ruptureacciersansbraslevier = []
         VedMax = 0
 
@@ -201,13 +271,13 @@ class Criteria:
                 Ruptureacciersansbraslevier.append(self.Ved[j, 0] / (VRKs / gamma))
             if self.Ved[j, 0] > VedMax:
                 VedMax = self.Ved[j, 0]
-        #print(gamma, VRKs)
+        # print(gamma, VRKs)
         return Ruptureacciersansbraslevier
 
     def rupture_concrete_with_lever_arm(self, C1, C2):
         global aeq, VRkcpseis, VRdcpeq
         agap = 0.5
-        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+        gamma = self.calculation_gamma_c() * float(self.get_dowel_property(
             'Rupture du beton par effet de levier - gamma inst'))
         ruptbetonlevierC2 = []
         ruptbetonlevierC1 = []
@@ -220,7 +290,7 @@ class Criteria:
                 aeq = self.aeq_isolee
 
         if C2 == "C2":
-            self.dV_seis_eq = float(self.Recuperationproprietecheville.get_dowel_property('Deplacement deltaV,seis (DLS)'))
+            self.dV_seis_eq = float(self.get_dowel_property('Deplacement deltaV,seis (DLS)'))
             self.dV_seis_req = 3
             rat = self.dV_seis_req / self.dV_seis_eq
             if rat > 1:
@@ -262,7 +332,7 @@ class Criteria:
                     self.ruptbetonlevierglob = 3.33 * self.VEdg / (VRkcp / gamma)
                 else:
                     self.ruptbetonlevierglob = self.VEdg / (VRkcp / gamma)
-        #print(N0, a, A0, psisN, psireN, psiecN, psiMN, NRkc, ratio, k8, VRkcp, gamma, self.VEdg, scrN1, self.ccrN, hef1, self.fck)
+        # print(N0, a, A0, psisN, psireN, psiecN, psiMN, NRkc, ratio, k8, VRkcp, gamma, self.VEdg, scrN1, self.ccrN, hef1, self.fck)
         Vedeq = self.VEdg
 
         # Affichage de VEdg / (VRkcp / gamma)
@@ -353,7 +423,7 @@ class Criteria:
                     a = self.calculation_acn(scrN1, j)
 
                 psisN = self.calculation_psis_n(scrN1, "")
-                #print(psisN)
+                # print(psisN)
                 psireN = self.calculation_psir_eN(hef1)
                 if self.norme == "ETAG":
                     psiecN = self.calculation_psie_cN(scrN1, self.eV, 2)
@@ -395,14 +465,13 @@ class Criteria:
                     else:
                         ruptbetonlevier.append(0)
                         return ruptbetonlevier
-                #print(N0, a, A0, psisN, psireN, psiecN, psiMN, NRkc, ratio, k8, VRkcp, gamma, self.VEdg, scrN1,
-                      #self.ccrN, hef1, self.fck, self.ruptbetonlevierglob, self.Ved[j] / (VRkcp / gamma), self.Ved[j])
+                # print(N0, a, A0, psisN, psireN, psiecN, psiMN, NRkc, ratio, k8, VRkcp, gamma, self.VEdg, scrN1,
+                # self.ccrN, hef1, self.fck, self.ruptbetonlevierglob, self.Ved[j] / (VRkcp / gamma), self.Ved[j])
         return self.ruptbetonlevierglob
 
     def rupture_edge_concrete(self, C1, C2):
-
         global c1z, c1x, tempx1, tempx2
-        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+        gamma = self.calculation_gamma_c() * float(self.get_dowel_property(
             'Rupture du beton par effet de levier - gamma inst'))
         kt = 1
         agap = 0.5
@@ -419,7 +488,7 @@ class Criteria:
                     self.aeq = 1
 
         if C2 == "C2":
-            self.dV_seis_eq = float(self.Recuperationproprietecheville.get_dowel_property('Deplacement deltaV,seis (DLS)'))
+            self.dV_seis_eq = float(self.get_dowel_property('Deplacement deltaV,seis (DLS)'))
             self.dV_seis_req = 3
             rat = self.dV_seis_req / self.dV_seis_eq
             if rat > 1:
@@ -790,8 +859,8 @@ class Criteria:
                         if self.Vx != 0:
                             eVz = ((self.PosFix[0, 1] - self.CentreGeo1) * self.Vedx[0, 0] + (
                                     self.PosFix[2, 1] - self.CentreGeo1) * self.Vedx[2, 0]) / (
-                                    (abs(self.Vedx[0, 0]) + abs(self.Vedx[1, 0]) + abs(self.Vedx[2, 0]) + abs(
-                                      self.Vedx[3, 0])) * 4)
+                                          (abs(self.Vedx[0, 0]) + abs(self.Vedx[1, 0]) + abs(self.Vedx[2, 0]) + abs(
+                                              self.Vedx[3, 0])) * 4)
                             self.psiecVx = self.calculation_psie_cN(3 * c1x, np.array([eVz, 0]), 4)
                         else:
                             self.psiecVx = self.calculation_psie_cN(3 * c1x, np.array([self.eV1, 0]), 4)
@@ -817,9 +886,9 @@ class Criteria:
                     elif self.VEgdx >= 0 and (self.VEgdz != 0 or self.T != 0):
                         if self.Vx != 0:
                             eVz = ((self.PosFix[0, 1] - self.CentreGeo1) * self.Vedx[0, 0] + (
-                            self.PosFix[2, 1] - self.CentreGeo1) * self.Vedx[2, 0]) / (
-                                  (abs(self.Vedx[0, 0]) + abs(self.Vedx[1, 0]) + abs(self.Vedx[2, 0]) + abs(
-                                      self.Vedx[3, 0])) * 4)
+                                    self.PosFix[2, 1] - self.CentreGeo1) * self.Vedx[2, 0]) / (
+                                          (abs(self.Vedx[0, 0]) + abs(self.Vedx[1, 0]) + abs(self.Vedx[2, 0]) + abs(
+                                              self.Vedx[3, 0])) * 4)
                             self.psiecVx = self.calculation_psie_cN(3 * c1x, np.array([eVz, 0]), 4)
                         else:
                             self.psiecVx = self.calculation_psie_cN(3 * c1x, np.array([self.eV1, 0]), 4)
@@ -839,11 +908,12 @@ class Criteria:
 
                 if C1 == "C1" or C2 == "C2":
                     if self.VEgdx >= 0 and (self.VEgdz != 0 or self.T != 0):
-                        if self.Vedx[0, 0] != 0 and self.Vedx[1, 0] != 0 and self.Vedx[2, 0] != 0 and self.Vedx[3, 0] != 0:
+                        if self.Vedx[0, 0] != 0 and self.Vedx[1, 0] != 0 and self.Vedx[2, 0] != 0 and self.Vedx[
+                            3, 0] != 0:
                             eVz = ((self.PosFix[0, 1] - self.CentreGeo1) * self.Vedx[0, 0] + (
-                                self.PosFix[2, 1] - self.CentreGeo1) * self.Vedx[2, 0]) / (
-                                      (abs(self.Vedx[0, 0]) + abs(self.Vedx[1, 0]) + abs(self.Vedx[2, 0]) + abs(
-                                          self.Vedx[3, 0])) * 4)
+                                    self.PosFix[2, 1] - self.CentreGeo1) * self.Vedx[2, 0]) / (
+                                          (abs(self.Vedx[0, 0]) + abs(self.Vedx[1, 0]) + abs(self.Vedx[2, 0]) + abs(
+                                              self.Vedx[3, 0])) * 4)
                             self.psiecVx = self.calculation_psie_cN(3 * c1x, np.array([eVz, 0]), 4)
                         else:
                             self.psiecVx = 1
@@ -861,11 +931,11 @@ class Criteria:
 
                 if C1 == "C1" or C2 == "C2":
                     self.Vrkcx1 = self.calculation_N(V0rkcx1, Ax, A0x, psisVx, psihVx, self.psiecVx, self.psiaVx,
-                                                 psireVx) * agap * self.aeq
+                                                     psireVx) * agap * self.aeq
                 else:
                     self.Vrkcx1 = self.calculation_N(V0rkcx1, Ax, A0x, psisVx, psihVx, self.psiecVx, self.psiaVx,
-                                                 psireVx)
-                #print(V0rkcx1, Ax, A0x, psisVx, psihVx, self.psiecVx, self.psiaVx, psireVx, gamma, self.Vrkcx1 / gamma, self.Vx, self.Vz)
+                                                     psireVx)
+                # print(V0rkcx1, Ax, A0x, psisVx, psihVx, self.psiecVx, self.psiaVx, psireVx, gamma, self.Vrkcx1 / gamma, self.Vx, self.Vz)
                 tempx1 = self.Vedx[0, 0]
                 tempx2 = self.Vedx[1, 0]
                 tempx3 = self.Vedx[2, 0]
@@ -883,14 +953,14 @@ class Criteria:
                 if C2 == "C2":
                     VRkcxseis = self.Vrkcx1 * (self.dV_seis_req / self.dV_seis_eq)
                     ratio1 = math.sqrt(
-                    (self.Vedz[0, 0] + self.Vedz[2, 0]) ** 2 + (tempx1 + tempx2 + tempx3 + tempx4) ** 2) / (
-                                 math.sqrt(VRkcxseis ** 2) / gamma)
+                        (self.Vedz[0, 0] + self.Vedz[2, 0]) ** 2 + (tempx1 + tempx2 + tempx3 + tempx4) ** 2) / (
+                                     math.sqrt(VRkcxseis ** 2) / gamma)
                 else:
                     ratio1 = math.sqrt(
-                    (self.Vedz[1, 0] + self.Vedz[3, 0]) ** 2 + (tempx1 + tempx2 + tempx3 + tempx4) ** 2) / (
-                                 math.sqrt(self.Vrkcx1 ** 2) / gamma)
+                        (self.Vedz[1, 0] + self.Vedz[3, 0]) ** 2 + (tempx1 + tempx2 + tempx3 + tempx4) ** 2) / (
+                                     math.sqrt(self.Vrkcx1 ** 2) / gamma)
                 Vedeq1 = math.sqrt((self.Vedz[1, 0] + self.Vedz[3, 0]) ** 2 + (tempx1 + tempx2 + tempx3 + tempx4) ** 2)
-                #print(Vedeq1, self.Vedz, self.PosFix, self.Iy)
+                # print(Vedeq1, self.Vedz, self.PosFix, self.Iy)
 
         if self.cx1 < 10 * self.hef and self.cx1 < 60 * self.dnom:
             if (self.VEgdx > 0 and self.VEgdz != 0) or (self.VEgdx <= 0 and self.VEgdz != 0) or (
@@ -914,14 +984,15 @@ class Criteria:
 
                 if self.norme == "ETAG":
                     if self.VEgdx > 0 and self.VEgdz != 0:
-                        aV = abs(math.atan((self.Vedz[0, 0] + self.Vedz[2, 0]) / self.Vx)) # abs(math.atan((self.Vedz[1, 0] + self.Vedz[3, 0]) / self.Vx))
+                        aV = abs(math.atan((self.Vedz[0, 0] + self.Vedz[2, 0]) / self.Vx))
+                        # abs(math.atan((self.Vedz[1, 0] + self.Vedz[3, 0]) / self.Vx))
                         self.psiaVx = (1 / (math.cos(aV) ** 2 + (math.sin(aV) / 2.5) ** 2)) ** (1 / 2)
                         if self.Vedx[0, 0] < 0 or self.Vedx[2, 0] < 0:
                             eVz = ((self.PosFix[1, 1] - self.CentreGeo1) * self.Vedx[1, 0] + (
-                                self.PosFix[3, 1] - self.CentreGeo1) * self.Vedx[3, 0]) / (
-                                    abs(self.Vedx[1, 0]) + abs(self.Vedx[3, 0]))
-                            #eVz = math.sqrt((((self.Vedz[0, 0] + self.Vedz[2, 0])-(self.Vedz[1, 0] + self.Vedz[3, 0])) ** 2) / (self.Vedz[2, 0] ** 2 + self.Vedx[2, 0] ** 2))
-                            #eVz = math.cos(aV) * self.Vedz[1, 0]
+                                    self.PosFix[3, 1] - self.CentreGeo1) * self.Vedx[3, 0]) / (
+                                          abs(self.Vedx[1, 0]) + abs(self.Vedx[3, 0]))
+                            # eVz = math.sqrt((((self.Vedz[0, 0] + self.Vedz[2, 0])-(self.Vedz[1, 0] + self.Vedz[3, 0])) ** 2) / (self.Vedz[2, 0] ** 2 + self.Vedx[2, 0] ** 2))
+                            # eVz = math.cos(aV) * self.Vedz[1, 0]
                             self.psiecVx = self.calculation_psie_cN(3 * c1x, np.array([eVz, 0]), 4)
                         else:
                             self.psiecVx = self.calculation_psie_cN(3 * c1x, np.array([self.eV1, 0]), 4)
@@ -946,8 +1017,8 @@ class Criteria:
                         self.psiaVx = (1 / (math.cos(aV) ** 2 + (0.5 * math.sin(aV)) ** 2)) ** (1 / 2)
                         if self.Vedx[0, 0] < 0 or self.Vedx[2, 0] < 0:
                             eVz = ((self.PosFix[1, 1] - self.CentreGeo1) * self.Vedx[1, 0] + (
-                                self.PosFix[3, 1] - self.CentreGeo1) * self.Vedx[3, 0]) / (
-                                    abs(self.Vedx[1, 0]) + abs(self.Vedx[3, 0]))
+                                    self.PosFix[3, 1] - self.CentreGeo1) * self.Vedx[3, 0]) / (
+                                          abs(self.Vedx[1, 0]) + abs(self.Vedx[3, 0]))
                             self.psiecVx = self.calculation_psie_cN(3 * c1x, np.array([eVz, 0]), 4)
                         else:
                             self.psiecVx = self.calculation_psie_cN(3 * c1x, np.array([self.eV1, 0]), 4)
@@ -970,10 +1041,10 @@ class Criteria:
 
                 if C1 == "C1" or C2 == "C2":
                     Vrkcx2 = self.calculation_N(V0rkcx2, Ax, A0x, psisVx, psihVx, self.psiecVx, self.psiaVx,
-                                            psireVx) * agap * self.aeq
+                                                psireVx) * agap * self.aeq
                 else:
                     Vrkcx2 = self.calculation_N(V0rkcx2, Ax, A0x, psisVx, psihVx, self.psiecVx, self.psiaVx, psireVx)
-                #print(V0rkcx2, Ax, A0x, psisVx, psihVx, self.psiecVx, self.psiaVx, psireVx, c1x, Vrkcx2)
+                # print(V0rkcx2, Ax, A0x, psisVx, psihVx, self.psiecVx, self.psiaVx, psireVx, c1x, Vrkcx2)
                 tempx1 = self.Vedx[0, 0]
                 tempx2 = self.Vedx[1, 0]
                 tempx3 = self.Vedx[2, 0]
@@ -990,17 +1061,18 @@ class Criteria:
                 if C2 == "C2":
                     VRkcxseis = Vrkcx2 * (self.dV_seis_req / self.dV_seis_eq)
                     ratio2 = math.sqrt(
-                    (self.Vedz[1, 0] + self.Vedz[3, 0]) ** 2 + (tempx1 + tempx2 + tempx3 + tempx4) ** 2) / (
-                                 math.sqrt(VRkcxseis ** 2) / gamma)
+                        (self.Vedz[1, 0] + self.Vedz[3, 0]) ** 2 + (tempx1 + tempx2 + tempx3 + tempx4) ** 2) / (
+                                     math.sqrt(VRkcxseis ** 2) / gamma)
                 else:
                     ratio2 = math.sqrt(
-                    (self.Vedz[0, 0] + self.Vedz[2, 0]) ** 2 + (tempx1 + tempx2 + tempx3 + tempx4) ** 2) / (
-                                 math.sqrt(Vrkcx2 ** 2) / gamma)
+                        (self.Vedz[0, 0] + self.Vedz[2, 0]) ** 2 + (tempx1 + tempx2 + tempx3 + tempx4) ** 2) / (
+                                     math.sqrt(Vrkcx2 ** 2) / gamma)
                 Vedeq2 = math.sqrt((self.Vedz[0, 0] + self.Vedz[2, 0]) ** 2 + (tempx1 + tempx2 + tempx3 + tempx4) ** 2)
-                #print(Vedeq2)
+                # print(Vedeq2)
 
         if self.cz0 < 10 * self.hef and self.cz0 < 60 * self.dnom:
-            if (self.VEgdz < 0 and self.VEgdx != 0) or (self.VEgdx != 0 and self.VEgdz > 0) or (self.VEgdx == 0 and (self.VEgdz < 0 or self.T / 1000 != 0)):
+            if (self.VEgdz < 0 and self.VEgdx != 0) or (self.VEgdx != 0 and self.VEgdz > 0) or (
+                    self.VEgdx == 0 and (self.VEgdz < 0 or self.T / 1000 != 0)):
                 if self.cx0 < 10 * self.hef and self.cx0 < 60 * self.dnom and self.cx1 < 10 * self.hef and self.cx1 < 60 * self.dnom:
                     if max(self.cz0, self.cz1) <= 1.5 * self.cz0 and self.h <= 1.5 * self.cz0:
                         c1z = max(max(self.cz0, self.cz1) / 1.5, self.h / 1.5, self.sx0 / 3)
@@ -1020,20 +1092,22 @@ class Criteria:
                     self.psisVz = self.calculation_psis_V(self.cz0, min(self.cx0, self.cx1))
                     self.psihVz = self.calculation_psih_V(self.cz0)
 
-                elif (self.VEgdx != 0 and self.VEgdz > 0) or (self.VEgdx == 0 and (self.VEgdz < 0 or self.T / 1000 != 0)):
+                elif (self.VEgdx != 0 and self.VEgdz > 0) or (
+                        self.VEgdx == 0 and (self.VEgdz < 0 or self.T / 1000 != 0)):
                     self.psisVz = self.calculation_psis_V(c1z, min(self.cx0, self.cx1))
                     self.psihVz = self.calculation_psih_V(c1z)
 
                 if self.norme == "ETAG":
                     if self.VEgdz < 0 and self.VEgdx != 0 and C1 == "" and C2 == "":
                         aV = abs(math.pi / 2 - math.atan(self.VEgdz / self.VEgdx))
-                        eVx = abs(((self.PosFix[0, 0] - self.CentreGeo1) * self.Vedz[0, 0] * 2 + (
-                                self.PosFix[1, 0] - self.CentreGeo1) * self.Vedz[1, 0] * 2) / (
-                                      self.T / math.sqrt((self.sx0 / 2) ** 2 + (self.sz0 / 2) ** 2)))          # Changement de self.eV0 en eVx
+                        # eVx = abs(((self.PosFix[0, 0] - self.CentreGeo1) * self.Vedz[0, 0] * 2 + (
+                        #         self.PosFix[1, 0] - self.CentreGeo1) * self.Vedz[1, 0] * 2) / (
+                        #                   self.T / math.sqrt(
+                        #               (self.sx0 / 2) ** 2 + (self.sz0 / 2) ** 2)))  # Changement de self.eV0 en eVx
                         self.psiaVz = (1 / (math.cos(aV) ** 2 + (math.sin(aV) / 2.5) ** 2)) ** (1 / 2)
-                        self.psiecVz = self.calculation_psie_cN(3 * c1z, np.array([eVx, 0]), 4)
+                        self.psiecVz = self.calculation_psie_cN(3 * c1z, np.array([self.eV0, 0]), 4)
 
-                        #print(aV, self.eV0, eVx)
+                        # print(aV, self.eV0, eVx)
 
                     elif self.VEgdz < 0 and self.VEgdx != 0 and (C1 == "C1" or C2 == "C2"):
                         aV = abs(math.pi / 2 - math.atan(self.VEgdz / (self.Vedx[0, 0] + self.Vedx[1, 0])))
@@ -1048,15 +1122,16 @@ class Criteria:
                         self.psiecVz = 1 / (1 + (2 * (abs(self.eV0) / (c1z * 3))))
                         if self.Vedz[0, 0] < 0 or self.Vedz[1, 0] < 0:
                             eVx = ((self.PosFix[0, 0] - self.CentreGeo1) * self.Vedz[0, 0] * 2 + (
-                                self.PosFix[1, 0] - self.CentreGeo1) * self.Vedz[1, 0] * 2) / (
-                                      self.T / math.sqrt((self.sx0 / 2) ** 2 + (self.sz0 / 2) ** 2))
+                                    self.PosFix[1, 0] - self.CentreGeo1) * self.Vedz[1, 0] * 2) / (
+                                          self.T / math.sqrt((self.sx0 / 2) ** 2) + (self.sz0 / 2) ** 2)
                             self.psiecVz = self.calculation_psie_cN(3 * c1z, np.array([eVx, 0]), 4)
                         else:
                             self.psiecVz = self.calculation_psie_cN(3 * c1z, np.array([self.eV1, 0]), 4)
 
                         if C1 == "C1" or C2 == "C2":
                             aV = abs(
-                            math.pi / 2 - math.atan(abs((self.Vedx[0, 0] + self.Vedx[1, 0])) / abs(self.Vedz[1, 0])))
+                                math.pi / 2 - math.atan(
+                                    abs((self.Vedx[0, 0] + self.Vedx[1, 0])) / abs(self.Vedz[1, 0])))
                             self.psiaVz = (1 / (math.cos(aV) ** 2 + (math.sin(aV) / 2.5) ** 2)) ** (1 / 2)
                         else:
                             aV = abs(math.atan(abs((self.Vedx[0, 0] + self.Vedx[1, 0]) / 2) / abs(self.Vedz[1, 0])))
@@ -1079,39 +1154,41 @@ class Criteria:
                     elif self.VEgdx == 0 and (self.VEgdz < 0 or self.T / 1000 != 0):
                         self.psiecVz = 1 / (1 + (2 * (abs(self.eV0) / (c1z * 3))))
                         if self.Vedz[0, 0] < 0 or self.Vedz[1, 0] < 0:
+                            print("BONJOUR HDHUHYIF8GBZUVBY8FVU", self.PosFix, self.CentreGeo1, self.Vedz, self.T,
+                                  self.sz0)
                             eVx = ((self.PosFix[0, 0] - self.CentreGeo1) * self.Vedz[0, 0] * 2 + (
-                            self.PosFix[1, 0] - self.CentreGeo1) * self.Vedz[1, 0] * 2) / (
-                                  self.T / math.sqrt((self.sx0 / 2) ** 2 + (self.sz0 / 2) ** 2))
+                                    self.PosFix[1, 0] - self.CentreGeo1) * self.Vedz[1, 0] * 2) / (
+                                          self.T / math.sqrt((self.sx0 / 2) ** 2) + (self.sz0 / 2) ** 2)
                             self.psiecVz = self.calculation_psie_cN(3 * c1z, np.array([eVx, 0]), 4)
-                            #print(eVx)
+                            # print(eVx)
                         else:
                             self.psiecVz = self.calculation_psie_cN(3 * c1z, np.array([self.eV1, 0]), 4)
 
                     if C1 == "C1" or C2 == "C2":
                         aV = abs(
-                        math.pi / 2 - math.atan(abs((self.Vedx[0, 0] + self.Vedx[1, 0])) / abs(self.Vedz[1, 0])))
+                            math.pi / 2 - math.atan(abs((self.Vedx[0, 0] + self.Vedx[1, 0])) / abs(self.Vedz[1, 0])))
                         self.psiaVz = (1 / (math.cos(aV) ** 2 + (0.5 * math.sin(aV)) ** 2)) ** (1 / 2)
                     else:
                         aV = abs(math.atan(abs((self.Vedx[0, 0] + self.Vedx[1, 0]) / 2) / abs(self.Vedz[1, 0])))
                         self.psiaVz = (1 / (math.cos(aV) ** 2 + (0.5 * math.sin(aV)) ** 2)) ** (1 / 2)
-                eVx = ((self.PosFix[0, 0] - self.CentreGeo1) * self.Vedz[0, 0] * 2 + (
-                        self.PosFix[1, 0] - self.CentreGeo1) * self.Vedz[1, 0] * 2) / (
-                              self.T / math.sqrt((self.sx0 / 2) ** 2 + (self.sz0 / 2) ** 2))
-                self.psiecVz = self.calculation_psie_cN(3 * c1z, np.array([eVx, 0]), 4)
-                #print(eVx)
+                # eVx = ((self.PosFix[0, 0] - self.CentreGeo1) * self.Vedz[0, 0] * 2 + (
+                #         self.PosFix[1, 0] - self.CentreGeo1) * self.Vedz[1, 0] * 2) / (
+                #               self.T / math.sqrt((self.sx0 / 2) ** 2 + (self.sz0 / 2) ** 2))
+                # self.psiecVz = self.calculation_psie_cN(3 * c1z, np.array([eVx, 0]), 4)
+                # print(eVx)
                 psireVz = 1
                 if C1 == "C1" or C2 == "C2":
                     Vrkcz = self.calculation_N(V0rkcz1, Az, A0z, self.psisVz, self.psihVz, self.psiecVz, self.psiaVz,
-                                           psireVz) * agap * self.aeq
+                                               psireVz) * agap * self.aeq
                 else:
                     Vrkcz = self.calculation_N(V0rkcz1, Az, A0z, self.psisVz, self.psihVz, self.psiecVz,
-                                           self.psiaVz, psireVz)
+                                               self.psiaVz, psireVz)
 
                 tempz1 = self.Vedz[0, 0]
                 tempz2 = self.Vedz[1, 0]
                 tempz3 = self.Vedz[2, 0]
                 tempz4 = self.Vedz[3, 0]
-                #print(V0rkcz1, Az, A0z, self.psisVz, self.psihVz, self.psiecVz, self.psiaVz, psireVz, self.cx0, self.cx1)
+                # print(V0rkcz1, Az, A0z, self.psisVz, self.psihVz, self.psiecVz, self.psiaVz, psireVz, self.cx0, self.cx1)
                 if tempz1 >= 0:
                     tempz1 = 0
                 if tempz2 >= 0:
@@ -1124,12 +1201,12 @@ class Criteria:
                 if C2 == "C2":
                     VRkczseis = Vrkcz * (self.dV_seis_req / self.dV_seis_eq)
                     ratio3 = math.sqrt(
-                    (self.Vedx[1] + self.Vedx[0]) ** 2 + (tempz1 + tempz2 + tempz3 + tempz4) ** 2) / (
-                                 math.sqrt(VRkczseis ** 2) / gamma)
+                        (self.Vedx[1] + self.Vedx[0]) ** 2 + (tempz1 + tempz2 + tempz3 + tempz4) ** 2) / (
+                                     math.sqrt(VRkczseis ** 2) / gamma)
                 else:
                     ratio3 = math.sqrt(
-                    (self.Vedx[1, 0] + self.Vedx[0, 0]) ** 2 + (tempz1 + tempz2 + tempz3 + tempz4) ** 2) / (
-                                 math.sqrt(Vrkcz ** 2) / gamma)
+                        (self.Vedx[1, 0] + self.Vedx[0, 0]) ** 2 + (tempz1 + tempz2 + tempz3 + tempz4) ** 2) / (
+                                     math.sqrt(Vrkcz ** 2) / gamma)
                 Vedeq3 = math.sqrt((self.Vedx[1, 0] + self.Vedx[0, 0]) ** 2 + (tempz1 + tempz2 + tempz3 + tempz4) ** 2)
 
         if self.cz1 < 10 * self.hef and self.cz1 < 60 * self.dnom:
@@ -1154,14 +1231,14 @@ class Criteria:
                     if self.VEgdz > 0 and self.VEgdx != 0 and C1 == "" and C2 == "":
                         aV = abs(math.pi / 2 - math.atan(self.VEgdz / (self.Vedx[2, 0] + self.Vedx[3, 0])))
                         self.psiaVz = (1 / (math.cos(aV) ** 2 + (math.sin(aV) / 2.5) ** 2)) ** (1 / 2)
-                        #eVx = abs(((self.PosFix[0, 0] - self.CentreGeo1) * self.Vedz[0, 0] * 2 + (
+                        # eVx = abs(((self.PosFix[0, 0] - self.CentreGeo1) * self.Vedz[0, 0] * 2 + (
                         #        self.PosFix[1, 0] - self.CentreGeo1) * self.Vedz[1, 0] * 2) / (
                         #                  self.T / math.sqrt((self.sx0 / 2) ** 2 + (self.sz0 / 2) ** 2)))
                         psiecVz = self.calculation_psie_cN(3 * c1z, np.array([self.eV0, 0]), 4)
 
                     elif (self.VEgdz < 0 and self.VEgdx != 0) or (
-                        self.VEgdx == 0 and (self.VEgdz > 0 or self.T / 1000 != 0)):
-                        #self.psiaVz = 2.5
+                            self.VEgdx == 0 and (self.VEgdz > 0 or self.T / 1000 != 0)):
+                        # self.psiaVz = 2.5
                         aV = abs(math.pi / 2 - math.atan(self.VEgdz / (self.Vedx[2, 0] + self.Vedx[3, 0])))
                         self.psiaVz = (1 / (math.cos(aV) ** 2 + (math.sin(aV) / 2.5) ** 2)) ** (1 / 2)
                     elif self.VEgdz > 0 and self.VEgdx != 0 and (C1 == "C1" or C2 == "C2"):
@@ -1171,7 +1248,8 @@ class Criteria:
                     if self.VEgdz > 0 and self.VEgdx != 0 and C1 == "" and C2 == "":
                         aV = abs(math.pi / 2 - math.atan(self.VEgdz / self.VEgdx))
                         self.psiaVz = (1 / (math.cos(aV) ** 2 + (0.5 * math.sin(aV)) ** 2)) ** (1 / 2)
-                    elif (self.VEgdz < 0 and self.VEgdx != 0) or (self.VEgdx == 0 and (self.VEgdz > 0 or self.T / 1000 != 0)):
+                    elif (self.VEgdz < 0 and self.VEgdx != 0) or (
+                            self.VEgdx == 0 and (self.VEgdz > 0 or self.T / 1000 != 0)):
                         self.psiaVz = 2
                     elif self.VEgdz > 0 and self.VEgdx != 0 and (C1 == "C1" or C2 == "C2"):
                         aV = abs(math.pi / 2 - math.atan(self.VEgdz / (self.Vedx[2, 0] + self.Vedx[3, 0])))
@@ -1180,7 +1258,7 @@ class Criteria:
                 psireVz = 1
                 if C1 == "C1" or C2 == "C2":
                     Vrkcz = self.calculation_N(V0rkcz2, Az, A0z, psisVz, psihVz, psiecVz, self.psiaVz,
-                                           psireVz) * agap * self.aeq
+                                               psireVz) * agap * self.aeq
                 else:
                     Vrkcz = self.calculation_N(V0rkcz2, Az, A0z, psisVz, psihVz, psiecVz, self.psiaVz, psireVz)
 
@@ -1188,7 +1266,7 @@ class Criteria:
                 tempz2 = self.Vedz[1, 0]
                 tempz3 = self.Vedz[2, 0]
                 tempz4 = self.Vedz[3, 0]
-                #print(V0rkcz2, Az, A0z, psisVz, psihVz, psiecVz, self.psiaVz, psireVz)
+                # print(V0rkcz2, Az, A0z, psisVz, psihVz, psiecVz, self.psiaVz, psireVz)
                 if tempz1 <= 0:
                     tempz1 = 0
                 if tempz2 <= 0:
@@ -1197,16 +1275,16 @@ class Criteria:
                     tempz3 = 0
                 if tempz4 <= 0:
                     tempz4 = 0
-                #print(Vrkcz, V0rkcz2, Az, A0z, psisVz, psihVz, psiecVz, self.psiaVz, psireVz)
+                # print(Vrkcz, V0rkcz2, Az, A0z, psisVz, psihVz, psiecVz, self.psiaVz, psireVz)
                 if C2 == "C2":
                     VRkczseis = Vrkcz * (self.dV_seis_req / self.dV_seis_eq)
                     ratio4 = math.sqrt(
-                    (self.Vedx[2, 0] + self.Vedx[3, 0]) ** 2 + (tempz1 + tempz2 + tempz3 + tempz4) ** 2) / (
-                                 math.sqrt(VRkczseis ** 2) / gamma)
+                        (self.Vedx[2, 0] + self.Vedx[3, 0]) ** 2 + (tempz1 + tempz2 + tempz3 + tempz4) ** 2) / (
+                                     math.sqrt(VRkczseis ** 2) / gamma)
                 else:
                     ratio4 = math.sqrt(
-                    (self.Vedx[2, 0] + self.Vedx[3, 0]) ** 2 + (tempz1 + tempz2 + tempz3 + tempz4) ** 2) / (
-                                 math.sqrt(Vrkcz ** 2) / gamma)
+                        (self.Vedx[2, 0] + self.Vedx[3, 0]) ** 2 + (tempz1 + tempz2 + tempz3 + tempz4) ** 2) / (
+                                     math.sqrt(Vrkcz ** 2) / gamma)
                 Vedeq4 = math.sqrt((self.Vedx[2, 0] + self.Vedx[3, 0]) ** 2 + (tempz1 + tempz2 + tempz3 + tempz4) ** 2)
 
         if (c1z == self.cz0 or c1z == self.cz1) and (
@@ -1215,7 +1293,7 @@ class Criteria:
             kt = self.calculation_kt(c1)
         else:
             kt = 1
-        #print(ratio1, ratio2, ratio3, ratio4)
+        # print(ratio1, ratio2, ratio3, ratio4)
         if self.norme == "ETAG":
             if self.TypeCharge == "Sismique C1" or self.TypeCharge == "Sismique C2":
                 self.rupturebordbeton = 1.5 * max(ratio1, ratio2, ratio3, ratio4)
@@ -1242,8 +1320,8 @@ class Criteria:
 
     def rupture_steel_fixation_without_lever_arm_C1(self):
         global V0Rks
-        gamma = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier sans bras de levier - gamma Ms,seis C1'))
-        V0Rks = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier sans bras de levier - VRk,s,seis C1'))
+        gamma = float(self.get_dowel_property('Rupture acier sans bras de levier - gamma Ms,seis C1'))
+        V0Rks = float(self.get_dowel_property('Rupture acier sans bras de levier - VRk,s,seis C1'))
         ruptacierfixasansbraslevierC1 = []
         Vedmax = 0
         agap = 0.5
@@ -1306,8 +1384,8 @@ class Criteria:
 
     def rupture_steel_fixation_without_lever_arm_C2(self):
         global V0Rks
-        gamma = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier sans bras de levier - gamma Ms,seis C2'))
-        V0Rks = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier sans bras de levier - VRk,s,seis C2'))
+        gamma = float(self.get_dowel_property('Rupture acier sans bras de levier - gamma Ms,seis C2'))
+        V0Rks = float(self.get_dowel_property('Rupture acier sans bras de levier - VRk,s,seis C2'))
         ruptacierfixasansbraslevierC2 = []
         Vedmax = 0
         agap = 0.5
@@ -1317,7 +1395,7 @@ class Criteria:
         else:
             aeq = 1
 
-        dV_seis_eq = float(self.Recuperationproprietecheville.get_dowel_property('Deplacement deltaV,seis (DLS)'))
+        dV_seis_eq = float(self.get_dowel_property('Deplacement deltaV,seis (DLS)'))
         dV_seis_req = 3
         rat = dV_seis_req / dV_seis_eq
         if rat > 1:
@@ -1376,8 +1454,8 @@ class Criteria:
         return ruptacierfixasansbraslevierC2
 
     def rupture_steel_fixing(self):
-        gamma = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier - gamma Ms,N'))
-        NRks = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier - NRk,s (N)'))
+        gamma = float(self.get_dowel_property('Rupture acier - gamma Ms,N'))
+        NRks = float(self.get_dowel_property('Rupture acier - NRk,s (N)'))
         Nedmax = 0
         ruptureacierfixa = []
 
@@ -1392,7 +1470,7 @@ class Criteria:
         return ruptureacierfixa
 
     def rupture_cone_concrete(self):
-        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+        gamma = self.calculation_gamma_c() * float(self.get_dowel_property(
             'Rupture par cone beton et par fendage - gamma inst'))
         hef1c = self.calculation_hef(self.scrn, "", self.ccrN)
         scrN1 = self.calculation_scrN(hef1c, self.scrn)
@@ -1408,20 +1486,20 @@ class Criteria:
             ruptureconebeton = 1.5 * self.NEdg / (NRkc / gamma)
         else:
             ruptureconebeton = self.NEdg / (NRkc / gamma)
-        #print(N0, a, A0, psisN, psireN, psiecN, psiMN, NRkc, scrN1, hef1c, self.NEdg, gamma)
+        # print(N0, a, A0, psisN, psireN, psiecN, psiMN, NRkc, scrN1, hef1c, self.NEdg, gamma)
         return ruptureconebeton
 
     def rupture_extraction(self):
-        #print(self.typebeton)
-        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+        # print(self.typebeton)
+        gamma = self.calculation_gamma_c() * float(self.get_dowel_property(
             'Rupture par extraction glissement - gamma inst beton C20/25'))
         NRkp = self.calculation_NRkp()
-        psic = float(self.Recuperationproprietecheville.get_dowel_property(
+        psic = float(self.get_dowel_property(
             'Rupture par extraction glissement - facteur acroissement pour beton psi c {}'.format(self.typebeton)))
         NRkp = NRkp * psic
         ratio = 0
         ruptureextrac = []
-        #print(NRkp, psic, gamma, self.NEd)
+        # print(NRkp, psic, gamma, self.NEd)
         for j in range(self.NbFixa):
             if NRkp == 0:
                 ruptureextrac.append(0)
@@ -1436,14 +1514,15 @@ class Criteria:
         return ruptureextrac
 
     def rupture_splitting(self):
-        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+        gamma = self.calculation_gamma_c() * float(self.get_dowel_property(
             'Rupture par cone beton et par fendage - gamma inst'))
         cmin = self.calculation_cmin("")
         hef1 = self.calculation_hef(self.scrsp, "", self.ccrsp)
         scrsp1 = self.calculation_scrN(hef1, self.scrsp)
         hef1c = self.calculation_hef(self.scrn, "", self.ccrN)
         if (cmin >= 1.2 * (scrsp1 / 2) and self.h >= self.hmin and self.norme == "EC2") or (cmin >= 1.2 *
-                    (self.scrsp / 2) and self.h >= 2 * self.hef and self.norme == "ETAG"):
+                                                                                            (
+                                                                                                    self.scrsp / 2) and self.h >= 2 * self.hef and self.norme == "ETAG"):
 
             if self.NbFixa == 2:
                 self.textresult = "Vérification non nécessaire"
@@ -1468,7 +1547,7 @@ class Criteria:
         psiecN = self.calculation_psie_cN(scrsp1, self.eN, 1)
         psihsp = self.calculation_psih_sp()
         NRksp = self.calculation_N(N0, a, A0, psisN, psireN, psiecN, psihsp, 1)
-        #print(N0, a, A0, psisN, psireN, psiecN, psihsp, hef1, hef1c, scrsp1, "he")
+        # print(N0, a, A0, psisN, psireN, psiecN, psihsp, hef1, hef1c, scrsp1, "he")
         cmin = self.calculation_cmin("")
         if cmin < 1.2 * self.ccrsp:
             if self.norme == "ETAG" and self.TypeCharge == "Sismique C1" or self.TypeCharge == "Sismique C2":
@@ -1483,8 +1562,8 @@ class Criteria:
         ratio = 0
         agap = 1
         aeq = 1
-        gamma = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier - gamma Ms,seis C1'))
-        N0Rks = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier - NRk,s,seis (N) C1'))
+        gamma = float(self.get_dowel_property('Rupture acier - gamma Ms,seis C1'))
+        N0Rks = float(self.get_dowel_property('Rupture acier - NRk,s,seis (N) C1'))
         NRks = agap * aeq * N0Rks
         NRdseq = NRks / gamma
         NEdeq = self.NEd[0, 0]
@@ -1498,7 +1577,7 @@ class Criteria:
         return ruptacierfixac1
 
     def rupture_cone_concrete_C1(self):
-        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+        gamma = self.calculation_gamma_c() * float(self.get_dowel_property(
             'Rupture par cone beton - gamma inst C1'))
         agap = 1
         tempaeq = 0
@@ -1530,7 +1609,7 @@ class Criteria:
         return ruptureconebetonC1
 
     def rupture_extraction_C1(self):
-        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+        gamma = self.calculation_gamma_c() * float(self.get_dowel_property(
             'Rupture par extraction glissement - gamma inst C1'))
         agap = 1
         tempaeq = 0
@@ -1547,7 +1626,7 @@ class Criteria:
             aeq = 1
 
         NRkp = self.calculation_NRkp_C1()
-        psic = float(self.Recuperationproprietecheville.get_dowel_property(
+        psic = float(self.get_dowel_property(
             'Rupture par extraction glissement - facteur acroissement pour beton psi c {}'.format(self.typebeton)))
         NRkpeq = NRkp * agap * aeq
 
@@ -1566,7 +1645,7 @@ class Criteria:
 
     def rupture_splitting_C1(self):
         global textresult
-        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+        gamma = self.calculation_gamma_c() * float(self.get_dowel_property(
             'Rupture par cone beton - gamma inst C1'))
         agap = 1
         tempaeq = 0
@@ -1628,12 +1707,12 @@ class Criteria:
         for g in dictio:
             malist1.append(g.get("{}".format("modele")))
 
-        if self.etat == "Fissuré":
+        if self.etat == "Fissure":
             if (
                     self.gamme == "HSL 3-G" or self.gamme == "HDA-T" or self.modele == "HILTI HDA-P M10/20") and self.modele != "HILTI HSL 3-G M8":
                 valeur1 = dictio[malist1.index(self.modele)]['valeur1']
                 N0 = min(N0, 7.5 * self.fck * valeur1)
-        elif self.etat == "Non fissuré":
+        elif self.etat == "Non fissure":
             if (self.gamme == "HSL 3-G" or self.gamme == "HDA-T") and self.modele != "HILTI HSL 3-G M8":
                 valeur2 = dictio[malist1.index(self.modele)]['valeur2']
                 N0 = min(N0, 10.5 * self.fck * valeur2)
@@ -1655,7 +1734,7 @@ class Criteria:
         agap = 1
         aeq = 1
 
-        dN_seis_eq = float(self.Recuperationproprietecheville.get_dowel_property('Deplacement deltaN,seis (DLS)'))
+        dN_seis_eq = float(self.get_dowel_property('Deplacement deltaN,seis (DLS)'))
         if self.norme == "ETAG":
             dN_seis_req = 3.95
         else:
@@ -1664,13 +1743,13 @@ class Criteria:
         if rat > 1:
             dN_seis_eq = dN_seis_req
 
-        gamma = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier - gamma Ms,seis C2'))
-        N0Rks = float(self.Recuperationproprietecheville.get_dowel_property('Rupture acier - NRk,s,seis (N) C2'))
+        gamma = float(self.get_dowel_property('Rupture acier - gamma Ms,seis C2'))
+        N0Rks = float(self.get_dowel_property('Rupture acier - NRk,s,seis (N) C2'))
         NRks = agap * aeq * N0Rks
         NRdseq = NRks / gamma
         NRKsseis = NRdseq * (dN_seis_req / dN_seis_eq)
         ruptacierfixac2 = []
-        #print(gamma, N0Rks, NRks, NRdseq, NRKsseis, dN_seis_eq)
+        # print(gamma, N0Rks, NRks, NRdseq, NRKsseis, dN_seis_eq)
         NEdeq = self.NEd[0, 0]
 
         for j in range(self.NbFixa):
@@ -1682,7 +1761,7 @@ class Criteria:
         return ruptacierfixac2
 
     def rupture_cone_concrete_C2(self):
-        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+        gamma = self.calculation_gamma_c() * float(self.get_dowel_property(
             'Rupture par cone beton - gamma inst C2'))
 
         tempaeq = 0
@@ -1698,7 +1777,7 @@ class Criteria:
 
         agap = 1
 
-        dN_seis_eq = float(self.Recuperationproprietecheville.get_dowel_property('Deplacement deltaN,seis (DLS)'))
+        dN_seis_eq = float(self.get_dowel_property('Deplacement deltaN,seis (DLS)'))
         dN_seis_req = 3
         rat = dN_seis_req / dN_seis_eq
 
@@ -1722,7 +1801,7 @@ class Criteria:
         return ruptconebetonC2
 
     def rupture_extraction_C2(self):
-        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+        gamma = self.calculation_gamma_c() * float(self.get_dowel_property(
             'Rupture par extraction glissement - gamma inst C2'))
         agap = 1
         tempaeq = 0
@@ -1738,14 +1817,14 @@ class Criteria:
         else:
             aeq = 1
 
-        dN_seis_eq = float(self.Recuperationproprietecheville.get_dowel_property('Deplacement deltaN,seis (DLS)'))
+        dN_seis_eq = float(self.get_dowel_property('Deplacement deltaN,seis (DLS)'))
         dN_seis_req = 3
         rat = dN_seis_req / dN_seis_eq
         if rat > 1:
             dN_seis_eq = dN_seis_req
 
         NRkp = self.calculation_NRkp_C2()
-        psic = float(self.Recuperationproprietecheville.get_dowel_property(
+        psic = float(self.get_dowel_property(
             'Rupture par extraction glissement - facteur acroissement pour beton psi c {}'.format(self.typebeton)))
         NRkpeq = NRkp * agap * aeq
         NRdp = (NRkpeq * psic) / gamma
@@ -1764,7 +1843,7 @@ class Criteria:
 
     def rupture_splitting_C2(self):
         global textresult
-        gamma = self.calculation_gamma_c() * float(self.Recuperationproprietecheville.get_dowel_property(
+        gamma = self.calculation_gamma_c() * float(self.get_dowel_property(
             'Rupture par cone beton - gamma inst C2'))
         agap = 1
         tempaeq = 0
@@ -1779,7 +1858,7 @@ class Criteria:
         else:
             aeq = 1
 
-        dN_seis_eq = self.Recuperationproprietecheville.get_dowel_property('Deplacement deltaN,seis (DLS)')
+        dN_seis_eq = self.get_dowel_property('Deplacement deltaN,seis (DLS)')
         dN_seis_req = 3
         rat = dN_seis_req / dN_seis_eq
         if rat > 1:
@@ -1832,11 +1911,11 @@ class Criteria:
         for g in dictio:
             malist1.append(g.get("{}".format("modele")))
 
-        if self.etat == "Fissuré":
+        if self.etat == "Fissure":
             if (self.gamme == "HSL 3-G" or self.gamme == "HDA-T") and self.modele != "HILTI HSL 3-G M8":
                 valeur1 = dictio[malist1.index(self.modele)]['valeur1']
                 N0 = min(N0, 7.5 * self.fck * valeur1)
-        elif self.etat == "Non fissuré":
+        elif self.etat == "Non fissure":
             if (self.gamme == "HSL 3-G" or self.gamme == "HDA-T") and self.modele != "HILTI HSL 3-G M8":
                 valeur2 = dictio[malist1.index(self.modele)]['valeur2']
                 N0 = min(N0, 10.5 * self.fck * valeur2)
@@ -1853,7 +1932,6 @@ class Criteria:
         return ruptfendageC2
 
     def calculation_gamma_c(self):
-
         if self.txt == "Situations permanentes et transitoires":
             calculation_gamma_c = 1.5
         else:
@@ -1861,7 +1939,7 @@ class Criteria:
 
         return calculation_gamma_c
 
-    def calculation_hef(self, scrN, j, ccrN): ####  GROSSE MODIF enlever le if j == "":
+    def calculation_hef(self, scrN, j, ccrN):  ####  GROSSE MODIF enlever le if j == "":
         NbBord = self.calculation_number_edge(scrN)
         cmax = self.calculation_cmax(scrN, "")
         smax = self.calculation_smax(scrN)
@@ -1906,7 +1984,7 @@ class Criteria:
 
         if cmax >= ccrN or cmax == 0:
             cmax = ccrN
-        #print(cmax)
+        # print(cmax)
         return cmax
 
     def calculation_smax(self, scrN):
@@ -1915,6 +1993,10 @@ class Criteria:
         smax = smin
         NbBord = self.calculation_number_edge(scrN)
         scrN1 = 0
+        if self.sx0 == "":
+            self.sx0 = 0
+        if self.sz0 == "":
+            self.sz0 = 0
 
         if NbBord == 3:
             if smin == self.sx0 or smin == self.sx1:
@@ -1939,16 +2021,22 @@ class Criteria:
         return smax
 
     def calculation_smin(self):
-        smin = self.sx0
-
-        if smin >= self.sx1 != 0:
-            smin = self.sx1
-
-        if smin >= self.sz0 != 0:
+        global smin
+        if self.NbFixa == 2 and self.orientation == "Vertical":
             smin = self.sz0
+        elif self.NbFixa == 2 and self.orientation == "Horizontal":
+            smin = self.sx0
+        elif self.NbFixa == 4:
+            smin = self.sx0
 
-        if smin >= self.sz1 != 0:
-            smin = self.sz1
+            if smin >= self.sx1 != 0:
+                smin = self.sx1
+
+            if smin >= float(self.sz0) != 0:
+                smin = float(self.sz0)
+
+            if smin >= self.sz1 != 0:
+                smin = self.sz1
 
         return smin
 
@@ -1985,7 +2073,7 @@ class Criteria:
 
     def calculation_k1(self):
         if self.norme == "ETAG":
-            if self.etat == "Fissuré":
+            if self.etat == "Fissure":
                 if self.gamme == "HDA-T" or self.gamme == "HDA-P":
                     k1 = 8.3
                 else:
@@ -1996,10 +2084,10 @@ class Criteria:
                 else:
                     k1 = 10.1
         else:
-            if self.etat == "Fissuré":
-                k1 = float(self.Recuperationproprietecheville.get_dowel_property('Rupture par cone beton et par fendage - kcr,N'))
+            if self.etat == "Fissure":
+                k1 = float(self.get_dowel_property('Rupture par cone beton et par fendage - kcr,N'))
             else:
-                k1 = float(self.Recuperationproprietecheville.get_dowel_property('Rupture par cone beton et par fendage - kucr,N'))
+                k1 = float(self.get_dowel_property('Rupture par cone beton et par fendage - kucr,N'))
         return k1
 
     def calculation_acn(self, scrN1, j):
@@ -2102,7 +2190,7 @@ class Criteria:
                     Az = Az + self.DistFixFix[j, 1, 1] / 2
 
         calculation_acn = Ax * Az
-        #print(calculation_acn, ccrN1)
+        # print(calculation_acn, ccrN1)
 
         if self.NbFixa == 2:
             AcN = Ax * Az
@@ -2283,8 +2371,8 @@ class Criteria:
                 S4[3, 1] = 0
 
             AcN4 = Arithmetique().Surface(S4)
-            #print(AcN1, AcN2, AcN3, AcN4)
-            #print(S1, S2, S3, S4)
+            # print(AcN1, AcN2, AcN3, AcN4)
+            # print(S1, S2, S3, S4)
             if j == "":
                 calculation_acn = AcN1 + AcN2 + AcN3 + AcN4
             elif j == 0:
@@ -2303,7 +2391,6 @@ class Criteria:
         return calculation_acn
 
     def calculation_psis_n(self, scrN1, j):
-
         if j == "":
             cmin = self.calculation_cmin("")
 
@@ -2312,11 +2399,11 @@ class Criteria:
             cmin = self.calculation_cmin(j)
 
             psisN = 0.7 + 0.3 * (cmin / (scrN1 / 2))
-            #print(scrN1, "je", psisN)
+            # print(scrN1, "je", psisN)
 
         if psisN >= 1:
             psisN = 1
-        #print(psisN)
+        # print(psisN)
         return psisN
 
     def calculation_psir_eN(self, hef1):
@@ -2332,7 +2419,7 @@ class Criteria:
         return psireN
 
     def calculation_psie_cN(self, scrN1, eN, a):
-        if self.norme == "ETAG" :#or self.norme == "EC2":
+        if self.norme == "ETAG":  # or self.norme == "EC2":
             if scrN1 < 300:
                 scrN1 = 300
         if eN[0] != 0:
@@ -2353,7 +2440,7 @@ class Criteria:
 
         elif a == 2:
             pass  # Affichage de resultat
-        #print(psiecN2, psiecN1)
+        # print(psiecN2, psiecN1)
         return psiecN1 * psiecN2
 
     def calculation_N(self, N0, a, A0, psi1, psi2, psi3, psi4, psi5):
@@ -2442,21 +2529,20 @@ class Criteria:
         if self.modele == "HILTI HDA-T M20/50" or self.modele == "HILTI HDA-T M20/100" or self.modele == "HILTI HDA-P M20/50" or self.modele == "HILTI HDA-P M20/100":
             lf = 120
             dnom = 35
-        #print(lf, c1)
+        # print(lf, c1)
         aa = 0.1 * ((lf / c1) ** 0.5)
         bb = 0.1 * ((dnom / c1) ** 0.2)
         calculation_v0rkc = k9 * (dnom ** aa) * (lf ** bb) * (self.fck ** 0.5) * (c1 ** 1.5)
         return calculation_v0rkc
 
     def calculation_k9(self):
-        if self.etat == "Fissuré":
+        if self.etat == "Fissure":
             k9 = 1.7
         else:
             k9 = 2.4
         return k9
 
     def calculation_acv(self, dir, c1):
-
         if dir == "x":
             if self.cz0 <= 1.5 * c1:
                 self.A1 = self.cz0
@@ -2489,17 +2575,17 @@ class Criteria:
             else:
                 self.A1 = self.A1 + 1.5 * c1
 
-            #if self.norme == "ETAG":
-                #    if self.sx0 <= 3 * c1 and self.cx0 <= 1.5 * c1:
-                #    self.A1 = 1.5 * c1 + self.sx0 + self.cx0
-                #elif self.sx0 <= 3 * c1 and self.cx1 <= 1.5 * c1:
+            # if self.norme == "ETAG":
+            #    if self.sx0 <= 3 * c1 and self.cx0 <= 1.5 * c1:
+            #    self.A1 = 1.5 * c1 + self.sx0 + self.cx0
+            # elif self.sx0 <= 3 * c1 and self.cx1 <= 1.5 * c1:
             #    self.A1 = 1.5 * c1 + self.sx0 + self.cx1
 
         if self.h <= 1.5 * c1:
             Ay = self.h
         else:
             Ay = 1.5 * c1
-        #print(self.A1, Ay, c1, self.sz0, self.cz0)
+        # print(self.A1, Ay, c1, self.sz0, self.cz0)
         return self.A1 * Ay
 
     def calculation_psis_V(self, c1, c2):
@@ -2553,20 +2639,20 @@ class Criteria:
         return psiMN
 
     def calculation_NRkp(self):
-        if self.etat == "Non fissuré":
-            if self.Recuperationproprietecheville.get_dowel_property(
+        if self.etat == "Non fissure":
+            if self.get_dowel_property(
                     'Rupture par extraction glissement - NRk,p,uncr (N) beton C20/25') == "non determinante":
                 self.NRkp = 0
             else:
-                self.NRkp = float(self.Recuperationproprietecheville.get_dowel_property(
+                self.NRkp = float(self.get_dowel_property(
                     'Rupture par extraction glissement - NRk,p,uncr (N) beton C20/25'))
 
-        elif self.etat == "Fissuré":
-            if self.Recuperationproprietecheville.get_dowel_property(
+        elif self.etat == "Fissure":
+            if self.get_dowel_property(
                     'Rupture par extraction glissement - NRk,p,cr (N) beton C20/25') == "non determinante":
                 self.NRkp = 0
             else:
-                self.NRkp = float(self.Recuperationproprietecheville.get_dowel_property(
+                self.NRkp = float(self.get_dowel_property(
                     'Rupture par extraction glissement - NRk,p,cr (N) beton C20/25'))
         return self.NRkp
 
@@ -2601,11 +2687,11 @@ class Criteria:
         return psihsp
 
     def calculation_NRkp_C1(self):
-        if self.Recuperationproprietecheville.get_dowel_property(
+        if self.get_dowel_property(
                 'Rupture par extraction glissement - NRk,p,seis (N) C1') == "non determinante":
             NRkpC1 = 0
         else:
-            NRkpC1 = float(self.Recuperationproprietecheville.get_dowel_property('Rupture par extraction glissement - NRk,p,seis (N) C1'))
+            NRkpC1 = float(self.get_dowel_property('Rupture par extraction glissement - NRk,p,seis (N) C1'))
         return NRkpC1
 
     def calculation_N0Rksp_C1(self, hef1):
@@ -2619,11 +2705,11 @@ class Criteria:
         return calculation_N0Rksp_C1
 
     def calculation_NRkp_C2(self):
-        if self.Recuperationproprietecheville.get_dowel_property(
+        if self.get_dowel_property(
                 'Rupture par extraction glissement - NRk,p,seis (N) C2') == "non determinante":
             NRkpC2 = 0
         else:
-            NRkpC2 = float(self.Recuperationproprietecheville.get_dowel_property('Rupture par extraction glissement - NRk,p,seis (N) C2'))
+            NRkpC2 = float(self.get_dowel_property('Rupture par extraction glissement - NRk,p,seis (N) C2'))
 
         return NRkpC2
 
@@ -2653,3 +2739,161 @@ class Criteria:
             NbBord = NbBord + 1
 
         return NbBord
+
+    def list_into_matrix(self, list):
+        matrix = np.zeros((self.NbFixa, 2))
+        a = 0
+        for i in range(self.NbFixa):
+            for j in range(2):
+                matrix[i, j] = list[a]
+                a = a + 1
+        return matrix
+
+    def list_into_list_matrix(self, list):
+        matrix = np.zeros((self.NbFixa, 2, 2))
+        a = 0
+        for i in range(self.NbFixa):
+            for j in range(2):
+                for k in range(2):
+                    matrix[i, j, k] = list[a]
+                    a = a + 1
+        return matrix
+
+    def list_into_vector(self, list):
+        matrix = np.zeros((self.NbFixa, 1))
+        for i in range(self.NbFixa):
+            for j in range(1):
+                matrix[i, j] = list[i]
+        return matrix
+
+    def effort_geometric_center(self):
+        Ix = 0
+        Iz = 0
+
+        for j in range(self.NbFixa):
+            Ix = Ix + (self.PosFix[j, 1] - self.CentreGeo1) ** 2
+            Iz = Iz + (self.PosFix[j, 0] - self.CentreGeo0) ** 2
+        Iy = Ix + Iz
+
+        Mxb = self.Mx - (self.Lz / 2 - self.CentreGeo1) * (-self.N)
+        Tb = self.T + (self.Lz / 2 - self.CentreGeo1) * self.Vx - (self.Lx / 2 - self.CentreGeo0) * self.Vz
+        Mzb = self.Mz + (self.Lx / 2 - self.CentreGeo0) * (-self.N)
+        # print("Hello",Ix, Iy, Iz, Mxb, Mzb, Tb)
+        return Ix, Iy, Iz, Mxb, Mzb, Tb
+
+    def change_origin(self, PosCmax2):  # Verifier et correcte
+        global PosCmax, PosCmax1
+
+        PosFix_bis = np.zeros((self.NbFixa, 2))
+        PosCmax = 0
+        PosCmax1 = 0
+
+        if PosCmax2 == "":
+            if self.Mxb != 0 and self.Mzb != 0:
+                if self.Mxb > 0 and self.Mzb > 0:
+                    PosCmax = 0
+                    PosCmax1 = self.Lz
+                elif self.Mxb > 0 > self.Mzb:
+                    PosCmax = self.Lx
+                    PosCmax1 = self.Lz
+                elif self.Mxb < 0 < self.Mzb:
+                    PosCmax = 0
+                    PosCmax1 = 0
+                elif self.Mxb < 0 and self.Mzb < 0:
+                    PosCmax = self.Lx
+                    PosCmax1 = 0
+            elif self.Mxb != 0 and self.Mzb == 0:
+                if self.Mxb > 0:
+                    PosCmax = self.Lx / 2
+                    PosCmax1 = self.Lz
+                else:
+                    PosCmax = self.Lx / 2
+                    PosCmax1 = 0
+
+            elif self.Mxb == 0 and self.Mzb != 0:
+                if self.Mzb > 0:
+                    PosCmax = 0
+                    PosCmax1 = self.Lz / 2
+                else:
+                    PosCmax = self.Lx
+                    PosCmax1 = self.Lz / 2
+        else:
+            PosCmax = PosCmax2[0]
+            PosCmax1 = PosCmax2[1]
+
+        for i in range(self.NbFixa):
+            if self.Mxb != 0 and self.Mzb != 0:
+                PosFix_bis[i, 0] = abs(self.PosFix[i, 0] - PosCmax)
+                PosFix_bis[i, 1] = abs(self.PosFix[i, 1] - PosCmax1)
+
+            elif self.Mxb != 0 and self.Mzb == 0:
+                PosFix_bis[i, 0] = self.PosFix[i, 0] - PosCmax
+                PosFix_bis[i, 1] = abs(self.PosFix[i, 1] - PosCmax1)
+            elif self.Mxb == 0 and self.Mzb != 0:
+                PosFix_bis[i, 0] = abs(self.PosFix[i, 0] - PosCmax)
+                PosFix_bis[i, 1] = self.PosFix[i, 1] - PosCmax1
+
+        return PosFix_bis, PosCmax, PosCmax1
+
+    def write_osup_result(self, curveFile, fx, fy, fz):
+        oFile = open(curveFile, "a")
+        print(self.ruptbetcombi, self.ruptaciercombi, self.betaV, self.betaN, fx, fy, fz)
+        oFile.write(
+            f'{round(fx, 2)}		{round(fy, 2)}		{round(fz, 2)}		{round(self.ruptbetcombi, 3)}		{round(self.ruptaciercombi, 3)}		{round(self.betaN, 3)}		{round(self.betaV, 3)}\n')
+        oFile.close()
+
+    def changement(self, dx, dy, dz, drx, dry, drz, orientation):
+        if orientation == "Y":
+            Vx = float(dx)
+            N = - float(dy)
+            Vz = float(dz)
+            Mx = float(drx)
+            T = float(dry)
+            Mz = float(drz)
+            print(Vx, N, Vz, Mx, T, Mz)
+            return Vx, N, Vz, Mx, T, Mz
+
+        elif orientation == "-Y":
+            Vx = float(dx)
+            N = float(dy)
+            Vz = float(dz)
+            Mx = float(drx)
+            T = float(dry)
+            Mz = float(drz)
+            return Vx, N, Vz, Mx, T, Mz
+
+        elif orientation == "X":
+            Vx = float(dy)
+            N = float(dx)
+            Vz = float(dz)
+            Mx = float(dry)
+            T = float(drx)
+            Mz = float(drz)
+            return Vx, N, Vz, Mx, T, Mz
+
+        elif orientation == "-X":
+            Vx = float(dz)
+            N = - float(dx)
+            Vz = float(dy)
+            Mx = float(drz)
+            T = float(drx)
+            Mz = float(dry)
+            return Vx, N, Vz, Mx, T, Mz
+
+        elif orientation == "Z":
+            Vx = float(dx)
+            N = float(dz)
+            Vz = float(dy)
+            Mx = float(drx)
+            T = float(drz)
+            Mz = float(dry)
+            return Vx, N, Vz, Mx, T, Mz
+
+        elif orientation == "-Z":
+            Vx = float(dy)
+            N = - float(dz)
+            Vz = float(dx)
+            Mx = float(dry)
+            T = - float(drz)
+            Mz = float(drx)
+            return Vx, N, Vz, Mx, T, Mz

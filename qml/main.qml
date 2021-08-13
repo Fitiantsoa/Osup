@@ -15,6 +15,7 @@ ApplicationWindow {
     height: 600
     width: 800
     visible: true
+    //visibility: applicationWindows.showMaximized()
     title: qsTr(osup.get_version())
     onClosing: {
         osup.write_recent_file()
@@ -309,6 +310,7 @@ ApplicationWindow {
             currentIndex: 0
             Page0{ id: page0 }
             PageMain{ id : pageMain }
+            PageSofix{ id: pageSofix}
         }
     }
 }
