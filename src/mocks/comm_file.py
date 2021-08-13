@@ -9,7 +9,7 @@ class CommFile:
         self.verif_mod = data['verification_module']
         self.plat_data = data['platine_data']
         self.dowel_data = data["cheville"]
-        self.list_liaison = self.liaison_ddl(data['geo']['node_rep'], data['geo']['beam_list'],data['verification_module']['load_node'])
+        self.list_liaison = self.liaison_ddl(data['geo']['node_rep'], data['geo']['beam_list'], data['verification_module']['load_node'])
         self.beam_group = data['geo']['beam_group']
         self.node_group = data['geo']['node_group']
         self.calc_var = Calculation_var( data['geo'],self.plat_data, self.dowel_data)
@@ -43,6 +43,7 @@ class CommFile:
         self.content.append("import time")
         self.content.append(f"value = {self.calc_var.get_value()}")
         self.content.append(f'niveau = "{self.calc_cond["level"]}"')
+        self.content.append(f'L = {self.calc_cond["portee"]}')
         self.content.append("mesh=LIRE_MAILLAGE( INFO=2,")
         self.content.append("    UNITE=20,FORMAT='MED',);")
         self.content.append("")
@@ -156,7 +157,7 @@ class CommFile:
             else:
                 RZ = round(IZ/ (Welz * 10**3),4 )
                 RY = round(IY / (Wely * 10**3),4)
-            RT = round((JX / Igr * 10**3),4)
+            RT = round((JX / (Igr * 10**3)),4)
             self.content.append("\t\t_F(GROUP_MA=('"+ str("','".join(gp_sect[sect])) + "',),")
             self.content.append("\t\tSECTION = 'GENERALE',")
             self.content.append("\t\tCARA=('A','IY','IZ','AY','AZ','JX','RY','RZ','RT',),")
@@ -271,6 +272,8 @@ class CommFile:
         self.content.append(f'curveFile = {PROFILE_RSLT}')
         self.content.append(f'platineFile = {PLATINE_RSLT}')
         self.content.append(f'chevilleFile = {CHEVILLE_RSLT}')
+        self.content.append(f'rigiditeFile = {RIGIDITE_PLAT_RSLT}')
+        self.content.append(f'flecheFile = {FLECHE_RSLT}')
         if self.verif_mod["axis"] == 'X' or self.verif_mod["axis"] =='':
             osup_file = open(DICHOTOMIE_COUBE_X, 'r')
         elif self.verif_mod["axis"] == 'Y':

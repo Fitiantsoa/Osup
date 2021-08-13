@@ -434,6 +434,27 @@ Rectangle {
 
                             }
                         }
+                        RowLayout{
+                            spacing: 15
+                            anchors.right: parent.right
+                            anchors.left: parent.left
+                            anchors.leftMargin: 15
+                            anchors.rightMargin: 20
+                            Label{
+                                text: "Portée:"
+                                Layout.preferredWidth: 130
+                                color : Theme.grey_6
+                            }
+                            CTextField{
+                                id: porteprof
+                                text: "0"
+                                Layout.preferredWidth: 150
+                                validator: IntValidator
+                                opacity: enabled?1:0.6
+                                objectName: "Portee"
+                                onEditingFinished: pageGeo.porte = porteprof.text
+                            }
+                        }
 
                     }                    
                 }

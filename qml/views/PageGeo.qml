@@ -22,6 +22,7 @@ Page{
     property var load_node_list
     property var rccm: conditioncaclul.rccm
     property var temperature: 20
+    property var porte: 0
     property bool verifTemp: false
 
     Flickable {

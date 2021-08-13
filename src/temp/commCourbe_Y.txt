@@ -231,7 +231,7 @@ while abs((ratioLimProf-0.01) - ratioMax) > 0.01:
 fzMax = fyMax/f
 reportFile = open(resultfile,"a")
 reportFile.write(f'{dash}\n')
-reportFile.write(f'CHARGEMENT:FX = 0, FY ={round(f*fzMax,2)},  FZ = {round(fzMax,2)} \n')
+reportFile.write(f'CHARGEMENT1:FX = 0, FY ={round(f*fzMax,2)},  FZ = {round(fzMax,2)} \n')
 reportFile.close()
 force=AFFE_CHAR_MECA(MODELE=model,
 FORCE_NODALE=_F(GROUP_NO=('load',),
@@ -278,7 +278,7 @@ while abs((ratioLimProf-0.01) - ratioMax) > 0.01:
     fzMax = (a3+b3)/2
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(f*fzMax,2)} , FZ = {round(fzMax,2)}\n')
+    reportFile.write(f'CHARGEMENT2: FX = 0, FY = {round(f*fzMax,2)} , FZ = {round(fzMax,2)}\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
@@ -1238,9 +1238,7 @@ plt.plot(sv.fyCourbeMin,sv.fzCourbeMin)
 ratio.writeOsupFile(curveFile,0,f*fzMax_init,fzMax_init) 
 
 #------------------------------- PLATINE ------------------------------------
-
 #------------------------ DÃ©but dichotomie -------------------------
-
 #TODO modifier le script pour qu'il dÃ©tecte la direction principale de poutre
 #Pour ce support le frottement est suivant X
 reportFile = open(resultfile,"a")
@@ -1755,7 +1753,7 @@ osupFile.write(f'{version}\n')
 osupFile.write(f'{dash}\nFX 			FX 			FZ 			Axial 			ratio max\n')
 osupFile.write(f'0 			{round(f*fzMax,3)} 			{round(fzMax,3)}\n')
 osupFile.close()
-ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+
 sv.fyCourbeMin.append(0)
 sv.fzCourbeMin.append(fzMax)
 fzMax_init = fzMax
@@ -1973,7 +1971,7 @@ for i in range(1,n):
     osupFile = open(platineFile,"a")
     osupFile.write(f'{round(fx,3)}		{round(f*((fz**2+fx**2)**0.5),3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
     osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    
     sv.fyCourbeMin.append(fx)
     sv.fzCourbeMin.append(fz)
 osupFile = open(platineFile,"a")
@@ -2140,7 +2138,7 @@ while abs((ratioLimPlat - 0.01) - ratioMax) > 0.01:
     DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);    
 
 #------------------------------------------------------------------------------------------
-ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+
 for i in range(1,n):
     fx = fxMax/n*(n-i)   
     reportFile = open(resultfile,"a")
@@ -2358,7 +2356,7 @@ for i in range(1,n):
     osupFile = open(platineFile,"a")
     osupFile.write(f'{round(fx,3)}		{round(f*((fz**2+fx**2)**0.5),3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
     osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    
     sv.fyCourbeMin.append(fx)
     sv.fzCourbeMin.append(fz)
 
@@ -2750,7 +2748,7 @@ for i in range(1,n):
     osupFile = open(platineFile,"a")
     osupFile.write(f'{round(fx,3)}		{round(f*((fz**2+fx**2)**0.5),3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
     osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    
     sv.fyCourbeMin.append(fx)
     sv.fzCourbeMin.append(fz)
 osupFile = open(platineFile,"a")
@@ -3060,40 +3058,1785 @@ for i in range(1,n):
     osupFile = open(platineFile,"a")
     osupFile.write(f'{round(fx,3)}		{round(f*((fz**2+fx**2)**0.5),3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
     osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    
     sv.fyCourbeMin.append(fx)
     sv.fzCourbeMin.append(fz)
-ratioPlatine.get_data(chevilleFile)
+
 import matplotlib.pyplot as plt
 sv.timefin = time.time()
 print("Temps total = ",sv.timefin-sv.timeInit)
 osupFile = open(platineFile,"a")
 osupFile.write(f'0 			{round(f*fzMax_init,3)} 			{round(fzMax_init,3)}\n')
 osupFile.close()
+# #------------------------------- CHEVILLES ------------------------------------
+# #------------------------ DÃ©but dichotomie -------------------------
 
-#------------------------------- CHEVILLES ------------------------------------
+# #TODO modifier le script pour qu'il dÃ©tecte la direction principale de poutre
+# #Pour ce support le frottement est suivant X
+# reportFile = open(resultfile,"a")
+# reportFile.write(f'{version}\n{dash}')
+# reportFile.write(f'CHARGEMENT: FX = 0,  FY={fy}, FZ = 0\n')
+# reportFile.close()
+# force=AFFE_CHAR_MECA(MODELE=model,
+# FORCE_NODALE=_F(GROUP_NO=('load',),
+	# FY = fy,),
+# );
 
-#------------------------ DÃ©but dichotomie -------------------------
+# stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+# EXCIT=(			_F(CHARGE=encast,),
+		# _F(CHARGE=force,),
+    # ),
 
-#TODO modifier le script pour qu'il dÃ©tecte la direction principale de poutre
-#Pour ce support le frottement est suivant X
+# SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11),
+# );
+
+# stat=CALC_CHAMP( reuse =stat,
+	# MODELE=model,
+	# CHAM_MATER=material,
+	# CARA_ELEM=elemcar,
+	# RESULTAT = stat,
+	# FORCE = ('REAC_NODA',),
+# );
+
+# TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);    
+
+# torseur = TAB_eff.EXTR_TABLE()
+# dx = torseur.DX
+# dy = torseur.DY
+# dz = torseur.DZ
+# drx = torseur.DRX
+# dry = torseur.DRY
+# drz = torseur.DRZ
+# nbChevilles = value['platine']['nbCheville']
+# maxRatio = []
+# for i in range(len(nbChevilles)):
+    # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+    # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+# ratioMax = max(maxRatio)
+# IMPR_TABLE (TABLE=TAB_eff,)
+# DETRUIRE(CONCEPT=_F(NOM=force,),);
+# DETRUIRE(CONCEPT=_F(NOM=stat,),);
+# DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+
+# #----------------------Borne max FZ------------------------------
+# a1 = 0
+# fyMax = fy
+# while ratioMax < ratioLimPlat:  
+    # fyMax += 500
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(fyMax,2)}, FZ = 0 FZ=0\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = fyMax,),
+    # );
+
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11),
+    # );
+
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);
+    
+
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ     
+
+    # nbChevilles = value['platine']['nbCheville']
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+
+# #-----------------------------  fyMax ------------------------------
+
+# while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
+    # if ratioMax < ratioLimPlat:
+        # a1 = fyMax
+    # else:
+        # b1 = fyMax
+    # fyMax = (a1+b1)/2
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(fyMax,2)}, FZ=0\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = fyMax,),
+    # );
+
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);
+
+    
+
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ
+
+    # nbChevilles = value['platine']['nbCheville']
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+
+
+
+# #----------------------------- fxMax --------------------------------
+# fxMax = fyMax/f
+# reportFile = open(resultfile,"a")
+# reportFile.write(f'CHARGEMENT: FX = {round(fxMax,2)}, FY = {round(f*fxMax,2)}, FZ=0\n')
+# reportFile.close()
+# force=AFFE_CHAR_MECA(MODELE=model,
+# FORCE_NODALE=_F(GROUP_NO=('load',),
+	# FY = f*fxMax,FX=fxMax,),
+
+# );
+
+# stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+# EXCIT=(			_F(CHARGE=encast,),
+		# _F(CHARGE=force,),
+    # ),
+
+# SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+# );
+
+# stat=CALC_CHAMP( reuse =stat,
+	# MODELE=model,
+	# CHAM_MATER=material,
+	# CARA_ELEM=elemcar,
+	# RESULTAT = stat,
+	# FORCE = ('REAC_NODA',),
+# );
+
+# TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);
+    
+
+# torseur = TAB_eff.EXTR_TABLE()
+# dx = torseur.DX
+# dy = torseur.DY
+# dz = torseur.DZ
+# drx = torseur.DRX
+# dry = torseur.DRY
+# drz = torseur.DRZ
+# nbChevilles = value['platine']['nbCheville']
+# maxRatio = []
+# for i in range(len(nbChevilles)):
+    # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+    # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+# ratioMax = max(maxRatio)
+# IMPR_TABLE (TABLE=TAB_eff,)
+# DETRUIRE(CONCEPT=_F(NOM=force,),);
+# DETRUIRE(CONCEPT=_F(NOM=stat,),);
+# DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+# while ratioMax < ratioLimPlat:
+    # fxMax *= 2
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'CHARGEMENT: FX = {round(fxMax,2)}, FY ={round(f*fxMax,2)}, FZ = 0 \n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = f*fxMax,FX=fxMax,),
+    # );
+
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+
+    # );
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+        # GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+        # TOUT_ORDRE='OUI',
+        # OPERATION='EXTRACTION',),);
+
+        
+
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ
+   
+    # nbChevilles = value['platine']['nbCheville']
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+# a2 = 0
+# b2 = fxMax
+
+# while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
+    # if ratioMax < ratioLimPlat:
+        # a2 = fxMax
+    # else:
+        # b2 = fxMax
+    # fxMax = (a2+b2)/2
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = {round(fxMax,2)}, FY = {round(f*fxMax,2)}, FZ = 0\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = f*fxMax,FX=fxMax,),
+    # );
+
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ
+
+    # nbChevilles = value['platine']['nbCheville']
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+ 
+
+# #----------------------------- FzMax --------------------------------
+
+# fzMax = fyMax/f
+# reportFile = open(resultfile,"a")
+# reportFile.write(f'{dash}\n')
+# reportFile.write(f'CHARGEMENT: FX = 0, FY ={round(f*fzMax,2)}, FZ = {round(fzMax,2)} \n')
+# reportFile.close()
+# force=AFFE_CHAR_MECA(MODELE=model,
+# FORCE_NODALE=_F(GROUP_NO=('load',),
+	# FY = f*fzMax,FZ=fzMax,),
+# );
+# stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+# EXCIT=(			_F(CHARGE=encast,),
+		# _F(CHARGE=force,),
+    # ),
+
+# SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+# );
+
+# stat=CALC_CHAMP( reuse =stat,
+	# MODELE=model,
+	# CHAM_MATER=material,
+	# CARA_ELEM=elemcar,
+	# RESULTAT = stat,
+	# FORCE = ('REAC_NODA',),
+# );
+
+# TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);
+    
+
+# torseur = TAB_eff.EXTR_TABLE()
+# dx = torseur.DX
+# dy = torseur.DY
+# dz = torseur.DZ
+# drx = torseur.DRX
+# dry = torseur.DRY
+# drz = torseur.DRZ
+
+ 
+
+# nbChevilles = value['platine']['nbCheville']
+# maxRatio = []
+# for i in range(len(nbChevilles)):
+    # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+    # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+# ratioMax = max(maxRatio)
+# IMPR_TABLE (TABLE=TAB_eff,)
+# DETRUIRE(CONCEPT=_F(NOM=force,),);
+# DETRUIRE(CONCEPT=_F(NOM=stat,),);
+# DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+# while ratioMax < ratioLimPlat:
+    # fzMax *= 2
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'CHARGEMENT: FX = 0, FY ={round(f*fzMax,2)}, FZ = {round(fzMax,2)} \n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = f*fzMax,FZ=fzMax,),
+    # );
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+        # GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+        # TOUT_ORDRE='OUI',
+        # OPERATION='EXTRACTION',),);
+        
+
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ
+    # nbChevilles = value['platine']['nbCheville']
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+
+# a3 = 0
+# b3 = fzMax
+# while abs((ratioLimPlat - 0.01) - ratioMax) > 0.01:
+    # if ratioMax < ratioLimPlat:
+        # a3 = fzMax
+    # else:
+        # b3 = fzMax
+    # fzMax = (a3+b3)/2
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(f*fzMax,2)} , FZ = {round(fzMax,2)}\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = f*fzMax,FZ=fzMax),
+    # );
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # )
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);   
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ
+    # nbChevilles = value['platine']['nbCheville']
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+    
+
+# #------------------------------------------------------------------------------------------
+# osupFile = open(chevilleFile,"w")
+# osupFile.write(f'{version}\n')
+# osupFile.write(f'{dash}\nFX 			FX 			FZ 			Axial 			ratio max\n')
+# osupFile.write(f'0 			{round(f*fzMax,3)} 			{round(fzMax,3)}\n')
+# osupFile.close()
+# 
+# sv.fyCourbeMin.append(0)
+# sv.fzCourbeMin.append(fzMax)
+# fzMax_init = fzMax
+# #----------------------------------QUADRANT 1 fy >0 , fx > 0-------------------------------
+# for i in range(1,n):
+    # fx = fxMax/n*i    
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fzMax**2)**0.5,2)}, FZ={round(fzMax,2)}\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FX=fx, FY = f*(fx**2+fzMax**2)**0.5,FZ=fzMax),
+    # );
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ
+    
+    # nbChevilles = value['platine']['nbCheville']
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);    
+    # if ratioMax < ratioLimPlat:
+        # fzMax *= 2
+    # fzCourbe = -fzMax/fxMax*fx + fzMax
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fzCourbe**2)**0.5,2)}, FZ = {round(fzCourbe,2)}\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = f*(fx**2+fzCourbe**2)**0.5,FX=fx,FZ=fzCourbe),
+    # );
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);
+    
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ     
+    # nbChevilles = value['platine']['nbCheville']
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);  
+    # if ratioMax > ratioLimPlat:
+        # alpha = 0
+        # beta = fzCourbe
+    # else:
+        # alpha = fzCourbe
+        # beta = fzMax
+    # fz = (alpha + beta)/2
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY ={round(f*(fx**2+fz**2)**0.5,2)}, FZ={round(fz,2)}\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = f*(fx**2+fz**2)**0.5,FZ=fz,FX=fx),
+    # );
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),        ),
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);
+    
+
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ     
+
+    # nbChevilles = value['platine']['nbCheville']
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+    # while abs((ratioLimPlat-0.01)-ratioMax) > 0.01:
+        # if ratioMax < ratioLimPlat:
+            # alpha = fz
+        # else:
+            # beta = fz
+        # fz = (alpha+beta)/2
+        # reportFile = open(resultfile,"a")
+        # reportFile.write(f'{dash}\n')
+        # reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fz**2)**0.5,2)}, FZ = {round(fz,2)}\n')
+        # reportFile.close()
+        # force=AFFE_CHAR_MECA(MODELE=model,
+        # FORCE_NODALE=_F(GROUP_NO=('load',),
+            # FY = f*(fx**2+fz**2)**0.5,FZ=fz,FX=fx),
+        # );
+
+        # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        # EXCIT=(			_F(CHARGE=encast,),
+                # _F(CHARGE=force,),
+            # ),
+        # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        # );
+
+        # stat=CALC_CHAMP( reuse =stat,
+            # MODELE=model,
+            # CHAM_MATER=material,
+            # CARA_ELEM=elemcar,
+            # RESULTAT = stat,
+            # FORCE = ('REAC_NODA',),
+        # );
+
+        # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            # GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+            # TOUT_ORDRE='OUI',
+            # OPERATION='EXTRACTION',),);
+        
+
+        # torseur = TAB_eff.EXTR_TABLE()
+        # dx = torseur.DX
+        # dy = torseur.DY
+        # dz = torseur.DZ
+        # drx = torseur.DRX
+        # dry = torseur.DRY
+        # drz = torseur.DRZ
+         
+
+        # nbChevilles = value['platine']['nbCheville']
+        # maxRatio = []
+        # for i in range(len(nbChevilles)):
+            # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+            # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        # ratioMax = max(maxRatio)
+        # IMPR_TABLE (TABLE=TAB_eff,)
+        # DETRUIRE(CONCEPT=_F(NOM=force,),);
+        # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+    # #-----------------------------------------------------------------------------------------
+
+    # osupFile = open(chevilleFile,"a")
+    # osupFile.write(f'{round(fx,3)}		{round(f*((fz**2+fx**2)**0.5),3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
+    # osupFile.close()
+    # 
+    # sv.fyCourbeMin.append(fx)
+    # sv.fzCourbeMin.append(fz)
+# osupFile = open(chevilleFile,"a")
+# osupFile.write(f'{round(fxMax,2)}		{round(f*fxMax,2)}		0\n')
+# osupFile.close()
+# sv.fyCourbeMin.append(fxMax)
+# sv.fzCourbeMin.append(0)
+
+# #-------------------------------------QUADRANT 2 fy<0 fx<0 ---------------------------------------------
+# fzMin = -fyMax/f
+# reportFile = open(resultfile,"a")
+# reportFile.write(f'{dash}\n')
+# reportFile.write(f'CHARGEMENT: FX = 0, FY ={round(f*-fzMin,2)}, FZ = {round(fzMin,2)} \n')
+# reportFile.close()
+# force=AFFE_CHAR_MECA(MODELE=model,
+# FORCE_NODALE=_F(GROUP_NO=('load',),
+	# FY = f*-fzMin,FZ=fzMin,),
+# );
+# stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+# EXCIT=(			_F(CHARGE=encast,),
+		# _F(CHARGE=force,),
+    # ),
+
+# SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+# );
+
+# stat=CALC_CHAMP( reuse =stat,
+	# MODELE=model,
+	# CHAM_MATER=material,
+	# CARA_ELEM=elemcar,
+	# RESULTAT = stat,
+	# FORCE = ('REAC_NODA',),
+# );
+
+# TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);    
+
+# torseur = TAB_eff.EXTR_TABLE()
+# dx = torseur.DX
+# dy = torseur.DY
+# dz = torseur.DZ
+# drx = torseur.DRX
+# dry = torseur.DRY
+# drz = torseur.DRZ 
+
+# nbChevilles = value['platine']['nbCheville']
+# maxRatio = []
+# for i in range(len(nbChevilles)):
+    # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+    # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+# ratioMax = max(maxRatio)
+# IMPR_TABLE (TABLE=TAB_eff,)
+# DETRUIRE(CONCEPT=_F(NOM=force,),);
+# DETRUIRE(CONCEPT=_F(NOM=stat,),);
+# DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+# while ratioMax < ratioLimPlat:
+    # fzMin *= 2
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'CHARGEMENT: FX = 0, FY ={round(f*-fzMin,2)}, FZ = {round(fzMin,2)} \n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = f*-fzMin,FZ=fzMin,),
+    # );
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+        # GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+        # TOUT_ORDRE='OUI',
+        # OPERATION='EXTRACTION',),);
+        
+
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ
+    # nbChevilles = value['platine']['nbCheville']
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+
+# a3 = 0
+# b3 = fzMin
+# while abs((ratioLimPlat - 0.01) - ratioMax) > 0.01:
+    # if ratioMax < ratioLimPlat:
+        # a3 = fzMin
+    # else:
+        # b3 = fzMin
+    # fzMin = (a3+b3)/2
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(f*-fzMin,2)} , FZ = {round(fzMin,2)}\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = f*-fzMin,FZ=fzMin),
+    # );
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # )
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);   
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ
+    # nbChevilles = value['platine']['nbCheville']
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);    
+
+# #------------------------------------------------------------------------------------------
+# 
+# for i in range(1,n):
+    # fx = fxMax/n*(n-i)   
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fzMax**2)**0.5,2)}, FZ={round(-fzMax,2)}\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = f*(fx**2+fzMax**2)**0.5,FZ=-fzMax,FX=fx),
+    # );
+
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);    
+
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ    
+
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);  
+    # if ratioMax < ratioLimPlat:
+        # fzMax *= 2
+    # fzCourbe = -fzMax/fxMax*fx - fzMax
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fzCourbe**2)**0.5,2)}, FZ = {round(fzCourbe,2)}\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = f*(fx**2+fzCourbe**2)**0.5,FX=fx,FZ=fzCourbe),
+    # );
+
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);    
+
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ    
+
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);   
+    # if ratioMax > ratioLimPlat:
+        # alpha = 0
+        # beta = fzCourbe
+    # else:
+        # alpha = fzCourbe
+        # beta = fzMin
+    # fz = (alpha + beta)/2
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY ={round(f*(fx**2+fz**2)**0.5,2)}, FZ={round(fz,2)}\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = f*(fz**2+fx**2)**0.5,FZ=fz,FX=fx),
+    # );
+
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);    
+
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ     
+
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+    # while abs((ratioLimPlat-0.01)-ratioMax) > 0.01:
+        # if ratioMax < ratioLimPlat:
+            # alpha = fz
+        # else:
+            # beta = fz
+        # fz = (alpha+beta)/2
+        # reportFile = open(resultfile,"a")
+        # reportFile.write(f'{dash}\n')
+        # reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fy**2+fx**2)**0.5,2)}, FZ = {round(fz,2)}\n')
+        # reportFile.close()
+        # force=AFFE_CHAR_MECA(MODELE=model,
+        # FORCE_NODALE=_F(GROUP_NO=('load',),
+            # FY = f*(fz**2+fx**2)**0.5,FZ=fz,FX=fx),
+        # );
+        # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        # EXCIT=(			_F(CHARGE=encast,),
+                # _F(CHARGE=force,),
+            # ),
+
+        # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        # );
+
+        # stat=CALC_CHAMP( reuse =stat,
+            # MODELE=model,
+            # CHAM_MATER=material,
+            # CARA_ELEM=elemcar,
+            # RESULTAT = stat,
+            # FORCE = ('REAC_NODA',),
+        # );
+
+        # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            # GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+            # TOUT_ORDRE='OUI',
+            # OPERATION='EXTRACTION',),);    
+
+        # torseur = TAB_eff.EXTR_TABLE()
+        # dx = torseur.DX
+        # dy = torseur.DY
+        # dz = torseur.DZ
+        # drx = torseur.DRX
+        # dry = torseur.DRY
+        # drz = torseur.DRZ        
+
+        # maxRatio = []
+        # for i in range(len(nbChevilles)):
+            # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+            # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        # ratioMax = max(maxRatio)
+        # IMPR_TABLE (TABLE=TAB_eff,)
+        # DETRUIRE(CONCEPT=_F(NOM=force,),);
+        # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+    # #-----------------------------------------------------------------------------------------
+
+    # osupFile = open(chevilleFile,"a")
+    # osupFile.write(f'{round(fx,3)}		{round(f*((fz**2+fx**2)**0.5),3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
+    # osupFile.close()
+    # 
+    # sv.fyCourbeMin.append(fx)
+    # sv.fzCourbeMin.append(fz)
+
+# #----------------------------------QUADRANT 3 fy <0 , fx < 0-------------------------------
+# osupFile = open(chevilleFile,"a")
+# osupFile.write(f'0 			{round(f*-fzMin,3)} 			{round(fzMin,3)}\n')
+# osupFile.close()
+# sv.fyCourbeMin.append(0)
+# sv.fzCourbeMin.append(fzMin)
+# #----------------------------- fxMin --------------------------------
+# fxMin = -fyMax/f
+# reportFile = open(resultfile,"a")
+# reportFile.write(f'CHARGEMENT: FX = {round(fxMin,2)}, FY = {round(f*-fxMin,2)}, FZ=0\n')
+# reportFile.close()
+# force=AFFE_CHAR_MECA(MODELE=model,
+# FORCE_NODALE=_F(GROUP_NO=('load',),
+	# FY = f*-fxMin,FX=fxMin,),
+
+# );
+# stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+# EXCIT=(			_F(CHARGE=encast,),
+		# _F(CHARGE=force,),
+    # ),
+
+# SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+# );
+
+# stat=CALC_CHAMP( reuse =stat,
+	# MODELE=model,
+	# CHAM_MATER=material,
+	# CARA_ELEM=elemcar,
+	# RESULTAT = stat,
+	# FORCE = ('REAC_NODA',),
+# );
+
+# TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);
+    
+
+# torseur = TAB_eff.EXTR_TABLE()
+# dx = torseur.DX
+# dy = torseur.DY
+# dz = torseur.DZ
+# drx = torseur.DRX
+# dry = torseur.DRY
+# drz = torseur.DRZ
+# nbChevilles = value['platine']['nbCheville']
+# maxRatio = []
+# for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio))
+# IMPR_TABLE (TABLE=TAB_eff,)
+# DETRUIRE(CONCEPT=_F(NOM=force,),);
+# DETRUIRE(CONCEPT=_F(NOM=stat,),);
+# DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+# while ratioMax < ratioLimPlat:
+    # fxMin *= 2
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'CHARGEMENT: FX = {round(fxMin,2)}, FY ={round(f*-fxMin,2)}, FZ = 0 \n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = f*-fxMin,FX=fxMin,),
+    # );
+
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+
+    # );
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+        # GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+        # TOUT_ORDRE='OUI',
+        # OPERATION='EXTRACTION',),);
+
+        
+
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ
+   
+    # nbChevilles = value['platine']['nbCheville']
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+# a2 = 0
+# b2 = fxMin
+
+# while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
+    # if ratioMax < ratioLimPlat:
+        # a2 = fxMin
+    # else:
+        # b2 = fxMin
+    # fxMin = (a2+b2)/2
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = {round(fxMin,2)}, FY = {round(f*-fxMin,2)}, FZ = 0\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = f*-fxMin,FX=fxMin,),
+    # );
+
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ
+
+    # nbChevilles = value['platine']['nbCheville']
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),); 
+# for i in range(1,n):
+    # fx = fxMin/n*i     
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fzMin**2)**0.5,2)}, FZ={round(fzMin,2)}\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = f*(fx**2+fzMin**2)**0.5,FZ=fzMin,FX=fx),
+    # );
+
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+    # GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+    # TOUT_ORDRE='OUI',
+    # OPERATION='EXTRACTION',),);
+    
+
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ     
+
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+    # if ratioMax < ratioLimPlat:
+        # fzMin *= 2
+    # fzCourbe = fzMin/fxMin*fx + fzMin
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fzCourbe**2)**0.5,2)}, FZ = {round(fzCourbe,2)}\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = f*(fx**2+fzCourbe**2)**0.5,FZ=fzCourbe,FX=fx),
+    # );
+
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);
+    
+
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ     
+
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);  
+    # if ratioMax > ratioLimPlat:
+        # alpha = 0
+        # beta = fzCourbe
+    # else:
+        # alpha = fzCourbe
+        # beta = fzMin
+    # fz = (alpha + beta)/2
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY ={round(f*(fz**2+fx**2)**0.5,2)}, FZ={round(fz,2)}\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = f*(fz**2+fx**2)**0.5,FZ=fz,FX=fx),
+    # );
+
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+	# GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	# TOUT_ORDRE='OUI',
+	# OPERATION='EXTRACTION',),);
+    
+
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ     
+
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+    # while abs((ratioLimPlat-0.01)-ratioMax) > 0.01:
+        # if ratioMax < ratioLimPlat:
+            # alpha = fz
+        # else:
+            # beta = fz
+        # fz = (alpha+beta)/2
+        # reportFile = open(resultfile,"a")
+        # reportFile.write(f'{dash}\n')
+        # reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fz**2)**0.5,2)}, FZ = {round(fz,2)}\n')
+        # reportFile.close()
+        # force=AFFE_CHAR_MECA(MODELE=model,
+        # FORCE_NODALE=_F(GROUP_NO=('load',),
+            # FY = f*(fz**2+fx**2)**0.5,FZ=fz,FX=fx),
+        # );
+
+        # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        # EXCIT=(			_F(CHARGE=encast,),
+                # _F(CHARGE=force,),
+            # ),
+
+        # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        # );
+
+        # stat=CALC_CHAMP( reuse =stat,
+            # MODELE=model,
+            # CHAM_MATER=material,
+            # CARA_ELEM=elemcar,
+            # RESULTAT = stat,
+            # FORCE = ('REAC_NODA',),
+        # );
+        # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            # GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+            # TOUT_ORDRE='OUI',
+            # OPERATION='EXTRACTION',),);        
+
+        # torseur = TAB_eff.EXTR_TABLE()
+        # dx = torseur.DX
+        # dy = torseur.DY
+        # dz = torseur.DZ
+        # drx = torseur.DRX
+        # dry = torseur.DRY
+        # drz = torseur.DRZ        
+
+        # maxRatio = []
+        # for i in range(len(nbChevilles)):
+            # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+            # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        # ratioMax = max(maxRatio)
+        # IMPR_TABLE (TABLE=TAB_eff,)
+        # DETRUIRE(CONCEPT=_F(NOM=force,),);
+        # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+    # #-----------------------------------------------------------------------------------------
+    # osupFile = open(chevilleFile,"a")
+    # osupFile.write(f'{round(fx,3)}		{round(f*((fz**2+fx**2)**0.5),3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
+    # osupFile.close()
+    # 
+    # sv.fyCourbeMin.append(fx)
+    # sv.fzCourbeMin.append(fz)
+# osupFile = open(chevilleFile,"a")
+# osupFile.write(f'{round(fxMin,2)}		{round(f*-fxMin,2)}		0\n')
+# osupFile.close()
+
+# # #----------------------------------QUADRANT 4 fy <0 , fx > 0-------------------------------
+
+# for i in range(1,n):
+    # fx = fxMin/n*(n-i)   
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2)**0.5,2)}, FZ=0\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FX=fx,FY= f*(fx**2)**0.5,FZ=0),
+    # );
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+   # );
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+        # GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+        # TOUT_ORDRE='OUI',
+        # OPERATION='EXTRACTION',),);
+    
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ
+    # maxRatio = []    
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),); 
+    # while ratioMax > ratioLimPlat:
+        # if i ==1:
+            # fx = (fx + sv.fyCourbeMin[-2])/2
+        # else:
+            # fx = (fx + sv.fyCourbeMin[-1])/2
+        # reportFile = open(resultfile,"a")
+        # reportFile.write(f'{dash}\n')
+        # reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2)**0.5,2)}, FZ=0\n')
+        # reportFile.close()
+        # force=AFFE_CHAR_MECA(MODELE=model,
+        # FORCE_NODALE=_F(GROUP_NO=('load',),
+            # FY = f*(fx**2)**0.5,FX=fx,FZ=0),
+        # );
+        # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        # EXCIT=(			_F(CHARGE=encast,),
+                # _F(CHARGE=force,),
+            # ),
+        # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        # );
+        # stat=CALC_CHAMP( reuse =stat,
+            # MODELE=model,
+            # CHAM_MATER=material,
+            # CARA_ELEM=elemcar,
+            # RESULTAT = stat,
+            # FORCE = ('REAC_NODA',),
+        # );
+        # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            # GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+            # TOUT_ORDRE='OUI',
+            # OPERATION='EXTRACTION',),);
+        
+
+        # torseur = TAB_eff.EXTR_TABLE()
+        # dx = torseur.DX
+        # dy = torseur.DY
+        # dz = torseur.DZ
+        # drx = torseur.DRX
+        # dry = torseur.DRY
+        # drz = torseur.DRZ
+
+        # maxRatio = []
+        # for i in range(len(nbChevilles)):
+            # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+            # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        # ratioMax = max(maxRatio)
+        # IMPR_TABLE (TABLE=TAB_eff,)
+        # DETRUIRE(CONCEPT=_F(NOM=force,),);
+        # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fzMax**2)**0.5,2)}, FZ={round(fzMax,2)}\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FX=fx,FY = f*(fx**2+fzMax**2)**0.5,FZ=fzMax),
+    # );
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+        # GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+        # TOUT_ORDRE='OUI',
+        # OPERATION='EXTRACTION',),);
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ
+    # maxRatio = []  
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),); 
+    # if ratioMax < ratioLimPlat:
+        # fzMax *= 2
+    # fzCourbe = fzMax/-fxMax*fx + fzMax
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fzCourbe**2)**0.5,2)},  FZ = {round(fzCourbe,2)}\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = f*(fx**2+fzCourbe**2)**0.5,FX=fx,FZ=fzCourbe),
+    # );
+
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+        # GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+        # TOUT_ORDRE='OUI',
+        # OPERATION='EXTRACTION',),);
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ    
+
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),); 
+    # if ratioMax > ratioLimPlat:
+        # alpha = 0
+        # beta = fzCourbe
+    # else:
+        # alpha = fzCourbe
+        # beta = fzMax
+    # fz = (alpha + beta)/2
+    # reportFile = open(resultfile,"a")
+    # reportFile.write(f'{dash}\n')
+    # reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY ={round(f*(fx**2+fz**2)**0.5,2)}, FZ={round(fz,2)}\n')
+    # reportFile.close()
+    # force=AFFE_CHAR_MECA(MODELE=model,
+    # FORCE_NODALE=_F(GROUP_NO=('load',),
+        # FY = f*(fz**2+fx**2)**0.5,FZ=fz,FX=fx),
+    # );
+
+    # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    # EXCIT=(			_F(CHARGE=encast,),
+            # _F(CHARGE=force,),
+        # ),
+    # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    # );
+
+    # stat=CALC_CHAMP( reuse =stat,
+        # MODELE=model,
+        # CHAM_MATER=material,
+        # CARA_ELEM=elemcar,
+        # RESULTAT = stat,
+        # FORCE = ('REAC_NODA',),
+    # );
+    # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+        # GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+        # TOUT_ORDRE='OUI',
+        # OPERATION='EXTRACTION',),);
+    # torseur = TAB_eff.EXTR_TABLE()
+    # dx = torseur.DX
+    # dy = torseur.DY
+    # dz = torseur.DZ
+    # drx = torseur.DRX
+    # dry = torseur.DRY
+    # drz = torseur.DRZ
+    # maxRatio = []
+    # for i in range(len(nbChevilles)):
+        # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+        # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    # ratioMax = max(maxRatio)
+    # IMPR_TABLE (TABLE=TAB_eff,)
+    # DETRUIRE(CONCEPT=_F(NOM=force,),);
+    # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+    # while abs((ratioLimPlat-0.01)-ratioMax) > 0.01:
+        # if ratioMax < 1:
+            # alpha = fz
+        # else:
+            # beta = fz
+        # fz = (alpha+beta)/2
+        # reportFile = open(resultfile,"a")
+        # reportFile.write(f'{dash}\n')
+        # reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fz**2+fx**2)**0.5,2)}, FZ = {round(fz,2)}\n')
+        # reportFile.close()
+        # force=AFFE_CHAR_MECA(MODELE=model,
+        # FORCE_NODALE=_F(GROUP_NO=('load',),
+            # FX=fx,FY = f*(fx**2+fz**2)**0.5,FZ=fz),
+        # );
+
+        # stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+
+        # EXCIT=(			_F(CHARGE=encast,),
+                # _F(CHARGE=force,),
+            # ),
+        # SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        # );
+
+        # stat=CALC_CHAMP( reuse =stat,
+            # MODELE=model,
+            # CHAM_MATER=material,
+            # CARA_ELEM=elemcar,
+            # RESULTAT = stat,
+            # FORCE = ('REAC_NODA',),
+        # );
+        # TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            # GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+            # TOUT_ORDRE='OUI',
+            # OPERATION='EXTRACTION',),);
+        # torseur = TAB_eff.EXTR_TABLE()
+        # dx = torseur.DX
+        # dy = torseur.DY
+        # dz = torseur.DZ
+        # drx = torseur.DRX
+        # dry = torseur.DRY
+        # drz = torseur.DRZ
+        # nbChevilles = value['platine']['nbCheville']
+        # maxRatio = []
+        # for i in range(len(nbChevilles)):
+            # ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
+            # maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        # ratioMax = max(maxRatio)
+        # IMPR_TABLE (TABLE=TAB_eff,)
+        # DETRUIRE(CONCEPT=_F(NOM=force,),);
+        # DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        # DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+
+    # #-----------------------------------------------------------------------------------------    
+    # osupFile = open(chevilleFile,"a")
+    # osupFile.write(f'{round(fx,3)}		{round(f*((fz**2+fx**2)**0.5),3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
+    # osupFile.close()
+    # 
+    # sv.fyCourbeMin.append(fx)
+    # sv.fzCourbeMin.append(fz)
+# 
+# import matplotlib.pyplot as plt
+# sv.timefin = time.time()
+# print("Temps total = ",sv.timefin-sv.timeInit)
+# osupFile = open(chevilleFile,"a")
+# osupFile.write(f'0 			{round(f*fzMax_init,3)} 			{round(fzMax_init,3)}\n')
+# osupFile.close()
+# ------------------------------- RIGIDITE PLATINE ------------------------------------
+# ------------------------ Début dichotomie -------------------------
+# TODO modifier le script pour qu'il détecte la direction principale de poutre 
+# Pour ce support le frottement est suivant X
 reportFile = open(resultfile,"a")
-reportFile.write(f'{version}\n{dash}')
-reportFile.write(f'CHARGEMENT: FX = 0,  FY={fy}, FZ = 0\n')
+reportFile.write(f'RIGIDITE\n{dash}')
+reportFile.write(f'CHARGEMENT: FX = 0, FY = {fy}, FZ = 0\n')
 reportFile.close()
 force=AFFE_CHAR_MECA(MODELE=model,
 FORCE_NODALE=_F(GROUP_NO=('load',),
 	FY = fy,),
 );
-
 stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
 EXCIT=(			_F(CHARGE=encast,),
 		_F(CHARGE=force,),
     ),
-
 SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11),
 );
-
 stat=CALC_CHAMP( reuse =stat,
 	MODELE=model,
 	CHAM_MATER=material,
@@ -3101,12 +4844,11 @@ stat=CALC_CHAMP( reuse =stat,
 	RESULTAT = stat,
 	FORCE = ('REAC_NODA',),
 );
-
 TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
 	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
 	TOUT_ORDRE='OUI',
-	OPERATION='EXTRACTION',),);    
-
+	OPERATION='EXTRACTION',),);
+    
 torseur = TAB_eff.EXTR_TABLE()
 dx = torseur.DX
 dy = torseur.DY
@@ -3114,39 +4856,36 @@ dz = torseur.DZ
 drx = torseur.DRX
 dry = torseur.DRY
 drz = torseur.DRZ
+ 
 nbChevilles = value['platine']['nbCheville']
 maxRatio = []
 for i in range(len(nbChevilles)):
-    ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-    maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
 ratioMax = max(maxRatio)
 IMPR_TABLE (TABLE=TAB_eff,)
 DETRUIRE(CONCEPT=_F(NOM=force,),);
 DETRUIRE(CONCEPT=_F(NOM=stat,),);
 DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+#----------------------Borne max fy------------------------------
 
-#----------------------Borne max FZ------------------------------
 a1 = 0
 fyMax = fy
-while ratioMax < ratioLimPlat:  
+while ratioMax < ratioLimPlat:    
     fyMax += 500
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(fyMax,2)}, FZ = 0 FZ=0\n')
+    reportFile.write(f'CHARGEMENT1: FX = 0, FY = {round(fyMax,2)}, FZ = 0\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
         FY = fyMax,),
     );
-
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
             _F(CHARGE=force,),
         ),
-
     SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11),
     );
-
     stat=CALC_CHAMP( reuse =stat,
         MODELE=model,
         CHAM_MATER=material,
@@ -3154,34 +4893,29 @@ while ratioMax < ratioLimPlat:
         RESULTAT = stat,
         FORCE = ('REAC_NODA',),
     );
-
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
 	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
 	TOUT_ORDRE='OUI',
 	OPERATION='EXTRACTION',),);
     
-
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
     dz = torseur.DZ
     drx = torseur.DRX
     dry = torseur.DRY
-    drz = torseur.DRZ     
-
+    drz = torseur.DRZ
+     
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=stat,),);
     DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
-
 #-----------------------------  fyMax ------------------------------
-
 while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
     if ratioMax < ratioLimPlat:
         a1 = fyMax
@@ -3190,21 +4924,18 @@ while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
     fyMax = (a1+b1)/2
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(fyMax,2)}, FZ=0\n')
+    reportFile.write(f'CHARGEMENT2:  FX = 0, FY = {round(fyMax,2)}, FZ = 0,\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
         FY = fyMax,),
     );
-
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
             _F(CHARGE=force,),
         ),
-
     SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
     );
-
     stat=CALC_CHAMP( reuse =stat,
         MODELE=model,
         CHAM_MATER=material,
@@ -3212,14 +4943,11 @@ while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
         RESULTAT = stat,
         FORCE = ('REAC_NODA',),
     );
-
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
 	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
 	TOUT_ORDRE='OUI',
 	OPERATION='EXTRACTION',),);
-
     
-
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
@@ -3227,39 +4955,32 @@ while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
     drx = torseur.DRX
     dry = torseur.DRY
     drz = torseur.DRZ
-
+     
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=stat,),);
     DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
 
-
-
 #----------------------------- fxMax --------------------------------
 fxMax = fyMax/f
 reportFile = open(resultfile,"a")
-reportFile.write(f'CHARGEMENT: FX = {round(fxMax,2)}, FY = {round(f*fxMax,2)}, FZ=0\n')
+reportFile.write(f'CHARGEMENT: FX = {round(fxMax,2)}, FY = {round(f*fxMax,2)}, FZ = 0\n')
 reportFile.close()
 force=AFFE_CHAR_MECA(MODELE=model,
 FORCE_NODALE=_F(GROUP_NO=('load',),
 	FY = f*fxMax,FX=fxMax,),
-
 );
-
 stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
 EXCIT=(			_F(CHARGE=encast,),
 		_F(CHARGE=force,),
     ),
-
 SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
 );
-
 stat=CALC_CHAMP( reuse =stat,
 	MODELE=model,
 	CHAM_MATER=material,
@@ -3267,13 +4988,11 @@ stat=CALC_CHAMP( reuse =stat,
 	RESULTAT = stat,
 	FORCE = ('REAC_NODA',),
 );
-
 TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
 	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
 	TOUT_ORDRE='OUI',
 	OPERATION='EXTRACTION',),);
     
-
 torseur = TAB_eff.EXTR_TABLE()
 dx = torseur.DX
 dy = torseur.DY
@@ -3281,11 +5000,11 @@ dz = torseur.DZ
 drx = torseur.DRX
 dry = torseur.DRY
 drz = torseur.DRZ
+ 
 nbChevilles = value['platine']['nbCheville']
 maxRatio = []
 for i in range(len(nbChevilles)):
-    ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-    maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
 ratioMax = max(maxRatio)
 IMPR_TABLE (TABLE=TAB_eff,)
 DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -3294,7 +5013,7 @@ DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
 while ratioMax < ratioLimPlat:
     fxMax *= 2
     reportFile = open(resultfile,"a")
-    reportFile.write(f'CHARGEMENT: FX = {round(fxMax,2)}, FY ={round(f*fxMax,2)}, FZ = 0 \n')
+    reportFile.write(f'CHARGEMENT: FX = {round(fxMax,2)}, FY = {round(f*fxMax,2)}, FZ = 0 \n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
@@ -3305,7 +5024,6 @@ while ratioMax < ratioLimPlat:
     EXCIT=(			_F(CHARGE=encast,),
             _F(CHARGE=force,),
         ),
-
     SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
     );
 
@@ -3317,13 +5035,11 @@ while ratioMax < ratioLimPlat:
         FORCE = ('REAC_NODA',),
 
     );
+
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
         GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);
-
-        
-
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
@@ -3331,12 +5047,10 @@ while ratioMax < ratioLimPlat:
     drx = torseur.DRX
     dry = torseur.DRY
     drz = torseur.DRZ
-   
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -3344,7 +5058,6 @@ while ratioMax < ratioLimPlat:
     DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
 a2 = 0
 b2 = fxMax
-
 while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
     if ratioMax < ratioLimPlat:
         a2 = fxMax
@@ -3359,15 +5072,12 @@ while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
     FORCE_NODALE=_F(GROUP_NO=('load',),
         FY = f*fxMax,FX=fxMax,),
     );
-
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
             _F(CHARGE=force,),
         ),
-
     SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
     );
-
     stat=CALC_CHAMP( reuse =stat,
         MODELE=model,
         CHAM_MATER=material,
@@ -3375,11 +5085,11 @@ while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
         RESULTAT = stat,
         FORCE = ('REAC_NODA',),
     );
-
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
 	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
 	TOUT_ORDRE='OUI',
 	OPERATION='EXTRACTION',),);
+    
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
@@ -3387,25 +5097,22 @@ while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
     drx = torseur.DRX
     dry = torseur.DRY
     drz = torseur.DRZ
-
+     
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=stat,),);
     DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
  
-
-#----------------------------- FzMax --------------------------------
-
+#----------------------------- fzMax --------------------------------
 fzMax = fyMax/f
 reportFile = open(resultfile,"a")
 reportFile.write(f'{dash}\n')
-reportFile.write(f'CHARGEMENT: FX = 0, FY ={round(f*fzMax,2)}, FZ = {round(fzMax,2)} \n')
+reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(f*fzMax,2)}, FZ ={round(fzMax,2)} \n')
 reportFile.close()
 force=AFFE_CHAR_MECA(MODELE=model,
 FORCE_NODALE=_F(GROUP_NO=('load',),
@@ -3415,10 +5122,8 @@ stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
 EXCIT=(			_F(CHARGE=encast,),
 		_F(CHARGE=force,),
     ),
-
 SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
 );
-
 stat=CALC_CHAMP( reuse =stat,
 	MODELE=model,
 	CHAM_MATER=material,
@@ -3426,13 +5131,11 @@ stat=CALC_CHAMP( reuse =stat,
 	RESULTAT = stat,
 	FORCE = ('REAC_NODA',),
 );
-
 TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
 	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
 	TOUT_ORDRE='OUI',
 	OPERATION='EXTRACTION',),);
     
-
 torseur = TAB_eff.EXTR_TABLE()
 dx = torseur.DX
 dy = torseur.DY
@@ -3440,14 +5143,11 @@ dz = torseur.DZ
 drx = torseur.DRX
 dry = torseur.DRY
 drz = torseur.DRZ
-
  
-
 nbChevilles = value['platine']['nbCheville']
 maxRatio = []
 for i in range(len(nbChevilles)):
-    ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-    maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
 ratioMax = max(maxRatio)
 IMPR_TABLE (TABLE=TAB_eff,)
 DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -3456,17 +5156,17 @@ DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
 while ratioMax < ratioLimPlat:
     fzMax *= 2
     reportFile = open(resultfile,"a")
-    reportFile.write(f'CHARGEMENT: FX = 0, FY ={round(f*fzMax,2)}, FZ = {round(fzMax,2)} \n')
+    reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(f*fzMax,2)}, FZ = {round(fzMax,2)} \n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
         FY = f*fzMax,FZ=fzMax,),
     );
+
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
             _F(CHARGE=force,),
         ),
-
     SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
     );
 
@@ -3476,14 +5176,13 @@ while ratioMax < ratioLimPlat:
         CARA_ELEM=elemcar,
         RESULTAT = stat,
         FORCE = ('REAC_NODA',),
+
     );
 
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
         GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);
-        
-
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
@@ -3494,17 +5193,15 @@ while ratioMax < ratioLimPlat:
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=stat,),);
     DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
-
 a3 = 0
 b3 = fzMax
-while abs((ratioLimPlat - 0.01) - ratioMax) > 0.01:
+while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
     if ratioMax < ratioLimPlat:
         a3 = fzMax
     else:
@@ -3512,7 +5209,7 @@ while abs((ratioLimPlat - 0.01) - ratioMax) > 0.01:
     fzMax = (a3+b3)/2
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(f*fzMax,2)} , FZ = {round(fzMax,2)}\n')
+    reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(f*fzMax,2)}, FZ = {round(fzMax,2)}\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
@@ -3531,11 +5228,11 @@ while abs((ratioLimPlat - 0.01) - ratioMax) > 0.01:
         RESULTAT = stat,
         FORCE = ('REAC_NODA',),
     );
-
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
 	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
 	TOUT_ORDRE='OUI',
-	OPERATION='EXTRACTION',),);   
+	OPERATION='EXTRACTION',),);
+    
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
@@ -3543,38 +5240,37 @@ while abs((ratioLimPlat - 0.01) - ratioMax) > 0.01:
     drx = torseur.DRX
     dry = torseur.DRY
     drz = torseur.DRZ
+     
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=stat,),);
     DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
-    
-
 #------------------------------------------------------------------------------------------
-osupFile = open(chevilleFile,"w")
+osupFile = open(rigiditeFile,"w")
 osupFile.write(f'{version}\n')
-osupFile.write(f'{dash}\nFX 			FX 			FZ 			Axial 			ratio max\n')
-osupFile.write(f'0 			{round(f*fzMax,3)} 			{round(fzMax,3)}\n')
-osupFile.close()
-ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
-sv.fyCourbeMin.append(0)
-sv.fzCourbeMin.append(fzMax)
+osupFile.write(f'{dash}\nFX 			FY 			FZ 			ratio max\n')
+osupFile.write(f'0		{round(f*fzMax,2)}		{round(fzMax,2)}\n')
 fzMax_init = fzMax
-#----------------------------------QUADRANT 1 fy >0 , fx > 0-------------------------------
+osupFile.close()
+
+sv.fzCourbeMin.append(0)
+sv.fyCourbeMin.append(fzMax)
+
+#----------------------------------QUADRANT 1 fz >0 , fx > 0-------------------------------
 for i in range(1,n):
     fx = fxMax/n*i    
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fzMax**2)**0.5,2)}, FZ={round(fzMax,2)}\n')
+    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*fzMax,2)}, FZ = {round(f*(fx**2+fzMax**2)**0.5,2)}\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
-        FX=fx, FY = f*(fx**2+fzMax**2)**0.5,FZ=fzMax),
+        FY = f*(fx**2+fzMax**2)**0.5,FX=fx,FZ=fzMax),
     );
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
@@ -3589,11 +5285,11 @@ for i in range(1,n):
         RESULTAT = stat,
         FORCE = ('REAC_NODA',),
     );
-
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
 	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
 	TOUT_ORDRE='OUI',
 	OPERATION='EXTRACTION',),);
+    
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
@@ -3601,12 +5297,11 @@ for i in range(1,n):
     drx = torseur.DRX
     dry = torseur.DRY
     drz = torseur.DRZ
-    
+     
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -3647,12 +5342,12 @@ for i in range(1,n):
     dz = torseur.DZ
     drx = torseur.DRX
     dry = torseur.DRY
-    drz = torseur.DRZ     
+    drz = torseur.DRZ
+     
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -3667,7 +5362,7 @@ for i in range(1,n):
     fz = (alpha + beta)/2
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY ={round(f*(fx**2+fz**2)**0.5,2)}, FZ={round(fz,2)}\n')
+    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fz**2)**0.5,2)}, FZ = {round(fz,2)}\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
@@ -3675,10 +5370,10 @@ for i in range(1,n):
     );
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
-            _F(CHARGE=force,),        ),
+            _F(CHARGE=force,),
+        ),
     SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
     );
-
     stat=CALC_CHAMP( reuse =stat,
         MODELE=model,
         CHAM_MATER=material,
@@ -3686,26 +5381,23 @@ for i in range(1,n):
         RESULTAT = stat,
         FORCE = ('REAC_NODA',),
     );
-
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
 	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
 	TOUT_ORDRE='OUI',
 	OPERATION='EXTRACTION',),);
     
-
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
     dz = torseur.DZ
     drx = torseur.DRX
     dry = torseur.DRY
-    drz = torseur.DRZ     
-
+    drz = torseur.DRZ
+     
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -3719,20 +5411,18 @@ for i in range(1,n):
         fz = (alpha+beta)/2
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fz**2)**0.5,2)}, FZ = {round(fz,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fx,3)}, FY = {round(f*(fx**2+fz**2)**0.5,3)}, FZ = {round(fz,3)}\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
             FY = f*(fx**2+fz**2)**0.5,FZ=fz,FX=fx),
         );
-
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
                 _F(CHARGE=force,),
             ),
         SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
         );
-
         stat=CALC_CHAMP( reuse =stat,
             MODELE=model,
             CHAM_MATER=material,
@@ -3740,13 +5430,11 @@ for i in range(1,n):
             RESULTAT = stat,
             FORCE = ('REAC_NODA',),
         );
-
         TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
             GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);
         
-
         torseur = TAB_eff.EXTR_TABLE()
         dx = torseur.DX
         dy = torseur.DY
@@ -3755,36 +5443,33 @@ for i in range(1,n):
         dry = torseur.DRY
         drz = torseur.DRZ
          
-
         nbChevilles = value['platine']['nbCheville']
         maxRatio = []
         for i in range(len(nbChevilles)):
-            ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-            maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+            maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
         ratioMax = max(maxRatio)
         IMPR_TABLE (TABLE=TAB_eff,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=stat,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
     #-----------------------------------------------------------------------------------------
-
-    osupFile = open(chevilleFile,"a")
-    osupFile.write(f'{round(fx,3)}		{round(f*((fz**2+fx**2)**0.5),3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
-    osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
-    sv.fyCourbeMin.append(fx)
-    sv.fzCourbeMin.append(fz)
-osupFile = open(chevilleFile,"a")
+    osupFile = open(rigiditeFile,"a")
+    osupFile.write(f'{round(fx,3)}		{round(f*((fz**2+fx**2)**0.5),3)}		{round(fz,3)}		{round(ratioMax,3)}		\n')
+    osupFile.close()    
+    sv.fzCourbeMin.append(fx)
+    sv.fyCourbeMin.append(fz)
+osupFile = open(rigiditeFile,"a")
 osupFile.write(f'{round(fxMax,2)}		{round(f*fxMax,2)}		0\n')
 osupFile.close()
-sv.fyCourbeMin.append(fxMax)
-sv.fzCourbeMin.append(0)
+sv.fzCourbeMin.append(fxMax)
+sv.fyCourbeMin.append(0)
 
-#-------------------------------------QUADRANT 2 fy<0 fx<0 ---------------------------------------------
-fzMin = -fyMax/f
+#-------------------------------------QUADRANT 2 fz<0 fx<0 ---------------------------------------------
+#----------------------------- fyMax --------------------------------
+fyMin = -fzMax/f
 reportFile = open(resultfile,"a")
 reportFile.write(f'{dash}\n')
-reportFile.write(f'CHARGEMENT: FX = 0, FY ={round(f*-fzMin,2)}, FZ = {round(fzMin,2)} \n')
+reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(-f*fzMin,2)}, FZ ={round(fzMin,2)} \n')
 reportFile.close()
 force=AFFE_CHAR_MECA(MODELE=model,
 FORCE_NODALE=_F(GROUP_NO=('load',),
@@ -3794,10 +5479,8 @@ stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
 EXCIT=(			_F(CHARGE=encast,),
 		_F(CHARGE=force,),
     ),
-
 SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
 );
-
 stat=CALC_CHAMP( reuse =stat,
 	MODELE=model,
 	CHAM_MATER=material,
@@ -3805,25 +5488,23 @@ stat=CALC_CHAMP( reuse =stat,
 	RESULTAT = stat,
 	FORCE = ('REAC_NODA',),
 );
-
 TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
 	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
 	TOUT_ORDRE='OUI',
-	OPERATION='EXTRACTION',),);    
-
+	OPERATION='EXTRACTION',),);
+    
 torseur = TAB_eff.EXTR_TABLE()
 dx = torseur.DX
 dy = torseur.DY
 dz = torseur.DZ
 drx = torseur.DRX
 dry = torseur.DRY
-drz = torseur.DRZ 
-
+drz = torseur.DRZ
+ 
 nbChevilles = value['platine']['nbCheville']
 maxRatio = []
 for i in range(len(nbChevilles)):
-    ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-    maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+    maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
 ratioMax = max(maxRatio)
 IMPR_TABLE (TABLE=TAB_eff,)
 DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -3832,17 +5513,17 @@ DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
 while ratioMax < ratioLimPlat:
     fzMin *= 2
     reportFile = open(resultfile,"a")
-    reportFile.write(f'CHARGEMENT: FX = 0, FY ={round(f*-fzMin,2)}, FZ = {round(fzMin,2)} \n')
+    reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(-f*fzMin,2)}, FZ = {round(fzMin,2)} \n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
         FY = f*-fzMin,FZ=fzMin,),
     );
+
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
             _F(CHARGE=force,),
         ),
-
     SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
     );
 
@@ -3852,14 +5533,13 @@ while ratioMax < ratioLimPlat:
         CARA_ELEM=elemcar,
         RESULTAT = stat,
         FORCE = ('REAC_NODA',),
+
     );
 
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
         GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);
-        
-
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
@@ -3870,25 +5550,23 @@ while ratioMax < ratioLimPlat:
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=stat,),);
     DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
-
 a3 = 0
 b3 = fzMin
-while abs((ratioLimPlat - 0.01) - ratioMax) > 0.01:
+while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
     if ratioMax < ratioLimPlat:
         a3 = fzMin
     else:
         b3 = fzMin
-    fzMin = (a3+b3)/2
+    fzMin= (a3+b3)/2
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(f*-fzMin,2)} , FZ = {round(fzMin,2)}\n')
+    reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(-f*fzMin,2)}, FZ = {round(fzMin,2)}\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
@@ -3907,11 +5585,11 @@ while abs((ratioLimPlat - 0.01) - ratioMax) > 0.01:
         RESULTAT = stat,
         FORCE = ('REAC_NODA',),
     );
-
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
 	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
 	TOUT_ORDRE='OUI',
-	OPERATION='EXTRACTION',),);   
+	OPERATION='EXTRACTION',),);
+    
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
@@ -3919,37 +5597,32 @@ while abs((ratioLimPlat - 0.01) - ratioMax) > 0.01:
     drx = torseur.DRX
     dry = torseur.DRY
     drz = torseur.DRZ
+     
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=stat,),);
-    DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);    
-
-#------------------------------------------------------------------------------------------
-ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
 for i in range(1,n):
-    fx = fxMax/n*(n-i)   
+    fx = fxMax/n*(n-i)    
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fzMax**2)**0.5,2)}, FZ={round(-fzMax,2)}\n')
+    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fzMin**2)**0.5,2)} FZ = {round(fzMin,2)},\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
-        FY = f*(fx**2+fzMax**2)**0.5,FZ=-fzMax,FX=fx),
+        FY = f*(fx**2+fzMin**2)**0.5,FZ=fzMin,FX=fx),
     );
-
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
             _F(CHARGE=force,),
         ),
     SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
     );
-
     stat=CALC_CHAMP( reuse =stat,
         MODELE=model,
         CHAM_MATER=material,
@@ -3957,32 +5630,31 @@ for i in range(1,n):
         RESULTAT = stat,
         FORCE = ('REAC_NODA',),
     );
-
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
 	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
 	TOUT_ORDRE='OUI',
-	OPERATION='EXTRACTION',),);    
-
+	OPERATION='EXTRACTION',),);
+    
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
     dz = torseur.DZ
     drx = torseur.DRX
     dry = torseur.DRY
-    drz = torseur.DRZ    
-
+    drz = torseur.DRZ
+     
+    nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=stat,),);
-    DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);  
+    DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);   
     if ratioMax < ratioLimPlat:
-        fzMax *= 2
-    fzCourbe = -fzMax/fxMax*fx - fzMax
+        fzMin *= 2
+    fzCourbe = fzMin/fxMax*fx + fzMin
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
     reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fzCourbe**2)**0.5,2)}, FZ = {round(fzCourbe,2)}\n')
@@ -3991,15 +5663,12 @@ for i in range(1,n):
     FORCE_NODALE=_F(GROUP_NO=('load',),
         FY = f*(fx**2+fzCourbe**2)**0.5,FX=fx,FZ=fzCourbe),
     );
-
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
             _F(CHARGE=force,),
         ),
-
     SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
     );
-
     stat=CALC_CHAMP( reuse =stat,
         MODELE=model,
         CHAM_MATER=material,
@@ -4007,29 +5676,28 @@ for i in range(1,n):
         RESULTAT = stat,
         FORCE = ('REAC_NODA',),
     );
-
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
 	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
 	TOUT_ORDRE='OUI',
-	OPERATION='EXTRACTION',),);    
-
+	OPERATION='EXTRACTION',),);
+    
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
     dz = torseur.DZ
     drx = torseur.DRX
     dry = torseur.DRY
-    drz = torseur.DRZ    
-
+    drz = torseur.DRZ
+     
+    nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=stat,),);
-    DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);   
+    DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);    
     if ratioMax > ratioLimPlat:
         alpha = 0
         beta = fzCourbe
@@ -4039,21 +5707,18 @@ for i in range(1,n):
     fz = (alpha + beta)/2
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY ={round(f*(fx**2+fz**2)**0.5,2)}, FZ={round(fz,2)}\n')
+    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fz**2)**0.5,2)}, FZ = {round(fz,2)}\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
         FY = f*(fz**2+fx**2)**0.5,FZ=fz,FX=fx),
     );
-
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
             _F(CHARGE=force,),
         ),
-
     SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
     );
-
     stat=CALC_CHAMP( reuse =stat,
         MODELE=model,
         CHAM_MATER=material,
@@ -4061,24 +5726,23 @@ for i in range(1,n):
         RESULTAT = stat,
         FORCE = ('REAC_NODA',),
     );
-
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
 	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
 	TOUT_ORDRE='OUI',
-	OPERATION='EXTRACTION',),);    
-
+	OPERATION='EXTRACTION',),);
+    
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
     dz = torseur.DZ
     drx = torseur.DRX
     dry = torseur.DRY
-    drz = torseur.DRZ     
-
+    drz = torseur.DRZ
+     
+    nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -4092,7 +5756,7 @@ for i in range(1,n):
         fz = (alpha+beta)/2
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fy**2+fx**2)**0.5,2)}, FZ = {round(fz,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fz**2+fx**2)**0.5,2)}, FZ = {round(fz,2)}\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
@@ -4102,10 +5766,8 @@ for i in range(1,n):
         EXCIT=(			_F(CHARGE=encast,),
                 _F(CHARGE=force,),
             ),
-
         SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
         );
-
         stat=CALC_CHAMP( reuse =stat,
             MODELE=model,
             CHAM_MATER=material,
@@ -4113,62 +5775,57 @@ for i in range(1,n):
             RESULTAT = stat,
             FORCE = ('REAC_NODA',),
         );
-
         TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
             GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
             TOUT_ORDRE='OUI',
-            OPERATION='EXTRACTION',),);    
-
+            OPERATION='EXTRACTION',),);
+    
         torseur = TAB_eff.EXTR_TABLE()
         dx = torseur.DX
         dy = torseur.DY
         dz = torseur.DZ
         drx = torseur.DRX
         dry = torseur.DRY
-        drz = torseur.DRZ        
-
+        drz = torseur.DRZ
+         
+        nbChevilles = value['platine']['nbCheville']
         maxRatio = []
         for i in range(len(nbChevilles)):
-            ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-            maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+            maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
         ratioMax = max(maxRatio)
         IMPR_TABLE (TABLE=TAB_eff,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=stat,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
     #-----------------------------------------------------------------------------------------
-
-    osupFile = open(chevilleFile,"a")
+    osupFile = open(rigiditeFile,"a")
     osupFile.write(f'{round(fx,3)}		{round(f*((fz**2+fx**2)**0.5),3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
     osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
-    sv.fyCourbeMin.append(fx)
-    sv.fzCourbeMin.append(fz)
-
-#----------------------------------QUADRANT 3 fy <0 , fx < 0-------------------------------
-osupFile = open(chevilleFile,"a")
-osupFile.write(f'0 			{round(f*-fzMin,3)} 			{round(fzMin,3)}\n')
+    
+    sv.fzCourbeMin.append(fx)
+    sv.fyCourbeMin.append(fz)
+osupFile = open(rigiditeFile,"a")
+osupFile.write(f'0		{round(f*fzMin,3)}		{round(fzMin,3)}\n')
 osupFile.close()
-sv.fyCourbeMin.append(0)
-sv.fzCourbeMin.append(fzMin)
+sv.fzCourbeMin.append(0)
+sv.fyCourbeMin.append(fzMin)
+#----------------------------------QUADRANT 3 fz <0 , fx < 0-------------------------------
 #----------------------------- fxMin --------------------------------
-fxMin = -fyMax/f
+fxMin = -fzMax/f
 reportFile = open(resultfile,"a")
-reportFile.write(f'CHARGEMENT: FX = {round(fxMin,2)}, FY = {round(f*-fxMin,2)}, FZ=0\n')
+reportFile.write(dash)
+reportFile.write(f'CHARGEMENT: FX = {round(fxMin ,2)}, FY = {round(f*-fxMin ,2)}, FZ = 0\n')
 reportFile.close()
 force=AFFE_CHAR_MECA(MODELE=model,
 FORCE_NODALE=_F(GROUP_NO=('load',),
-	FY = f*-fxMin,FX=fxMin,),
-
+	FY = f*-fxMin ,FX=fxMin ,),
 );
 stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
 EXCIT=(			_F(CHARGE=encast,),
 		_F(CHARGE=force,),
     ),
-
 SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
 );
-
 stat=CALC_CHAMP( reuse =stat,
 	MODELE=model,
 	CHAM_MATER=material,
@@ -4176,13 +5833,11 @@ stat=CALC_CHAMP( reuse =stat,
 	RESULTAT = stat,
 	FORCE = ('REAC_NODA',),
 );
-
 TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
 	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
 	TOUT_ORDRE='OUI',
 	OPERATION='EXTRACTION',),);
     
-
 torseur = TAB_eff.EXTR_TABLE()
 dx = torseur.DX
 dy = torseur.DY
@@ -4190,31 +5845,30 @@ dz = torseur.DZ
 drx = torseur.DRX
 dry = torseur.DRY
 drz = torseur.DRZ
+ 
 nbChevilles = value['platine']['nbCheville']
 maxRatio = []
 for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
-    ratioMax = max(maxRatio))
+    maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
+ratioMax = max(maxRatio)
 IMPR_TABLE (TABLE=TAB_eff,)
 DETRUIRE(CONCEPT=_F(NOM=force,),);
 DETRUIRE(CONCEPT=_F(NOM=stat,),);
 DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
 while ratioMax < ratioLimPlat:
-    fxMin *= 2
+    fxMin  *= 2
     reportFile = open(resultfile,"a")
-    reportFile.write(f'CHARGEMENT: FX = {round(fxMin,2)}, FY ={round(f*-fxMin,2)}, FZ = 0 \n')
+    reportFile.write(f'CHARGEMENT: FX = {round(fxMin,2)}, FY = {round(-f*fxMin,2)}, FZ = 0 \n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
-        FY = f*-fxMin,FX=fxMin,),
+        FY = -f*fxMin,FX=fxMin,),
     );
 
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
             _F(CHARGE=force,),
         ),
-
     SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
     );
 
@@ -4226,13 +5880,11 @@ while ratioMax < ratioLimPlat:
         FORCE = ('REAC_NODA',),
 
     );
+
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
         GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);
-
-        
-
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
@@ -4240,43 +5892,37 @@ while ratioMax < ratioLimPlat:
     drx = torseur.DRX
     dry = torseur.DRY
     drz = torseur.DRZ
-   
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=stat,),);
     DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
 a2 = 0
-b2 = fxMin
-
+b2 = fxMin 
 while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
     if ratioMax < ratioLimPlat:
-        a2 = fxMin
+        a2 = fxMin 
     else:
-        b2 = fxMin
-    fxMin = (a2+b2)/2
+        b2 = fxMin 
+    fxMin  = (a2+b2)/2
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = {round(fxMin,2)}, FY = {round(f*-fxMin,2)}, FZ = 0\n')
+    reportFile.write(f'CHARGEMENT: FX = {round(fxMin ,2)}, FY = {round(-f*fxMin,2)}, FZ = 0\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
-        FY = f*-fxMin,FX=fxMin,),
+        FY = f*-fxMin ,FX=fxMin ,),
     );
-
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
             _F(CHARGE=force,),
         ),
-
     SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
     );
-
     stat=CALC_CHAMP( reuse =stat,
         MODELE=model,
         CHAM_MATER=material,
@@ -4284,11 +5930,11 @@ while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
         RESULTAT = stat,
         FORCE = ('REAC_NODA',),
     );
-
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
 	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
 	TOUT_ORDRE='OUI',
 	OPERATION='EXTRACTION',),);
+    
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
@@ -4296,36 +5942,33 @@ while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
     drx = torseur.DRX
     dry = torseur.DRY
     drz = torseur.DRZ
-
+     
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=stat,),);
     DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),); 
+
 for i in range(1,n):
-    fx = fxMin/n*i     
+    fx = fxMin /n*i    
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fzMin**2)**0.5,2)}, FZ={round(fzMin,2)}\n')
+    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2)**0.5,2)}, FZ = 0\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
-        FY = f*(fx**2+fzMin**2)**0.5,FZ=fzMin,FX=fx),
+        FY = f*(fx**2)**0.5,FZ=0,FX=fx),
     );
-
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
             _F(CHARGE=force,),
         ),
-
     SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
     );
-
     stat=CALC_CHAMP( reuse =stat,
         MODELE=model,
         CHAM_MATER=material,
@@ -4333,13 +5976,10 @@ for i in range(1,n):
         RESULTAT = stat,
         FORCE = ('REAC_NODA',),
     );
-
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
-    GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
-    TOUT_ORDRE='OUI',
-    OPERATION='EXTRACTION',),);
-    
-
+	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+	TOUT_ORDRE='OUI',
+	OPERATION='EXTRACTION',),);    
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
@@ -4347,11 +5987,99 @@ for i in range(1,n):
     drx = torseur.DRX
     dry = torseur.DRY
     drz = torseur.DRZ     
-
+    nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
+    ratioMax = max(maxRatio)
+    IMPR_TABLE (TABLE=TAB_eff,)
+    DETRUIRE(CONCEPT=_F(NOM=force,),);
+    DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);  
+    # Pour pas faire de boucle infinie
+    while ratioMax > ratioLimPlat:
+        fx = (fx + sv.fzCourbeMin[-1])/2 
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2)**0.5,2)}, FZ = 0\n')
+        reportFile.close()
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FY = f*(fx**2)**0.5,FZ=0,FX=fx),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+        stat=CALC_CHAMP( reuse =stat,
+            MODELE=model,
+            CHAM_MATER=material,
+            CARA_ELEM=elemcar,
+            RESULTAT = stat,
+            FORCE = ('REAC_NODA',),
+        );
+        TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+        GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+        TOUT_ORDRE='OUI',
+        OPERATION='EXTRACTION',),);
+        
+        torseur = TAB_eff.EXTR_TABLE()
+        dx = torseur.DX
+        dy = torseur.DY
+        dz = torseur.DZ
+        drx = torseur.DRX
+        dry = torseur.DRY
+        drz = torseur.DRZ
+         
+        nbChevilles = value['platine']['nbCheville']
+        maxRatio = []
+        for i in range(len(nbChevilles)):
+            maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
+        ratioMax = max(maxRatio)
+        IMPR_TABLE (TABLE=TAB_eff,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+    reportFile = open(resultfile,"a")
+    reportFile.write(f'{dash}\n')
+    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fzMin**2)**0.5,2)}, FZ = {round(fzMin,2)}\n')
+    reportFile.close()
+    force=AFFE_CHAR_MECA(MODELE=model,
+    FORCE_NODALE=_F(GROUP_NO=('load',),
+        FY = f*(fx**2+fzMin**2)**0.5,FZ=fzMin,FX=fx),
+    );
+    stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    EXCIT=(			_F(CHARGE=encast,),
+            _F(CHARGE=force,),
+        ),
+    SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    );
+    stat=CALC_CHAMP( reuse =stat,
+        MODELE=model,
+        CHAM_MATER=material,
+        CARA_ELEM=elemcar,
+        RESULTAT = stat,
+        FORCE = ('REAC_NODA',),
+    );
+    TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+    GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
+    TOUT_ORDRE='OUI',
+    OPERATION='EXTRACTION',),);
+    
+    torseur = TAB_eff.EXTR_TABLE()
+    dx = torseur.DX
+    dy = torseur.DY
+    dz = torseur.DZ
+    drx = torseur.DRX
+    dry = torseur.DRY
+    drz = torseur.DRZ
+     
+    nbChevilles = value['platine']['nbCheville']
+    maxRatio = []
+    for i in range(len(nbChevilles)):
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -4368,15 +6096,12 @@ for i in range(1,n):
     FORCE_NODALE=_F(GROUP_NO=('load',),
         FY = f*(fx**2+fzCourbe**2)**0.5,FZ=fzCourbe,FX=fx),
     );
-
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
             _F(CHARGE=force,),
         ),
-
     SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
     );
-
     stat=CALC_CHAMP( reuse =stat,
         MODELE=model,
         CHAM_MATER=material,
@@ -4384,30 +6109,28 @@ for i in range(1,n):
         RESULTAT = stat,
         FORCE = ('REAC_NODA',),
     );
-
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
 	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
 	TOUT_ORDRE='OUI',
 	OPERATION='EXTRACTION',),);
     
-
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
     dz = torseur.DZ
     drx = torseur.DRX
     dry = torseur.DRY
-    drz = torseur.DRZ     
-
+    drz = torseur.DRZ
+     
+    nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=stat,),);
-    DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);  
+    DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);   
     if ratioMax > ratioLimPlat:
         alpha = 0
         beta = fzCourbe
@@ -4417,13 +6140,12 @@ for i in range(1,n):
     fz = (alpha + beta)/2
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY ={round(f*(fz**2+fx**2)**0.5,2)}, FZ={round(fz,2)}\n')
+    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fz**2+fx**2)**0.5,2)}, FZ = {round(fz,2)}\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
         FY = f*(fz**2+fx**2)**0.5,FZ=fz,FX=fx),
     );
-
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
             _F(CHARGE=force,),
@@ -4440,9 +6162,7 @@ for i in range(1,n):
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
 	GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
 	TOUT_ORDRE='OUI',
-	OPERATION='EXTRACTION',),);
-    
-
+	OPERATION='EXTRACTION',),);    
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
@@ -4450,11 +6170,10 @@ for i in range(1,n):
     drx = torseur.DRX
     dry = torseur.DRY
     drz = torseur.DRZ     
-
+    nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -4472,17 +6191,14 @@ for i in range(1,n):
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FY = f*(fz**2+fx**2)**0.5,FZ=fz,FX=fx),
+            FZ=fz,FX=fx, FY = f*(fz**2+fx**2)**0.5),
         );
-
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
                 _F(CHARGE=force,),
             ),
-
         SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
         );
-
         stat=CALC_CHAMP( reuse =stat,
             MODELE=model,
             CHAM_MATER=material,
@@ -4493,54 +6209,54 @@ for i in range(1,n):
         TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
             GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
             TOUT_ORDRE='OUI',
-            OPERATION='EXTRACTION',),);        
-
+            OPERATION='EXTRACTION',),);
+        
         torseur = TAB_eff.EXTR_TABLE()
         dx = torseur.DX
         dy = torseur.DY
         dz = torseur.DZ
         drx = torseur.DRX
         dry = torseur.DRY
-        drz = torseur.DRZ        
-
+        drz = torseur.DRZ
+         
+        nbChevilles = value['platine']['nbCheville']
         maxRatio = []
         for i in range(len(nbChevilles)):
-            ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-            maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+            maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
         ratioMax = max(maxRatio)
         IMPR_TABLE (TABLE=TAB_eff,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=stat,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
     #-----------------------------------------------------------------------------------------
-    osupFile = open(chevilleFile,"a")
+    osupFile = open(rigiditeFile,"a")
     osupFile.write(f'{round(fx,3)}		{round(f*((fz**2+fx**2)**0.5),3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
     osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
-    sv.fyCourbeMin.append(fx)
-    sv.fzCourbeMin.append(fz)
-osupFile = open(chevilleFile,"a")
-osupFile.write(f'{round(fxMin,2)}		{round(f*-fxMin,2)}		0\n')
+    
+    sv.fzCourbeMin.append(fx)
+    sv.fyCourbeMin.append(fz)
+osupFile = open(rigiditeFile,"a")
+osupFile.write(f'{round(fxMin ,3)}		{round(f*(fxMin ),3)}		0		\n')
 osupFile.close()
-
-# #----------------------------------QUADRANT 4 fy <0 , fx > 0-------------------------------
-
+sv.fzCourbeMin.append(fxMin)
+sv.fyCourbeMin.append(0)
+#----------------------------------QUADRANT 4 fz <0 , fx > 0-------------------------------
 for i in range(1,n):
-    fx = fxMin/n*(n-i)   
+    fx = fxMin/n*(n-i)    
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2)**0.5,2)}, FZ=0\n')
+    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(f*(fx**2)**0.5,2)}\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
-        FX=fx,FY= f*(fx**2)**0.5,FZ=0),
+        FZ = f*(fx**2)**0.5,FX=fx,FY=0),
     );
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
             _F(CHARGE=force,),
         ),
     SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
-   );
+    );
     stat=CALC_CHAMP( reuse =stat,
         MODELE=model,
         CHAM_MATER=material,
@@ -4560,10 +6276,11 @@ for i in range(1,n):
     drx = torseur.DRX
     dry = torseur.DRY
     drz = torseur.DRZ
-    maxRatio = []    
+     
+    nbChevilles = value['platine']['nbCheville']
+    maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -4571,12 +6288,12 @@ for i in range(1,n):
     DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),); 
     while ratioMax > ratioLimPlat:
         if i ==1:
-            fx = (fx + sv.fyCourbeMin[-2])/2
+            fx = (fx + sv.fzCourbeMin[-2])/2
         else:
-            fx = (fx + sv.fyCourbeMin[-1])/2
+            fx = (fx + sv.fzCourbeMin[-1])/2
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2)**0.5,2)}, FZ=0\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2)**0.5,2)}, FZ = 0\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
@@ -4600,7 +6317,6 @@ for i in range(1,n):
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);
         
-
         torseur = TAB_eff.EXTR_TABLE()
         dx = torseur.DX
         dy = torseur.DY
@@ -4608,11 +6324,11 @@ for i in range(1,n):
         drx = torseur.DRX
         dry = torseur.DRY
         drz = torseur.DRZ
-
+         
+        nbChevilles = value['platine']['nbCheville']
         maxRatio = []
         for i in range(len(nbChevilles)):
-            ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-            maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+            maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
         ratioMax = max(maxRatio)
         IMPR_TABLE (TABLE=TAB_eff,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -4620,11 +6336,11 @@ for i in range(1,n):
         DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fzMax**2)**0.5,2)}, FZ={round(fzMax,2)}\n')
+    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fzMax**2)**0.5,2)}, FZ = {round(fzMax,2)}\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
-        FX=fx,FY = f*(fx**2+fzMax**2)**0.5,FZ=fzMax),
+        FY = f*(fx**2+fzMax**2)**0.5,FX=fx,FZ=fzMax),
     );
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
@@ -4643,6 +6359,7 @@ for i in range(1,n):
         GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);
+    
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
@@ -4650,10 +6367,11 @@ for i in range(1,n):
     drx = torseur.DRX
     dry = torseur.DRY
     drz = torseur.DRZ
-    maxRatio = []  
+     
+    nbChevilles = value['platine']['nbCheville']
+    maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -4664,20 +6382,18 @@ for i in range(1,n):
     fzCourbe = fzMax/-fxMax*fx + fzMax
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fzCourbe**2)**0.5,2)},  FZ = {round(fzCourbe,2)}\n')
+    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fzCourbe**2)**0.5,2)}, FZ = {round(fzCourbe,2)}\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
         FY = f*(fx**2+fzCourbe**2)**0.5,FX=fx,FZ=fzCourbe),
     );
-
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
             _F(CHARGE=force,),
         ),
     SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
     );
-
     stat=CALC_CHAMP( reuse =stat,
         MODELE=model,
         CHAM_MATER=material,
@@ -4685,28 +6401,28 @@ for i in range(1,n):
         RESULTAT = stat,
         FORCE = ('REAC_NODA',),
     );
-
     TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
         GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);
+    
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
     dz = torseur.DZ
     drx = torseur.DRX
     dry = torseur.DRY
-    drz = torseur.DRZ    
-
+    drz = torseur.DRZ
+     
+    nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=stat,),);
-    DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),); 
+    DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);    
     if ratioMax > ratioLimPlat:
         alpha = 0
         beta = fzCourbe
@@ -4716,20 +6432,18 @@ for i in range(1,n):
     fz = (alpha + beta)/2
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY ={round(f*(fx**2+fz**2)**0.5,2)}, FZ={round(fz,2)}\n')
+    reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(f*(fx**2+fz**2)**0.5,2)}, FZ = {round(fz,2)}\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
         FY = f*(fz**2+fx**2)**0.5,FZ=fz,FX=fx),
     );
-
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
             _F(CHARGE=force,),
         ),
     SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
     );
-
     stat=CALC_CHAMP( reuse =stat,
         MODELE=model,
         CHAM_MATER=material,
@@ -4741,6 +6455,7 @@ for i in range(1,n):
         GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);
+    
     torseur = TAB_eff.EXTR_TABLE()
     dx = torseur.DX
     dy = torseur.DY
@@ -4748,10 +6463,11 @@ for i in range(1,n):
     drx = torseur.DRX
     dry = torseur.DRY
     drz = torseur.DRZ
+     
+    nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-        maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -4769,17 +6485,14 @@ for i in range(1,n):
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FX=fx,FY = f*(fx**2+fz**2)**0.5,FZ=fz),
+            FY = f*(fx**2+fz**2)**0.5,FX=fx,FZ=fz),
         );
-
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
-
         EXCIT=(			_F(CHARGE=encast,),
                 _F(CHARGE=force,),
             ),
         SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
         );
-
         stat=CALC_CHAMP( reuse =stat,
             MODELE=model,
             CHAM_MATER=material,
@@ -4791,6 +6504,7 @@ for i in range(1,n):
             GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);
+    
         torseur = TAB_eff.EXTR_TABLE()
         dx = torseur.DX
         dy = torseur.DY
@@ -4801,26 +6515,1081 @@ for i in range(1,n):
         nbChevilles = value['platine']['nbCheville']
         maxRatio = []
         for i in range(len(nbChevilles)):
-            ratio_cheville = Criteria(value['chevilles'], dx[i], dy[i], dz[i], drx[i], dry[i], drz[i], i)    
-            maxRatio.append(ratio_cheville.calculation_criteria_traction_shearing())
+            maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
         ratioMax = max(maxRatio)
         IMPR_TABLE (TABLE=TAB_eff,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=stat,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
-
-    #-----------------------------------------------------------------------------------------    
-    osupFile = open(chevilleFile,"a")
+    #-----------------------------------------------------------------------------------------
+    osupFile = open(rigiditeFile,"a")
     osupFile.write(f'{round(fx,3)}		{round(f*((fz**2+fx**2)**0.5),3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
-    osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
-    sv.fyCourbeMin.append(fx)
-    sv.fzCourbeMin.append(fz)
-ratioPlatine.get_data(chevilleFile)
+    osupFile.close()    
+    sv.fzCourbeMin.append(fx)
+    sv.fyCourbeMin.append(fz)
+
 import matplotlib.pyplot as plt
 sv.timefin = time.time()
 print("Temps total = ",sv.timefin-sv.timeInit)
-osupFile = open(chevilleFile,"a")
-osupFile.write(f'0 			{round(f*fzMax_init,3)} 			{round(fzMax_init,3)}\n')
+plt.plot(sv.fzCourbeMin,sv.fyCourbeMin) 
+plt.show()
+osupFile = open(rigiditeFile,"a")
+osupFile.write(f'0		{round(f*fzMax_init,2)}		{round(fzMax_init,2)}\n')
 osupFile.close()
+# ------------------------------- FLECHE ------------------------------------
+if niveau == "oab":
+    if L / 700 <= 2:
+        fleche_adm = L / 700
+    else:
+        fleche_adm = 2
+    #----------------------------- fxMax --------------------------------
+    fxMax = 1000
+    reportFile = open(resultfile,"a")
+    reportFile.write(f'CHARGEMENT: FX = {round(fxMax,2)}, FY = 0, FZ = 0\n')
+    reportFile.close()
+    force=AFFE_CHAR_MECA(MODELE=model,
+    FORCE_NODALE=_F(GROUP_NO=('load',),
+        FX=fxMax,),
+    );
+    stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    EXCIT=(			_F(CHARGE=encast,),
+            _F(CHARGE=force,),
+        ),
+    SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    );
+    TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+        GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+        TOUT_ORDRE='OUI',
+        OPERATION='EXTRACTION',),);    
+    depl = TAB_depl.EXTR_TABLE()
+    dy = max( [abs(ele) for ele in depl.DY])
+    dx = max( [abs(ele) for ele in depl.DX]) 
+    fleche_max = max(dy, dx)
+    IMPR_TABLE (TABLE=TAB_depl,)
+    DETRUIRE(CONCEPT=_F(NOM=force,),);
+    DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+    DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    while fleche_max < fleche_adm:
+        fxMax *= 2        
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FX=fxMax,),
+        );
+
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'CHARGEMENT: FX = {round(fxMax,2)}, FY = 0, FZ = 0\n')
+        reportFile.write(f'fleche1 = {fleche_max}\n')
+        reportFile.write(f'fleche adm = {fleche_adm}\n')
+        reportFile.close()
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    a2 = 0
+    b2 = fxMax
+    while abs((fleche_max - 0.01)-fleche_adm) > 0.01:
+        if fleche_max < fleche_adm:
+            a2 = fxMax
+        else:
+            b2 = fxMax
+        fxMax = (a2+b2) / 2        
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FX=fxMax,),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fxMax,2)}, FY = 0, FZ = 0\n')
+        reportFile.write(f'fleche2 = {fleche_max}\n')
+        reportFile.write(f'fleche adm = {fleche_adm}\n')
+        reportFile.close()
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);     
+    #----------------------------- fzMax --------------------------------
+    fzMax = 1000   
+    force=AFFE_CHAR_MECA(MODELE=model,
+    FORCE_NODALE=_F(GROUP_NO=('load',),
+        FZ=fzMax,),
+    );
+    stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    EXCIT=(			_F(CHARGE=encast,),
+            _F(CHARGE=force,),
+        ),
+    SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    );
+    TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+        GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+        TOUT_ORDRE='OUI',
+        OPERATION='EXTRACTION',),);    
+    depl = TAB_depl.EXTR_TABLE()
+    dy = max( [abs(ele) for ele in depl.DY])
+    dx = max( [abs(ele) for ele in depl.DX]) 
+    fleche_max = max(dy, dx)
+    IMPR_TABLE (TABLE=TAB_depl,)
+    DETRUIRE(CONCEPT=_F(NOM=force,),);
+    DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+    DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    reportFile = open(resultfile,"a")
+    reportFile.write(f'{dash}\n')
+    reportFile.write(f'CHARGEMENT: FX = 0, FY = 0, FZ = {round(fzMax,2)} \n')
+    reportFile.write(f'fleche = {round(fleche_max, 3)}\n')
+    reportFile.close()
+    while fleche_max < fleche_adm:
+        fzMax *= 2        
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FZ=fzMax,),
+        );
+
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'CHARGEMENT: FX = 0, FY = 0, FZ = {round(fzMax,2)} \n')
+        reportFile.write(f'fleche = {round(fleche_max, 3)}\n')
+        reportFile.close()
+    a3 = 0
+    b3 = fzMax
+    while abs((fleche_max - 0.01)-fleche_adm) > 0.01:
+        if fleche_max < fleche_adm:
+            a3 = fzMax
+        else:
+            b3 = fzMax
+        fzMax = (a3+b3)/2        
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FZ = fzMax),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        )
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = 0, FY = 0, FZ = {round(fzMax,2)}\n')
+        reportFile.write(f'fleche = {round(fleche_max, 3)}\n')
+        reportFile.close()
+    #------------------------------------------------------------------------------------------
+    osupFile = open(flecheFile,"w")
+    osupFile.write(f'{version}\n')
+    osupFile.write(f'{dash}\nFX 			FY 			FZ 			ratio max\n')
+    osupFile.write(f'0		0		{round(fzMax,2)}\n')
+    fzMax_init = fzMax
+    osupFile.close()
+    sv.fzCourbeMin.append(0)
+    sv.fyCourbeMin.append(fzMax)
+
+    #----------------------------------QUADRANT 1 fy >0 , fx > 0-------------------------------
+    for i in range(1,n):
+        fx = fxMax/n*i    
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(fzMax,2)}\n')
+        reportFile.close()
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FX=fx,FZ=fzMax),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);   
+        if fleche_max < fleche_adm:
+            fzMax *= 2
+        fzCourbe = -fzMax/fxMax*fx + fzMax
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(fzCourbe,2)}\n')
+        reportFile.write(f'fleche1 = {round(fleche_max, 3)}\n')
+        reportFile.close()
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FX=fx,FZ=fzCourbe),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);  
+        if fleche_max > fleche_adm:
+            alpha = 0
+            beta = fzCourbe
+        else:
+            alpha = fzCourbe
+            beta = fzMax
+        fz = (alpha + beta)/2        
+        reportFile.close()
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FZ=fz,FX=fx),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(fz,2)}\n')
+        reportFile.write(f'fleche2 = {round(fleche_max, 3)}\n')
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        while abs((fleche_max - 0.01)-fleche_adm) > 0.01:
+            if fleche_max < fleche_adm:
+                alpha = fz
+            else:
+                beta = fz
+            fz = (alpha+beta)/2            
+            force=AFFE_CHAR_MECA(MODELE=model,
+            FORCE_NODALE=_F(GROUP_NO=('load',),
+                FZ=fz,FX=fx),
+            );
+            stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+            EXCIT=(			_F(CHARGE=encast,),
+                    _F(CHARGE=force,),
+                ),
+            SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+            );
+            TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+                GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+                TOUT_ORDRE='OUI',
+                OPERATION='EXTRACTION',),);    
+            depl = TAB_depl.EXTR_TABLE()
+            dy = max( [abs(ele) for ele in depl.DY])
+            dx = max( [abs(ele) for ele in depl.DX]) 
+            fleche_max = max(dy, dx)
+            reportFile = open(resultfile,"a")
+            reportFile.write(f'{dash}\n')
+            reportFile.write(f'CHARGEMENT: FX = {round(fx,3)}, FY = 0, FZ = {round(fz,3)}\n')
+            reportFile.write(f'fleche3 = {round(fleche_max, 3)}\n')
+            reportFile.close()
+            IMPR_TABLE (TABLE=TAB_depl,)
+            DETRUIRE(CONCEPT=_F(NOM=force,),);
+            DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+            DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        #-----------------------------------------------------------------------------------------
+        osupFile = open(flecheFile,"a")
+        osupFile.write(f'{round(fx,3)}		0		{round(fz,3)}		{round(fleche_max,3)}		\n')
+        osupFile.close()    
+        sv.fzCourbeMin.append(fx)
+        sv.fyCourbeMin.append(fz)
+    osupFile = open(flecheFile,"a")
+    osupFile.write(f'{round(fxMax,2)}		0		0\n')
+    osupFile.close()
+    sv.fzCourbeMin.append(fxMax)
+    sv.fyCourbeMin.append(0)
+
+    #-------------------------------------QUADRANT 2 fz<0 fx<0 ---------------------------------------------
+    #----------------------------- fyMax --------------------------------
+    fzMin = - 1000
+    reportFile = open(resultfile,"a")
+    reportFile.write(f'{dash}\n')
+    reportFile.write(f'CHARGEMENT: FX = 0, FY = 0, FZ = {round(fzMin,2)} \n')
+    reportFile.close()
+    force=AFFE_CHAR_MECA(MODELE=model,
+    FORCE_NODALE=_F(GROUP_NO=('load',),
+        FZ=fzMin,),
+    );
+    stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    EXCIT=(			_F(CHARGE=encast,),
+            _F(CHARGE=force,),
+        ),
+    SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    );
+    TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+        GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+        TOUT_ORDRE='OUI',
+        OPERATION='EXTRACTION',),);    
+    depl = TAB_depl.EXTR_TABLE()
+    dy = max( [abs(ele) for ele in depl.DY])
+    dx = max( [abs(ele) for ele in depl.DX]) 
+    fleche_max = max(dy, dx)
+    IMPR_TABLE (TABLE=TAB_depl,)
+    DETRUIRE(CONCEPT=_F(NOM=force,),);
+    DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+    DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    while fleche_max < fleche_adm:
+        fzMin *= 2
+        reportFile = open(resultfile,"a")        
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FZ=fzMin,),
+        );
+
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        reportFile.write(f'CHARGEMENT: FX = 0, FY = 0, FZ = {round(fzMin,2)} \n')
+        reportFile.write(f'fleche1 = {round(fleche_max, 3)}\n')
+        reportFile.close()
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    a3 = 0
+    b3 = fzMin
+    while abs((fleche_max - 0.01)-fleche_adm) > 0.01:
+        if fleche_max < fleche_adm:
+            a3 = fzMin
+        else:
+            b3 = fzMin
+        fzMin= (a3+b3)/2        
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FZ=fzMin),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        )
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = 0, FY = 0, FZ = {round(fzMin,2)}\n')
+        reportFile.write(f'fleche2 = {round(fleche_max, 3)}\n')
+        reportFile.close()
+    for i in range(1,n):
+        fx = fxMax/n*(n-i)    
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(fzMin,2)}\n')
+        reportFile.close()
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FZ=fzMin,FX=fx),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+        stat=CALC_CHAMP( reuse =stat,
+            MODELE=model,
+            CHAM_MATER=material,
+            CARA_ELEM=elemcar,
+            RESULTAT = stat,
+            FORCE = ('REAC_NODA',),
+        );
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);  
+        if fleche_max < fleche_adm:
+            fzMin *= 2
+        fzCourbe = fzMin/fxMax*fx + fzMin
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(fzCourbe,2)}\n')
+        reportFile.close()
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FX=fx,FZ=fzCourbe),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);   
+        if fleche_max > fleche_adm:
+            alpha = 0
+            beta = fzCourbe
+        else:
+            alpha = fzCourbe
+            beta = fzMin
+        fz = (alpha + beta)/2
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(fz,2)}\n')
+        reportFile.close()
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FZ=fz,FX=fx),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        while abs((fleche_max - 0.01)-fleche_adm) > 0.01:
+            if fleche_max < fleche_adm:
+                alpha = fz
+            else:
+                beta = fz
+            fz = (alpha+beta)/2            
+            force=AFFE_CHAR_MECA(MODELE=model,
+            FORCE_NODALE=_F(GROUP_NO=('load',),
+                FZ=fz,FX=fx),
+            );
+            stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+            EXCIT=(			_F(CHARGE=encast,),
+                    _F(CHARGE=force,),
+                ),
+            SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+            );
+            TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+                GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+                TOUT_ORDRE='OUI',
+                OPERATION='EXTRACTION',),);    
+            depl = TAB_depl.EXTR_TABLE()
+            dy = max( [abs(ele) for ele in depl.DY])
+            dx = max( [abs(ele) for ele in depl.DX]) 
+            fleche_max = max(dy, dx)
+            IMPR_TABLE (TABLE=TAB_depl,)
+            DETRUIRE(CONCEPT=_F(NOM=force,),);
+            DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+            DETRUIRE(CONCEPT=_F(NOM=stat,),);
+            reportFile = open(resultfile,"a")
+            reportFile.write(f'{dash}\n')
+            reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(fz,2)}\n')
+            reportFile.write(f'fleche3 = {round(fleche_max, 3)}\n')
+            reportFile.close()
+        #-----------------------------------------------------------------------------------------
+        osupFile = open(flecheFile,"a")
+        osupFile.write(f'{round(fx,3)}		0		{round(fz, 3)}		{round(fleche_max, 3)}\n')
+        osupFile.close()        
+        sv.fzCourbeMin.append(fx)
+        sv.fyCourbeMin.append(fz)
+    osupFile = open(flecheFile,"a")
+    osupFile.write(f'0		0		{round(fzMin,3)}\n')
+    osupFile.close()
+    sv.fzCourbeMin.append(0)
+    sv.fyCourbeMin.append(fzMin)
+    #----------------------------------QUADRANT 3 fz <0 , fx < 0-------------------------------
+    #----------------------------- fxMin --------------------------------
+    fxMin = -fxMax
+    reportFile = open(resultfile,"a")
+    reportFile.write(dash)
+    reportFile.write(f'CHARGEMENT: FX = {round(fxMin ,2)}, FY = 0, FZ = 0\n')
+    reportFile.close()
+    force=AFFE_CHAR_MECA(MODELE=model,
+    FORCE_NODALE=_F(GROUP_NO=('load',),
+        FX=fxMin ,),
+    );
+    stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+    EXCIT=(			_F(CHARGE=encast,),
+            _F(CHARGE=force,),
+        ),
+    SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+    );
+    TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+        GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+        TOUT_ORDRE='OUI',
+        OPERATION='EXTRACTION',),);    
+    depl = TAB_depl.EXTR_TABLE()
+    dy = max( [abs(ele) for ele in depl.DY])
+    dx = max( [abs(ele) for ele in depl.DX])
+    fleche_max = max(dy, dx)
+    IMPR_TABLE (TABLE=TAB_depl,)
+    DETRUIRE(CONCEPT=_F(NOM=force,),);
+    DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+    DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    while fleche_max < fleche_adm:
+        fxMin  *= 2
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'CHARGEMENT: FX = {round(fxMin,2)}, FY = 0, FZ = 0 \n')
+        reportFile.close()
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FX=fxMin,),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);
+    a2 = 0
+    b2 = fxMin 
+    while abs((fleche_max - 0.01)-fleche_adm) > 0.01:
+        if fleche_max < fleche_adm:
+            a2 = fxMin 
+        else:
+            b2 = fxMin 
+        fxMin  = (a2+b2)/2
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fxMin ,2)}, FY = 0, FZ = 0\n')
+        reportFile.close()
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FX=fxMin ,),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),); 
+    for i in range(1,n):
+        fx = fxMin /n*i    
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = 0\n')
+        reportFile.close()
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FX=fx),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),); 
+        # Pour pas faire de boucle infinie
+        while fleche_max > fleche_adm:
+            fx = (fx + sv.fzCourbeMin[-1])/2 
+            reportFile = open(resultfile,"a")
+            reportFile.write(f'{dash}\n')
+            reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = 0\n')
+            reportFile.close()
+            force=AFFE_CHAR_MECA(MODELE=model,
+            FORCE_NODALE=_F(GROUP_NO=('load',),
+                FX=fx),
+            );
+            stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+            EXCIT=(			_F(CHARGE=encast,),
+                    _F(CHARGE=force,),
+                ),
+            SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+            );
+            TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+                GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+                TOUT_ORDRE='OUI',
+                OPERATION='EXTRACTION',),);    
+            depl = TAB_depl.EXTR_TABLE()
+            dy = max( [abs(ele) for ele in depl.DY])
+            dx = max( [abs(ele) for ele in depl.DX]) 
+            fleche_max = max(dy, dx)
+            IMPR_TABLE (TABLE=TAB_depl,)
+            DETRUIRE(CONCEPT=_F(NOM=force,),);
+            DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+            DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(fzMin,2)}\n')
+        reportFile.close()
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FZ=fzMin,FX=fx),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        if fleche_max < fleche_adm:
+            fzMin *= 2
+        fzCourbe = fzMin/fxMin*fx + fzMin
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(fzCourbe,2)}\n')
+        reportFile.close()
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FZ=fzCourbe,FX=fx),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);  
+        if fleche_max > fleche_adm:
+            alpha = 0
+            beta = fzCourbe
+        else:
+            alpha = fzCourbe
+            beta = fzMin
+        fz = (alpha + beta)/2
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(fz,2)}\n')
+        reportFile.close()
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FZ=fz,FX=fx),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+        stat=CALC_CHAMP( reuse =stat,
+            MODELE=model,
+            CHAM_MATER=material,
+            CARA_ELEM=elemcar,
+            RESULTAT = stat,
+            FORCE = ('REAC_NODA',),
+        );
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        while abs((fleche_max - 0.01)-fleche_adm) > 0.01:
+            if fleche_max < fleche_adm:
+                alpha = fz
+            else:
+                beta = fz
+            fz = (alpha+beta)/2
+            reportFile = open(resultfile,"a")
+            reportFile.write(f'{dash}\n')
+            reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(fz,2)}\n')
+            reportFile.close()
+            force=AFFE_CHAR_MECA(MODELE=model,
+            FORCE_NODALE=_F(GROUP_NO=('load',),
+                FZ=fz,FX=fx),
+            );
+            stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+            EXCIT=(			_F(CHARGE=encast,),
+                    _F(CHARGE=force,),
+                ),
+            SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+            );
+            TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+                GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+                TOUT_ORDRE='OUI',
+                OPERATION='EXTRACTION',),);    
+            depl = TAB_depl.EXTR_TABLE()
+            dy = max( [abs(ele) for ele in depl.DY])
+            dx = max( [abs(ele) for ele in depl.DX]) 
+            fleche_max = max(dy, dx)
+            IMPR_TABLE (TABLE=TAB_depl,)
+            DETRUIRE(CONCEPT=_F(NOM=force,),);
+            DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+            DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        #-----------------------------------------------------------------------------------------
+        osupFile = open(flecheFile,"a")
+        osupFile.write(f'{round(fx,3)}		0		{round(fz,3)}		{round(fleche_max,3)}\n')
+        osupFile.close()        
+        sv.fzCourbeMin.append(fx)
+        sv.fyCourbeMin.append(fz)
+    osupFile = open(flecheFile,"a")
+    osupFile.write(f'{round(fxMin ,3)}		0		0		\n')
+    osupFile.close()
+    sv.fzCourbeMin.append(fxMin)
+    sv.fyCourbeMin.append(0)
+    #----------------------------------QUADRANT 4 fz <0 , fx > 0-------------------------------
+    for i in range(1,n):
+        fx = fxMin/n*(n-i)    
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = 0\n')
+        reportFile.close()
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FX=fx),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        while fleche_max > fleche_adm:
+            if i == 1:
+                fx = (fx + sv.fzCourbeMin[-2])/2
+            else:
+                fx = (fx + sv.fzCourbeMin[-1])/2
+            reportFile = open(resultfile,"a")
+            reportFile.write(f'{dash}\n')
+            reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = 0\n')
+            reportFile.close()
+            force=AFFE_CHAR_MECA(MODELE=model,
+            FORCE_NODALE=_F(GROUP_NO=('load',),
+                FX=fx,FY=0),
+            );
+            stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+            EXCIT=(			_F(CHARGE=encast,),
+                    _F(CHARGE=force,),
+                ),
+            SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+            );
+            TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+                GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+                TOUT_ORDRE='OUI',
+                OPERATION='EXTRACTION',),);    
+            depl = TAB_depl.EXTR_TABLE()
+            dy = max( [abs(ele) for ele in depl.DY])
+            dx = max( [abs(ele) for ele in depl.DX]) 
+            fleche_max = max(dy, dx)
+            IMPR_TABLE (TABLE=TAB_depl,)
+            DETRUIRE(CONCEPT=_F(NOM=force,),);
+            DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+            DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(fzMax,2)}\n')
+        reportFile.close()
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FX=fx,FZ=fzMax),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        if fleche_max < fleche_adm:
+            fzMax *= 2
+        fzCourbe = fzMax/-fxMax*fx + fzMax
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(fzCourbe,2)}\n')
+        reportFile.close()
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FX=fx, FZ=fzCourbe),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);    
+        if fleche_max > fleche_adm:
+            alpha = 0
+            beta = fzCourbe
+        else:
+            alpha = fzCourbe
+            beta = fzMax
+        fz = (alpha + beta)/2
+        reportFile = open(resultfile,"a")
+        reportFile.write(f'{dash}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(fz,2)}\n')
+        reportFile.close()
+        force=AFFE_CHAR_MECA(MODELE=model,
+        FORCE_NODALE=_F(GROUP_NO=('load',),
+            FZ=fz,FX=fx),
+        );
+        stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+        EXCIT=(			_F(CHARGE=encast,),
+                _F(CHARGE=force,),
+            ),
+        SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+        );
+        TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+            GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+            TOUT_ORDRE='OUI',
+            OPERATION='EXTRACTION',),);    
+        depl = TAB_depl.EXTR_TABLE()
+        dy = max( [abs(ele) for ele in depl.DY])
+        dx = max( [abs(ele) for ele in depl.DX]) 
+        fleche_max = max(dy, dx)
+        IMPR_TABLE (TABLE=TAB_depl,)
+        DETRUIRE(CONCEPT=_F(NOM=force,),);
+        DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+        DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        while abs((fleche_max - 0.01) - fleche_adm) > 0.01:
+            if fleche_max < fleche_adm:
+                alpha = fz
+            else:
+                beta = fz
+            fz = (alpha+beta)/2
+            reportFile = open(resultfile,"a")
+            reportFile.write(f'{dash}\n')
+            reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(fz,2)}\n')
+            reportFile.close()
+            force=AFFE_CHAR_MECA(MODELE=model,
+            FORCE_NODALE=_F(GROUP_NO=('load',),
+                FX=fx,FZ=fz),
+            );
+            stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
+            EXCIT=(			_F(CHARGE=encast,),
+                    _F(CHARGE=force,),
+                ),
+            SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
+            );
+            TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
+                GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
+                TOUT_ORDRE='OUI',
+                OPERATION='EXTRACTION',),);    
+            depl = TAB_depl.EXTR_TABLE()
+            dy = max( [abs(ele) for ele in depl.DY])
+            dx = max( [abs(ele) for ele in depl.DX]) 
+            fleche_max = max(dy, dx)
+            IMPR_TABLE (TABLE=TAB_depl,)
+            DETRUIRE(CONCEPT=_F(NOM=force,),);
+            DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
+            DETRUIRE(CONCEPT=_F(NOM=stat,),);
+        #-----------------------------------------------------------------------------------------
+        osupFile = open(flecheFile,"a")
+        osupFile.write(f'{round(fx,3)}		0		{round(fz,3)}		{round(fleche_max,3)}\n')
+        osupFile.close()        
+        sv.fzCourbeMin.append(fx)
+        sv.fyCourbeMin.append(fz)
+    import matplotlib.pyplot as plt
+    sv.timefin = time.time()
+    print("Temps total = ",sv.timefin-sv.timeInit)
+    plt.plot(sv.fzCourbeMin,sv.fyCourbeMin) 
+    plt.show()
+    osupFile = open(flecheFile,"a")
+    osupFile.write(f'0		0		{round(fzMax_init,2)}\n')
+    osupFile.close()
 FIN()   
