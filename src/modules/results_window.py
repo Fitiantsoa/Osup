@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QToolBar, QAction, QGroupBox, QGridLayout,QLabel, QFileDialog
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QToolBar, QAction, QGroupBox, QGridLayout, QLabel, QFileDialog
 from PyQt5.QtCore import Qt
 from src.utils import lerp
 from src.modules.plots_data import Data
@@ -10,6 +10,9 @@ from src.constantes import *
 from src.modules.rw_data_view import DataView
 from src.modules.rw_torsor_view import TorsorView
 from src.modules.rw_error import Error
+from tkinter import *
+from tkinter import messagebox
+from src.Version5etag.general import General
 
 
 class ResultWindow(QWidget):
@@ -28,6 +31,7 @@ class ResultWindow(QWidget):
         self.setMouseTracking(True)
         self.status = None
         self.horizontal_group_box = None
+        self.chevilleerror = None
 
         # Data
         self.data = Data()
@@ -38,6 +42,7 @@ class ResultWindow(QWidget):
         self.tree_view = TreeListView()
         self.result_table_view_prof = TableView("profile")
         self.result_table_view_plat = TableView("platine")
+        self.result_table_view_chev = TableView("cheville")
         self.export_data = ExportResult()
         self.torsor_view = TorsorView(self.data, pipe_axis)
         # self.data_view = DataView()  # TODO: Maybe we don't need it, check that with the result file values
@@ -52,9 +57,6 @@ class ResultWindow(QWidget):
         self.init_ui()
         self.init_events()
         self.curve_data = []
-
-
-
 
     def init_ui(self):
         self.setWindowTitle(self.title)
@@ -105,18 +107,22 @@ class ResultWindow(QWidget):
         layout = QGridLayout()
         layout.setColumnStretch(0, 2)
         layout.setColumnStretch(1, 0)
-        layout.addWidget(self.graph.plot_widget, 0, 0, 7, 1)
+        layout.addWidget(self.graph.plot_widget, 0, 0, 9, 1)
         layout.addWidget(self.tree_view, 0, 1)
         title = QLabel()
         title.setText("Courbe profilé")
-        layout.addWidget(title,1,1)
+        layout.addWidget(title, 1, 1)
         layout.addWidget(self.result_table_view_prof, 2, 1)
         title = QLabel()
         title.setText("Courbe platine")
         layout.addWidget(title, 3, 1)
         layout.addWidget(self.result_table_view_plat, 4, 1)
-        layout.addWidget(self.export_data, 5, 1)
-        layout.addWidget(self.torsor_view, 6, 1)
+        title = QLabel()
+        title.setText("Courbe cheville")
+        layout.addWidget(title, 5, 1)
+        layout.addWidget(self.result_table_view_chev, 6, 1)
+        layout.addWidget(self.export_data, 7, 1)
+        layout.addWidget(self.torsor_view, 8, 1)
         # layout.addWidget(self.data_view, 2, 1)
         self.horizontal_group_box.setLayout(layout)
 
@@ -170,8 +176,9 @@ class ResultWindow(QWidget):
             if j > 2:  # Nombre à changer si de nouveaux groupes de torseurs sont ajoutés
                 for i, elt in enumerate(curve[0]):
                     try:
-                        if abs(elt) < abs(Fy) < abs(curve[0][i+1]):
-                            curveFz = lerp(abs(curve[1][i]), abs(curve[1][i+1]), abs(elt), abs(curve[0][i-1]), abs(Fy))
+                        if abs(elt) < abs(Fy) < abs(curve[0][i + 1]):
+                            curveFz = lerp(abs(curve[1][i]), abs(curve[1][i + 1]), abs(elt), abs(curve[0][i - 1]),
+                                           abs(Fy))
                             if curveFz < abs(Fz):
                                 index += 1
                         elif abs(Fy) == abs(elt):
@@ -197,10 +204,9 @@ class ResultWindow(QWidget):
         file = self.graph.export()
         QWidget.grab(self).save(file[0], 'jpg')
 
-
     def import_from_file(self, file_path):
         frslt = file_path.split(".")[0] + "." + file_path.split(".")[1] + ".rslt"
-        f = open(frslt,"r")
+        f = open(frslt, "r")
         lines = f.readlines()
         j = 0
         for line in lines:
@@ -213,24 +219,26 @@ class ResultWindow(QWidget):
                     curve_data.append("data")
                 else:
                     try:
-                        curve_data.append(float(((((data[i].replace(",","")).replace("[","")).replace("]","")).replace("{", "")).replace("}", "")))
+                        curve_data.append(float(
+                            ((((data[i].replace(",", "")).replace("[", "")).replace("]", "")).replace("{", "")).replace(
+                                "}", "")))
                     except:
                         print("erreur data", data[i])
             print(curve_data)
             if j == 1:
-                prof_data = {'DataX': curve_data[1:data_y_id], 'DataY':curve_data[data_y_id+1:] }
-                self.load_result(prof_data,"Profilé")
+                prof_data = {'DataX': curve_data[1:data_y_id], 'DataY': curve_data[data_y_id + 1:]}
+                self.load_result(prof_data, "Profilé")
                 # data["Profilé"]={"all": line}
             elif j == 2:
-                plat_data = {'DataX': curve_data[1:data_y_id], 'DataY': curve_data[data_y_id+1:]}
+                plat_data = {'DataX': curve_data[1:data_y_id], 'DataY': curve_data[data_y_id + 1:]}
                 self.load_result(plat_data, "Platine")
                 # data["Platine"]={"all": line}
             elif j == 3:
-                etr_data = {'DataX': curve_data[1:data_y_id], 'DataY': curve_data[data_y_id+1:]}
+                etr_data = {'DataX': curve_data[1:data_y_id], 'DataY': curve_data[data_y_id + 1:]}
                 self.load_result(etr_data, "Etriers")
                 # data["Chevilles"] = {"all":line}
             else:
-                chev_data = {'DataX': curve_data[1:data_y_id], 'DataY': curve_data[data_y_id+1:]}
+                chev_data = {'DataX': curve_data[1:data_y_id], 'DataY': curve_data[data_y_id + 1:]}
                 self.load_result(chev_data, "Cheville")
                 # data["Chevilles"] = {"all":line}
 
@@ -245,12 +253,12 @@ class ResultWindow(QWidget):
         cp_file.write("PROFILE")
         cp_file.write("\n")
         cp_file.close()
-        self.copyFile(PROFILE_RSLT.replace("'",""), fname[0], "PR")
+        self.copyFile(PROFILE_RSLT.replace("'", ""), fname[0], "PR")
         cp_file = open(fname[0], "a")
         cp_file.write("PLATINE")
         cp_file.write("\n")
         cp_file.close()
-        self.copyFile(PLATINE_RSLT.replace("'",""), fname[0], "PL")
+        self.copyFile(PLATINE_RSLT.replace("'", ""), fname[0], "PL")
         cp_file = open(fname[0], "a")
         cp_file.write("CHEVILLE")
         cp_file.write("\n")
@@ -265,18 +273,17 @@ class ResultWindow(QWidget):
         frslt.close()
 
     @staticmethod
-    def copyFile(result_file,fpath, comp):
-        f = open(result_file,"r")
-        cp_file = open(fpath,"a")
+    def copyFile(result_file, fpath, comp):
+        f = open(result_file, "r")
+        cp_file = open(fpath, "a")
         lines = f.readlines()
         for line in lines:
-            if "-------" in line :
+            if "-------" in line:
                 pass
             else:
-                cp_file.write(comp + " "+ line)
+                cp_file.write(comp + " " + line)
         f.close()
         cp_file.close()
-
 
     def hide_torsorEvent(self):
         if self.graph.torsor_visible:
@@ -287,6 +294,8 @@ class ResultWindow(QWidget):
             self.hide_torsor.setText("Cacher les torseurs")
 
     def torsor_buttons_clicked(self):
+        if self.chevilleerror is True:
+            General(self.platine_data.get_dowel_data())
         Fy, Fz, name, status = self.torsor_view.get_data()
         self.add_torsor(Fy, Fz, name, status)
 
@@ -296,9 +305,32 @@ class ResultWindow(QWidget):
     def new_file(self):
         self.graph.new_file()
 
-    def load_result(self, data,part):
-        self.data.load_plots(data,part)
+    def load_result(self, data, part):
+        self.data.load_plots(data, part)
         self.tree_view.add_model(self.data.plots)
 
     def add_plot(self, data, key):
         self.data.add_plot(data, key)
+
+    def affichage_message_erreur_cheville(self):
+        self.message_erreur_cheville()
+
+    def message_erreur_cheville(self):
+        # fenetre = Tk()
+        # fenetre.title("Erreur")
+        # #  fenetre.iconbitmap("logo.ico")
+        # fenetre.config(bg="#fff")
+        # fenetre.geometry("440x180")
+        # texte1 = Label(fenetre, text="Le calcul de chevilles d'ancrages n'a pas aboutie")
+        # texte1.pack()
+        # texte1.place(x=90, y=60)
+        # # Création d'un cadre dans la fenêtre :
+        # cadre1 = Frame(fenetre)
+        # cadre1.pack()
+        # cadre1.place(x=390, y=130)
+        # # Ajout de boutons dans le cadre :
+        # bouton1 = Button(cadre1, text="OK", command=fenetre.destroy)
+        # bouton1.pack(pady = 10)
+        # fenetre.mainloop()
+        messagebox.showwarning("Avertissement", "Le calcul d'ancrage n'a pas aboutie")
+        return self.chevilleerror is True

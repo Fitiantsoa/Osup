@@ -423,8 +423,11 @@ class OSup(QObject):
             self.result_window.load_result(self.result_file.get_plot_data(),"Profilé")
             self.result_file.load(result_file, "platine")
             self.result_window.load_result(self.result_file.get_plot_data(), "Platine")
-            self.result_file.load(result_file, "cheville")
-            self.result_window.load_result(self.result_file.get_plot_data(), "Cheville")
+            if self.result_file.void_file() == 0:
+                self.result_window.affichage_message_erreur_cheville()
+            else:
+                self.result_file.load(result_file, "cheville")
+                self.result_window.load_result(self.result_file.get_plot_data(), "Cheville")
             if self.data_stirrup == {}:
                 self.result_window.load_result(self.result_file.get_dict_data(self.get_saved_data()["verification_module"]['points'],self.get_saved_data()["stirrup"]["plot_data"]), "Etrier")
             else:

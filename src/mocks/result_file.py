@@ -1,5 +1,6 @@
 from src.constantes import *
 
+
 class ResultFile:
 
     def __init__(self, pipe_axis):
@@ -75,4 +76,9 @@ class ResultFile:
     def write_load(self, fx, fy, fz, niveau):
         self.input_data.append(
             "LOAD\t" + str(fx) + "\t" + str(fy) + "\t" + str(fz) + "\nNIVEAU\t" + niveau)
+
+    @staticmethod
+    def void_file():
+        return os.path.getsize(CHEVILLE_RSLT.replace("'", ""))
+
 
