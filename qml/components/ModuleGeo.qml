@@ -526,26 +526,34 @@ Rectangle {
                                 ButtonAdd{
                                     anchors.verticalCenter: parent.verticalCenter
                                     onClicked: {
-                                        if (nodeModel.contain(tfcx.text,tfcy.text,tfcz.text)){
-                                            errorMessageNode.title = "Doublon noeud"
-                                            errorMessageNode.text = "Le noeud créé existe déjà."
+                                        if (pageGeo.porte === 0){
+                                            errorMessageNode.title = "Portée non définie"
+                                            errorMessageNode.text = "Veuillez définir la portée avant de créer le modèle."
                                             errorMessageNode.visible = true
                                         }
-                                        else if (appui.currentText === ""){
-                                            errorMessageNode.title = "Appui non défini"
-                                            errorMessageNode.text = "Veuillez sélectionner un type d'appui"
-                                            errorMessageNode.visible = true
-                                        }
-                                        else{
-                                            nodeModel.append(tfcx.text, tfcy.text, tfcz.text, appui.currentText)
-                                            tfcx.text = ""
-                                            tfcy.text = ""
-                                            tfcz.text = ""
-                                            tfn1.text = ""
-                                            tfn2.text = ""
 
-                                            if (appui.currentText !== "Libre"){
-                                                appui.currentIndex = -1
+                                        else{
+                                            if (nodeModel.contain(tfcx.text,tfcy.text,tfcz.text)){
+                                                errorMessageNode.title = "Doublon noeud"
+                                                errorMessageNode.text = "Le noeud créé existe déjà."
+                                                errorMessageNode.visible = true
+                                            }
+                                            else if (appui.currentText === ""){
+                                                errorMessageNode.title = "Appui non défini"
+                                                errorMessageNode.text = "Veuillez sélectionner un type d'appui"
+                                                errorMessageNode.visible = true
+                                            }
+                                            else{
+                                                nodeModel.append(tfcx.text, tfcy.text, tfcz.text, appui.currentText)
+                                                tfcx.text = ""
+                                                tfcy.text = ""
+                                                tfcz.text = ""
+                                                tfn1.text = ""
+                                                tfn2.text = ""
+
+                                                if (appui.currentText !== "Libre"){
+                                                    appui.currentIndex = -1
+                                                }
                                             }
                                         }
                                     }

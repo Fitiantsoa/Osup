@@ -41,6 +41,7 @@ class ModulePlatine:
         self.S = []
         self.Sy = []
         self.Su = []
+        self.E = []
         self.section_database = read_json(PROFILE_DB)
         self.inertieY = []
         self.orientation = []
@@ -83,6 +84,7 @@ class ModulePlatine:
         self.S = []
         self.Sy = []
         self.Su = []
+        self.E = []
         self.inertieY = []
         self.nbCheville = []
         self.prod = []
@@ -155,6 +157,7 @@ class ModulePlatine:
             'S': self.S,
             'Sy':self.Sy,
             'Su': self.Su,
+            'E': self.E,
             'prod': self.prod,
             'mat':self.mat,
             't': self.t,
@@ -288,6 +291,7 @@ class ModulePlatine:
                         self.Su.append(self.material_db["RCC-M 2016"][prod][mat][t]['Su'])
                         self.Sy.append(self.material_db["RCC-M 2016"][prod][mat][t]['Sy'])
                         self.S.append(self.material_db["RCC-M 2016"][prod][mat][t]['S'])
+                        self.E.append(self.material_db["RCC-M 2016"][prod][mat][t]['E'])
                         if data['or'] == 0.0:
                             self.inertieY.append("faible")
                             self.bprofile.append(float(self.profile_db[sect][dim]['b']))

@@ -332,5 +332,5 @@ class ResultWindow(QWidget):
         # bouton1 = Button(cadre1, text="OK", command=fenetre.destroy)
         # bouton1.pack(pady = 10)
         # fenetre.mainloop()
-        messagebox.showwarning("Avertissement", "Le calcul d'ancrage n'a pas aboutie")
+        messagebox.showwarning("Avertissement", "Le calcul d'ancrage n'a pas abouti")
         return self.chevilleerror is True
