@@ -719,7 +719,6 @@ class CalculationEffort:
         PosCEd = self.calculation_compression(pm, self.alpha, lref, self.PosCmax, self.PosCmax1)[0]
         CEd = self.calculation_compression(pm, self.alpha, lref, self.PosCmax, self.PosCmax1)[1]
 
-        print(Nedg)
         return TypeCompression, NEd, self.NbFixTraction, Nedg, PosCEd, CEd
 
     @property

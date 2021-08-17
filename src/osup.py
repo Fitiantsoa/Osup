@@ -423,6 +423,12 @@ class OSup(QObject):
             self.result_window.load_result(self.result_file.get_plot_data(),"Profilé")
             self.result_file.load(result_file, "platine")
             self.result_window.load_result(self.result_file.get_plot_data(), "Platine")
+            print("gqdreqqg", self.result_file.void_file())
+            if self.result_file.void_file() == 0:
+                self.result_window.affichage_message_erreur_cheville()
+            else:
+                self.result_file.load(result_file, "cheville")
+                self.result_window.load_result(self.result_file.get_plot_data(), "Cheville")
             self.result_file.load(result_file, "cheville")
             self.result_window.load_result(self.result_file.get_plot_data(), "Cheville")
             self.result_file.load(result_file, "rigidie_plat")

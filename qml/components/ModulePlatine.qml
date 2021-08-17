@@ -296,8 +296,9 @@ Rectangle {
                             anchors.fill: parent
                             spacing: 0
                             Rectangle{
-                                height : 200
+                                height : 250
                                 width : (parent.width-320)/2
+                                color : "transparent"
                                 Column{
                                     anchors.fill: parent
                                     spacing: 0
@@ -305,6 +306,8 @@ Rectangle {
                                         height : 30
                                         anchors.left: parent.left
                                         anchors.right: parent.right
+                                        anchors.top: parent.top
+                                        anchors.topMargin: 10
                                         color: "transparent"
                                         RowLayout{
                                             anchors.fill: parent
@@ -335,6 +338,8 @@ Rectangle {
                                         height : 30
                                         anchors.left: parent.left
                                         anchors.right: parent.right
+                                        anchors.top: parent.top
+                                        anchors.topMargin: 40
                                         RowLayout{
                                             anchors.fill: parent
                                             Label{
@@ -353,6 +358,8 @@ Rectangle {
                                         height : 30
                                         anchors.left: parent.left
                                         anchors.right: parent.right
+                                        anchors.top: parent.top
+                                        anchors.topMargin: 70
                                         visible : nbCheville.currentText === "2"
                                         RowLayout{
                                             anchors.fill: parent
@@ -387,7 +394,7 @@ Rectangle {
                                     anchors.left: parent.left
                                     anchors.verticalCenter: parent.verticalCenter
                                     anchors.horizontalCenter: parent.horizontalCenter
-                                    source:"../../assets/images/platine2.png"
+                                    source:"../../assets/images/platine2_bord.png"
                                 }
                             }
                             Rectangle{
@@ -402,7 +409,7 @@ Rectangle {
                                     anchors.left: parent.left
                                     anchors.verticalCenter: parent.verticalCenter
                                     anchors.horizontalCenter: parent.horizontalCenter
-                                    source:"../../assets/images/Plat2Chev_x_Vert.png"
+                                    source:"../../assets/images/Plat2Chev_x_Vert_bord.png"
                                 }
                             }
                             Rectangle{
@@ -417,7 +424,7 @@ Rectangle {
                                     anchors.left: parent.left
                                     anchors.verticalCenter: parent.verticalCenter
                                     anchors.horizontalCenter: parent.horizontalCenter
-                                    source:"../../assets/images/Plat2Chev_y_Hor.png"
+                                    source:"../../assets/images/Plat2Chev_y_Hor_bord.png"
                                 }
                             }
                             Rectangle{
@@ -432,7 +439,7 @@ Rectangle {
                                     anchors.left: parent.left
                                     anchors.verticalCenter: parent.verticalCenter
                                     anchors.horizontalCenter: parent.horizontalCenter
-                                    source:"../../assets/images/Plat2Chev_y_Vert.png"
+                                    source:"../../assets/images/Plat2Chev_y_Vert_bord.png"
                                 }
                             }
                             Rectangle{
@@ -447,7 +454,7 @@ Rectangle {
                                     anchors.left: parent.left
                                     anchors.verticalCenter: parent.verticalCenter
                                     anchors.horizontalCenter: parent.horizontalCenter
-                                    source:"../../assets/images/Plat2Chev_z_Hor.png"
+                                    source:"../../assets/images/Plat2Chev_z_Hor_bord.png"
                                 }
                             }
                             Rectangle{
@@ -462,7 +469,7 @@ Rectangle {
                                     anchors.left: parent.left
                                     anchors.verticalCenter: parent.verticalCenter
                                     anchors.horizontalCenter: parent.horizontalCenter
-                                    source:"../../assets/images/Plat2Chev_z_Vert.png"
+                                    source:"../../assets/images/Plat2Chev_z_Vert_bord.png"
                                 }
                             }
                             Rectangle{
@@ -477,7 +484,7 @@ Rectangle {
                                     anchors.left: parent.left
                                     anchors.verticalCenter: parent.verticalCenter
                                     anchors.horizontalCenter: parent.horizontalCenter
-                                    source:"../../assets/images/Plat4Chev_X.png"
+                                    source:"../../assets/images/Plat4Chev_X_test.png"
                                 }
                             }
                             Rectangle{
@@ -492,7 +499,7 @@ Rectangle {
                                     anchors.left: parent.left
                                     anchors.verticalCenter: parent.verticalCenter
                                     anchors.horizontalCenter: parent.horizontalCenter
-                                    source:"../../assets/images/Plat4Chev_Y.png"
+                                    source:"../../assets/images/Plat4Chev_Y_test1.png"
                                 }
                             }
                             Rectangle{
@@ -507,11 +514,20 @@ Rectangle {
                                     anchors.left: parent.left
                                     anchors.verticalCenter: parent.verticalCenter
                                     anchors.horizontalCenter: parent.horizontalCenter
-                                    source:"../../assets/images/Plat4Chev_Z.png"
+                                    source:"../../assets/images/Plat4Chev_Z_test.png"
                                 }
                             }
 
                         }
+                    }
+                    Rectangle {
+                        id: separationgauche
+                        color: Theme.grey_2
+                        width: 1
+                        anchors.top: parent.top
+                        anchors.topMargin: 30
+                        anchors.bottom: parent.bottom
+                        anchors.bottomMargin: 30
                     }
 
                     Rectangle{
@@ -948,6 +964,8 @@ Rectangle {
                                     implicitWidth: 150
                                     objectName: "TypeCharge"
                                     model: ["Statique ou quasi-statique", "Sismique C1", "Sismique C2"]
+                                    //{if (pageGeo.rccm.checked){ typecharge.model = ["Statique ou quasi-statique"]}
+                                      //  else{typecharge.model = ["Statique ou quasi-statique", "Sismique C1", "Sismique C2"]}}
                                 }
                                 }
                                 }
@@ -1222,7 +1240,7 @@ Rectangle {
                                 Rectangle{
                                     color: "transparent"
                                     height: 50
-                                    width: 920
+                                    width: 1000
 
                                 }
                                 ButtonAdd{
@@ -1261,6 +1279,17 @@ Rectangle {
                         }
                     }
                 }
+            }
+            Rectangle {
+                id: separationBas
+                color: Theme.grey_2
+                height: 1
+                anchors.left: parent.left
+                anchors.leftMargin: 30
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+                anchors.top: parent.top
+                anchors.topMargin: 475
             }
             Rectangle{
                 id : rectlistview

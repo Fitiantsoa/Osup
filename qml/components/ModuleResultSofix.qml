@@ -176,6 +176,8 @@ Rectangle {
                             Layout.preferredWidth: 50
                             Layout.maximumWidth: 50
                             Layout.minimumWidth: 50
+                            color : if (tfruptAcier.text >= 1)
+                                        tfruptAcier.color = "red";
                         }
                         CTextField {
                             id: tfruptExtGliss
@@ -184,6 +186,8 @@ Rectangle {
                             Layout.preferredWidth: 50
                             Layout.maximumWidth: 50
                             Layout.minimumWidth: 50
+                            color : if (tfruptExtGliss.text >= 1)
+                                        tfruptExtGliss.color = "red";
                         }
                         CTextField {
                             id: tfruptConeBet
@@ -192,6 +196,8 @@ Rectangle {
                             Layout.preferredWidth: 50
                             Layout.maximumWidth: 50
                             Layout.minimumWidth: 50
+                            color : if (tfruptConeBet.text >= 1)
+                                        tfruptConeBet.color = "red";
                         }
                         CTextField {
                             id: tfruptFendBet
@@ -200,6 +206,8 @@ Rectangle {
                             Layout.preferredWidth: 100
                             Layout.maximumWidth: 100
                             Layout.minimumWidth: 100
+                            color : if (tfruptFendBet.text >= 1)
+                                        tfruptFendBet.color = "red";
                         }
                         CTextField {
                             id: tfruptAcierSansBrasLevier
@@ -208,6 +216,8 @@ Rectangle {
                             Layout.preferredWidth: 100
                             Layout.maximumWidth: 100
                             Layout.minimumWidth: 100
+                            color : if (tfruptAcierSansBrasLevier.text >= 1)
+                                        tfruptAcierSansBrasLevier.color = "red";
                         }
                         CTextField {
                             id: tfruptEffetLevier
@@ -216,6 +226,8 @@ Rectangle {
                             Layout.preferredWidth: 100
                             Layout.maximumWidth: 100
                             Layout.minimumWidth: 100
+                            color : if (tfruptEffetLevier.text >= 1)
+                                        tfruptEffetLevier.color = "red";
                         }
                         CTextField {
                             id: tfruptBordBet
@@ -224,6 +236,8 @@ Rectangle {
                             Layout.preferredWidth: 100
                             Layout.maximumWidth: 100
                             Layout.minimumWidth: 100
+                            color : if (tfruptBordBet.text >= 1)
+                                        tfruptBordBet.color = "red";
                         }
                         CTextField {
                             id: tfruptCombiAcier
@@ -232,6 +246,8 @@ Rectangle {
                             Layout.preferredWidth: 100
                             Layout.maximumWidth: 100
                             Layout.minimumWidth: 100
+                            color : if (tfruptCombiAcier.text >= 1)
+                                        tfruptCombiAcier.color = "red";
                         }
                         CTextField {
                             id: tfruptCombiBet
@@ -240,6 +256,8 @@ Rectangle {
                             Layout.preferredWidth: 100
                             Layout.maximumWidth: 100
                             Layout.minimumWidth: 100
+                            color : if (tfruptCombiBet.text >= 1)
+                                        tfruptCombiBet.color = "red";
                         }
                         //                        RowLayout{
                         //                            id: rowLayout
