@@ -4811,9 +4811,9 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);    
     depl = TAB_depl.EXTR_TABLE()
-    dy = max( [abs(ele) for ele in depl.DY])
+    dz = max( [abs(ele) for ele in depl.DZ])
     dx = max( [abs(ele) for ele in depl.DX]) 
-    fleche_max = max(dy, dx)
+    fleche_max = max(dz, dx)
     IMPR_TABLE (TABLE=TAB_depl,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -4837,9 +4837,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         reportFile = open(resultfile,"a")
         reportFile.write(f'CHARGEMENT: FX = {round(fxMax,2)}, FY = 0, FZ = 0\n')
         reportFile.write(f'fleche1 = {fleche_max}\n')
@@ -4872,9 +4872,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
         reportFile.write(f'CHARGEMENT: FX = {round(fxMax,2)}, FY = 0, FZ = 0\n')
@@ -4902,9 +4902,9 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);    
     depl = TAB_depl.EXTR_TABLE()
-    dy = max( [abs(ele) for ele in depl.DY])
+    dz = max( [abs(ele) for ele in depl.DZ])
     dx = max( [abs(ele) for ele in depl.DX]) 
-    fleche_max = max(dy, dx)
+    fleche_max = max(dz, dx)
     IMPR_TABLE (TABLE=TAB_depl,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -4933,9 +4933,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -4967,9 +4967,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5011,9 +5011,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5041,9 +5041,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5071,9 +5071,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
         reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(fz,2)}\n')
@@ -5103,9 +5103,9 @@ if niveau == "oab":
                 TOUT_ORDRE='OUI',
                 OPERATION='EXTRACTION',),);    
             depl = TAB_depl.EXTR_TABLE()
-            dy = max( [abs(ele) for ele in depl.DY])
+            dz = max( [abs(ele) for ele in depl.DZ])
             dx = max( [abs(ele) for ele in depl.DX]) 
-            fleche_max = max(dy, dx)
+            fleche_max = max(dz, dx)
             reportFile = open(resultfile,"a")
             reportFile.write(f'{dash}\n')
             reportFile.write(f'CHARGEMENT: FX = {round(fx,3)}, FY = 0, FZ = {round(fz,3)}\n')
@@ -5149,9 +5149,9 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);    
     depl = TAB_depl.EXTR_TABLE()
-    dy = max( [abs(ele) for ele in depl.DY])
+    dz = max( [abs(ele) for ele in depl.DZ])
     dx = max( [abs(ele) for ele in depl.DX]) 
-    fleche_max = max(dy, dx)
+    fleche_max = max(dz, dx)
     IMPR_TABLE (TABLE=TAB_depl,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5175,9 +5175,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         reportFile.write(f'CHARGEMENT: FX = 0, FY = 0, FZ = {round(fzMin,2)} \n')
         reportFile.write(f'fleche1 = {round(fleche_max, 3)}\n')
         reportFile.close()
@@ -5208,9 +5208,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5248,9 +5248,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5277,9 +5277,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5310,9 +5310,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5338,9 +5338,9 @@ if niveau == "oab":
                 TOUT_ORDRE='OUI',
                 OPERATION='EXTRACTION',),);    
             depl = TAB_depl.EXTR_TABLE()
-            dy = max( [abs(ele) for ele in depl.DY])
+            dz = max( [abs(ele) for ele in depl.DZ])
             dx = max( [abs(ele) for ele in depl.DX]) 
-            fleche_max = max(dy, dx)
+            fleche_max = max(dz, dx)
             IMPR_TABLE (TABLE=TAB_depl,)
             DETRUIRE(CONCEPT=_F(NOM=force,),);
             DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5383,9 +5383,9 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);    
     depl = TAB_depl.EXTR_TABLE()
-    dy = max( [abs(ele) for ele in depl.DY])
+    dz = max( [abs(ele) for ele in depl.DZ])
     dx = max( [abs(ele) for ele in depl.DX])
-    fleche_max = max(dy, dx)
+    fleche_max = max(dz, dx)
     IMPR_TABLE (TABLE=TAB_depl,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5411,9 +5411,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5445,9 +5445,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5473,9 +5473,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5502,9 +5502,9 @@ if niveau == "oab":
                 TOUT_ORDRE='OUI',
                 OPERATION='EXTRACTION',),);    
             depl = TAB_depl.EXTR_TABLE()
-            dy = max( [abs(ele) for ele in depl.DY])
+            dz = max( [abs(ele) for ele in depl.DZ])
             dx = max( [abs(ele) for ele in depl.DX]) 
-            fleche_max = max(dy, dx)
+            fleche_max = max(dz, dx)
             IMPR_TABLE (TABLE=TAB_depl,)
             DETRUIRE(CONCEPT=_F(NOM=force,),);
             DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5528,9 +5528,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5557,9 +5557,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5597,9 +5597,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5629,9 +5629,9 @@ if niveau == "oab":
                 TOUT_ORDRE='OUI',
                 OPERATION='EXTRACTION',),);    
             depl = TAB_depl.EXTR_TABLE()
-            dy = max( [abs(ele) for ele in depl.DY])
+            dz = max( [abs(ele) for ele in depl.DZ])
             dx = max( [abs(ele) for ele in depl.DX]) 
-            fleche_max = max(dy, dx)
+            fleche_max = max(dz, dx)
             IMPR_TABLE (TABLE=TAB_depl,)
             DETRUIRE(CONCEPT=_F(NOM=force,),);
             DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5669,9 +5669,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5700,9 +5700,9 @@ if niveau == "oab":
                 TOUT_ORDRE='OUI',
                 OPERATION='EXTRACTION',),);    
             depl = TAB_depl.EXTR_TABLE()
-            dy = max( [abs(ele) for ele in depl.DY])
+            dz = max( [abs(ele) for ele in depl.DZ])
             dx = max( [abs(ele) for ele in depl.DX]) 
-            fleche_max = max(dy, dx)
+            fleche_max = max(dz, dx)
             IMPR_TABLE (TABLE=TAB_depl,)
             DETRUIRE(CONCEPT=_F(NOM=force,),);
             DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5726,9 +5726,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5755,9 +5755,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5788,9 +5788,9 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dy = max( [abs(ele) for ele in depl.DY])
+        dz = max( [abs(ele) for ele in depl.DZ])
         dx = max( [abs(ele) for ele in depl.DX]) 
-        fleche_max = max(dy, dx)
+        fleche_max = max(dz, dx)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -5820,9 +5820,9 @@ if niveau == "oab":
                 TOUT_ORDRE='OUI',
                 OPERATION='EXTRACTION',),);    
             depl = TAB_depl.EXTR_TABLE()
-            dy = max( [abs(ele) for ele in depl.DY])
+            dz = max( [abs(ele) for ele in depl.DZ])
             dx = max( [abs(ele) for ele in depl.DX]) 
-            fleche_max = max(dy, dx)
+            fleche_max = max(dz, dx)
             IMPR_TABLE (TABLE=TAB_depl,)
             DETRUIRE(CONCEPT=_F(NOM=force,),);
             DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);

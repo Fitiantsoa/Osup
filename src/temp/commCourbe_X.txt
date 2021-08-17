@@ -44,7 +44,7 @@ IMPR_TABLE (TABLE=TAB_cont,)
 DETRUIRE(CONCEPT=_F(NOM=force,),);
 DETRUIRE(CONCEPT=_F(NOM=stat,),);
 DETRUIRE(CONCEPT=_F(NOM=TAB_cont,),);
-#----------------------Borne max FZ------------------------------
+#----------------------Borne max FX------------------------------
 a1 = 0
 fxMax = fx
 while ratioMax < ratioLimProf:    
@@ -6305,13 +6305,14 @@ if niveau == "oab":
     #------------------------ Début dichotomie -------------------------
     #TODO modifier le script pour qu'il détecte la direction principale de poutre 
     #Pour ce support le frottement est suivant X
+    fx = 1000
     reportFile = open(resultfile,"a")
     reportFile.write(f'{version}\n{dash}')
-    reportFile.write(f'CHARGEMENT: FX = 0, FY = 0, FZ={fz}\n')
+    reportFile.write(f'CHARGEMENT: FX = {fx}, FY = 0, FZ = 0\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
-        FZ = fz,),
+        FX = fx,),
     );
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
@@ -6332,25 +6333,25 @@ if niveau == "oab":
         OPERATION='EXTRACTION',),);
         
     depl = TAB_depl.EXTR_TABLE()
-    dx = max( depl.DX)
+    dy = max( depl.DY)
     dz = max( depl.DZ)
-    fleche_max = max(dx, dz)
+    fleche_max = max(dy, dz)
     IMPR_TABLE (TABLE=TAB_depl,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
-    #----------------------Borne max fz------------------------------
+    #----------------------Borne max fx------------------------------
 
     a1 = 0
-    fzMax = fz
+    fxMax = fx
     while fleche_max < fleche_adm:    
-        fzMax += 500
+        fxMax += 500
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = 0, FY = 0, FZ = {round(fzMax,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(fxMax,2)}, FY = 0, FZ = 0\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = fzMax,),
+            FX = fxMax,),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -6363,26 +6364,26 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);        
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);    
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
     #-----------------------------  fzMax ------------------------------
     while abs((fleche_max-0.01) - fleche_adm) > 0.01:
         if fleche_max < fleche_adm:
-            a1 = fzMax
+            a1 = fxMax
         else:
-            b1 = fzMax
+            b1 = fxMax
         fzMax = (a1+b1)/2
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT:  FX = 0, FY = 0, FZ = {round(fzMax,2)},\n')
+        reportFile.write(f'CHARGEMENT:  FX = {round(fxMax,2)}, FY = 0, FZ = 0,\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = fzMax,),
+            FX = fxMax,),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -6396,21 +6397,21 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);        
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);    
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
 
-    #----------------------------- fxMax --------------------------------
-    fxMax = fzMax/f
+    #----------------------------- fzMax --------------------------------
+    fzMax = fyMax/f
     reportFile = open(resultfile,"a")
-    reportFile.write(f'CHARGEMENT: FX = {round(fxMax,2)}, FY = 0, FZ = {round(f*fxMax,2)}\n')
+    reportFile.write(f'CHARGEMENT: FX = {round(f*fzMax,2)}, FY = 0, FZ = {round(fzMax,2)}\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
-        FZ = f*fxMax,FX=fxMax,),
+        FX = f*fzMax,FZ=fzMax,),
     );
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
@@ -6430,20 +6431,20 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);        
     depl = TAB_depl.EXTR_TABLE()
-    dx = max( depl.DX)
+    dy = max( depl.DY)
     dz = max( depl.DZ)
-    fleche_max = max(dx, dz)
+    fleche_max = max(dy, dz)
     IMPR_TABLE (TABLE=TAB_depl,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
     while fleche_max < fleche_adm:
-        fxMax *= 2
+        fzMax *= 2
         reportFile = open(resultfile,"a")
-        reportFile.write(f'CHARGEMENT: FX = {round(fxMax,2)}, FY = 0, FZ = {round(f*fxMax,2)} \n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*fzMax,2)}, FY = 0, FZ = {round(fzMax,2)} \n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*fxMax,FX=fxMax,),
+            FX = f*fzMax,FZ=fzMax,),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -6456,27 +6457,27 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);    
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
     a2 = 0
-    b2 = fxMax
+    b2 = fzMax
     while abs((fleche_max-0.01) - fleche_adm) > 0.01:
         if fleche_max < fleche_adm:
-            a2 = fxMax
+            a2 = fzMax
         else:
-            b2 = fxMax
-        fxMax = (a2+b2)/2
+            b2 = fzMax
+        fzMax = (a2+b2)/2
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fxMax,2)}, FY = 0, FZ = {round(f*fxMax,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*fzMax,2)}, FY = 0, FZ = {round(fzMax,2)}\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*fxMax,FX=fxMax,),
+            FX = f*fzMax,FZ=fzMax,),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -6490,22 +6491,22 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);        
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);    
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
      
-    #----------------------------- fyMax --------------------------------
-    fyMax = fzMax/f
+    #----------------------------- fzMax --------------------------------
+    fzMax = fxMax/f
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(fyMax,2)}, FZ ={round(f*fyMax,2)} \n')
+    reportFile.write(f'CHARGEMENT: FX = {round(f*fzMax,2)}, FY = 0, FZ ={round(fzMax,2)} \n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
-        FZ = f*fyMax,FY=fyMax,),
+        FX = f*fzMax,FZ=fzMax,),
     );
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
@@ -6520,20 +6521,20 @@ if niveau == "oab":
         OPERATION='EXTRACTION',),);
         
     depl = TAB_depl.EXTR_TABLE()
-    dx = max( depl.DX)
+    dy = max( depl.DY)
     dz = max( depl.DZ)
-    fleche_max = max(dx, dz)
+    fleche_max = max(dy, dz)
     IMPR_TABLE (TABLE=TAB_depl,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
     while fleche_max < fleche_adm:
-        fyMax *= 2
+        fzMax *= 2
         reportFile = open(resultfile,"a")
-        reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(fyMax,2)}, FZ = {round(f*fyMax,2)} \n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*fzMax,2)}, FY = 0, FZ = {round(fzMax,2)} \n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*fyMax,FY=fyMax,),
+            FX = f*fzMax,FZ=fzMax,),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -6553,27 +6554,27 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);        
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
     a3 = 0
-    b3 = fyMax
+    b3 = fzMax
     while abs((fleche_max-0.01) - fleche_adm) > 0.01:
         if fleche_max < fleche_adm:
-            a3 = fyMax
+            a3 = fzMax
         else:
-            b3 = fyMax
-        fyMax = (a3+b3)/2
+            b3 = fzMax
+        fzMax = (a3+b3)/2
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(fyMax,2)}, FZ = {round(f*fyMax,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*fyMax,2), FY = 0, FZ = {round(fzMax,2)}}\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*fyMax,FY=fyMax),
+            FX = f*fzMax,FZ=fzMax),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -6587,9 +6588,9 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);        
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);    
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
@@ -6597,21 +6598,20 @@ if niveau == "oab":
     osupFile = open(flecheFile,"w")
     osupFile.write(f'{version}\n')
     osupFile.write(f'{dash}\nFX 			FY 			FZ 			ratio max\n')
-    osupFile.write(f'0		{round(fyMax,2)}		{round(f*fyMax,2)}\n')
-    fyMax_init = fymaxl
+    osupFile.write(f'{round(f*fzMax,2)}		0		{round(fzMax,2)}\n')
+    fzMax_init = fzmaxl
     osupFile.close()
     sv.fzCourbeMin.append(0)
-    sv.fyCourbeMin.append(fyMax)
+    sv.fyCourbeMin.append(fzMax)
     #----------------------------------QUADRANT 1 fy >0 , fx > 0-------------------------------
     for i in range(1,n):
-        fx = fxMax/n*i    
+        fy = fyMax/n*i    
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(fyMax,2)}, FZ = {round(f*(fx**2+fyMax**2)**0.5,2)}\n')
-        reportFile.close()
+        reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2+fzMax**2)**0.5,2)}, FY = {round(fy,2), FZ = {round(fzMax,2)}
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*(fx**2+fyMax**2)**0.5,FX=fx,FY=fyMax),
+            FX = f*(fy**2+fzMax**2)**0.5,FY=fy,FZ=fzMax),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -6625,22 +6625,22 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);        
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);        
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);    
         if fleche_max < fleche_adm:
-            fyMax *= 2
-        fyCourbe = -fyMax/fxMax*fx + fyMax
+            fzMax *= 2
+        fzCourbe = -fzMax/fyMax*fx + fzMax
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(fyCourbe,2)}, FZ = {round(f*(fx**2+fyCourbe**2)**0.5,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2+fzCourbe**2)**0.5,2)}, FY = {round(fy,2)}, FZ = {round(fzCourbe,2)}\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*(fx**2+fyCourbe**2)**0.5,FX=fx,FY=fyCourbe),
+            FX = f*(fy**2+fzCourbe**2)**0.5,FY=fy,FZ=fzCourbe),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -6654,26 +6654,26 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);        
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);        
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);  
         if fleche_max > fleche_adm:
             alpha = 0
-            beta = fyCourbe
+            beta = fzCourbe
         else:
-            alpha = fyCourbe
-            beta = fyMax
-        fy = (alpha + beta)/2
+            alpha = fzCourbe
+            beta = fzMax
+        fz = (alpha + beta)/2
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(fy,2)}, FZ ={round(f*(fx**2+fy**2)**0.5,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2+fz**2)**0.5,2)}, FY = {round(fy,2)}, FZ = {round(fz,2)}\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*(fx**2+fy**2)**0.5,FY=fy,FX=fx),
+            FX = f*(fy**2+fz**2)**0.5,FY=fy,FZ=fz),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -6687,25 +6687,25 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);        
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);    
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
         while abs((fleche_max-0.01)-fleche_adm) > 0.01:
             if fleche_max < fleche_adm:
-                alpha = fy
+                alpha = fz
             else:
-                beta = fy
-            fy = (alpha+beta)/2
+                beta = fz
+            fz = (alpha+beta)/2
             reportFile = open(resultfile,"a")
             reportFile.write(f'{dash}\n')
-            reportFile.write(f'CHARGEMENT: FX = {round(fx,3)}, FY = {round(fy,3)}, FZ = {round(f*(fx**2+fy**2)**0.5,3)}\n')
+            reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2+fz**2)**0.5,3)}, FY = {round(fy,3)}, FZ = {round(fz,3)}\n')
             reportFile.close()
             force=AFFE_CHAR_MECA(MODELE=model,
             FORCE_NODALE=_F(GROUP_NO=('load',),
-                FZ = f*(fx**2+fy**2)**0.5,FY=fy,FX=fx),
+                FX = f*(fy**2+fz**2)**0.5,FY=fy,FZ=fz),
             );
             stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
             EXCIT=(			_F(CHARGE=encast,),
@@ -6725,34 +6725,34 @@ if niveau == "oab":
                 TOUT_ORDRE='OUI',
                 OPERATION='EXTRACTION',),);            
             depl = TAB_depl.EXTR_TABLE()
-            dx = max( depl.DX)
+            dy = max( depl.DY)
             dz = max( depl.DZ)
-            fleche_max = max(dx, dz)
+            fleche_max = max(dy, dz)
             IMPR_TABLE (TABLE=TAB_depl,)       
             DETRUIRE(CONCEPT=_F(NOM=force,),);        
             DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
         #-----------------------------------------------------------------------------------------
         osupFile = open(flecheFile,"a")
-        osupFile.write(f'{round(fx,3)}		{round(fy,3)}		{round(f*((fy**2+fx**2)**0.5),3)}		{round(ratioMax,3)}		\n')
+        osupFile.write(f'{round(f*((fz**2+fy**2)**0.5),3)}		{round(fy,3)}		{round(fz,3)}		{round(ratioMax,3)}		\n')
         osupFile.close()    
-        sv.fzCourbeMin.append(fx)
-        sv.fyCourbeMin.append(fy)
+        sv.fzCourbeMin.append(fy)
+        sv.fyCourbeMin.append(fz)
     osupFile = open(flecheFile,"a")
-    osupFile.write(f'{round(fxMax,2)}		0		{round(f*fxMax,2)}\n')
+    osupFile.write(f'{round(f*fyMax,2)}		{round(fyMax,2)}		0\n')
     osupFile.close()
-    sv.fzCourbeMin.append(fxMax)
+    sv.fzCourbeMin.append(fyMax)
     sv.fyCourbeMin.append(0)
 
     #-------------------------------------QUADRANT 2 fz<0 fx<0 ---------------------------------------------
     #----------------------------- fyMax --------------------------------
-    fyMin = -fzMax/f
+    fyMin = -fxMax/f
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(fyMin,2)}, FZ ={round(f*-fyMin,2)} \n')
+    reportFile.write(f'CHARGEMENT: FX = {round(f*-fzMin,2)}, FY = 0, FZ = {round(fzMin,2)}\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
-        FZ = f*-fyMin,FY=fyMin,),
+        FX = f*-fzMin,FZ=fzMin,),
     );
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
@@ -6772,20 +6772,20 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);
     depl = TAB_depl.EXTR_TABLE()
-    dx = max( depl.DX)
+    dy = max( depl.DY)
     dz = max( depl.DZ)
-    fleche_max = max(dx, dz)
+    fleche_max = max(dy, dz)
     IMPR_TABLE (TABLE=TAB_depl,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
     while fleche_max < fleche_adm:
-        fyMin *= 2
+        fzMin *= 2
         reportFile = open(resultfile,"a")
-        reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(fyMin,2)}, FZ = {round(f*-fyMin,2)} \n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*-fzMin,2)}, FY = 0, FZ = {round(fzMin,2)} \n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*-fyMin,FY=fyMin,),
+            FX = f*-fzMin,FZ=fzMin,),
         );
 
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
@@ -6800,27 +6800,27 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);        
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
     a3 = 0
-    b3 = fyMin
+    b3 = fzMin
     while abs((fleche_max-0.01) - fleche_adm) > 0.01:
         if fleche_max < fleche_adm:
-            a3 = fyMin
+            a3 = fzMin
         else:
-            b3 = fyMin
-        fyMin= (a3+b3)/2
+            b3 = fzMin
+        fzMin= (a3+b3)/2
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = 0, FY = {round(fyMin,2)}, FZ = {round(f*-fyMin,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*-fyMin,2)}, FY = {round(fyMin,2)}, FZ = 0\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*-fyMin,FY=fyMin),
+            FX = f*-fzMin,FZ=fzMin),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -6834,22 +6834,22 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);    
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
     for i in range(1,n):
-        fx = fxMax/n*(n-i)    
+        fy = fyMax/n*(n-i)    
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(fyMin,2)}, FZ = {round(f*(fx**2+fyMin**2)**0.5,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2+fzMin**2)**0.5,2)}, FY = {round(fy,2)}, FZ = {round(fzMin,2)}\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*(fx**2+fyMin**2)**0.5,FY=fyMin,FX=fx),
+            FX = f*(fy**2+fzMin**2)**0.5,FY=fy,FZ=fzMin),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -6863,23 +6863,23 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);   
         if fleche_max < fleche_adm:
-            fyMin *= 2
-        fyCourbe = fyMin/fxMax*fx + fyMin
+            fzMin *= 2
+        fzCourbe = fzMin/fyMax*fy + fzMin
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(fyCourbe,2)}, FZ = {round(f*(fx**2+fyCourbe**2)**0.5,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2+fzCourbe**2)**0.5,2)}, FY = {round(fy,2)}, FZ = {round(fzCourbe,2)}\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*(fx**2+fyCourbe**2)**0.5,FX=fx,FY=fyCourbe),
+            FX = f*(fy**2+fzCourbe**2)**0.5,FY=fy,FZ=fzCourbe),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -6893,26 +6893,26 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);    
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);    
         if fleche_max > fleche_adm:
             alpha = 0
-            beta = fyCourbe
+            beta = fzCourbe
         else:
-            alpha = fyCourbe
-            beta = fyMin
-        fy = (alpha + beta)/2
+            alpha = fzCourbe
+            beta = fzMin
+        fz = (alpha + beta)/2
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(fy,2)}, FZ ={round(f*(fx**2+fy**2)**0.5,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*(fz**2+fy**2)**0.5,2)}, FY = {round(fy,2)}, FZ = {round(fz,2)}\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*(fy**2+fx**2)**0.5,FY=fy,FX=fx),
+            FX = f*(fz**2+fy**2)**0.5,FY=fy,FZ=fz),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -6926,26 +6926,26 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
         while abs((fleche_max-0.01)-fleche_adm) > 0.01:
             if fleche_max < fleche_adm:
-                alpha = fy
+                alpha = fz
             else:
-                beta = fy
-            fy = (alpha+beta)/2
+                beta = fz
+            fz = (alpha+beta)/2
             reportFile = open(resultfile,"a")
             reportFile.write(f'{dash}\n')
-            reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(fy,2)}, FZ = {round(f*(fz**2+fx**2)**0.5,2)}\n')
+            reportFile.write(f'CHARGEMENT: FX = {round(f*(fz**2+fy**2)**0.5,2)}, FY = {round(fy,2)}, FZ = {round(fz,2)}\n')
             reportFile.close()
             force=AFFE_CHAR_MECA(MODELE=model,
             FORCE_NODALE=_F(GROUP_NO=('load',),
-                FZ = f*(fy**2+fx**2)**0.5,FY=fy,FX=fx),
+                FX = f*(fy**2+fz**2)**0.5,FZ=fz,FY=fy),
             );
             stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
             EXCIT=(			_F(CHARGE=encast,),
@@ -6959,33 +6959,33 @@ if niveau == "oab":
                 OPERATION='EXTRACTION',),);
         
             depl = TAB_depl.EXTR_TABLE()
-            dx = max( depl.DX)
+            dy = max( depl.DY)
             dz = max( depl.DZ)
-            fleche_max = max(dx, dz)
+            fleche_max = max(dy, dz)
             IMPR_TABLE (TABLE=TAB_depl,)
             DETRUIRE(CONCEPT=_F(NOM=force,),);            
             DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
         #-----------------------------------------------------------------------------------------
         osupFile = open(flecheFile,"a")
-        osupFile.write(f'{round(fx,3)}		{round(fy,3)}		{round(f*((fy**2+fx**2)**0.5),3)}		{round(fleche_adm,3)}\n')
+        osupFile.write(f'{round(f*((fz**2+fx**2)**0.5),3)}		{round(fy,3)}		{round(fz,3)}		{round(fleche_adm,3)}\n')
         osupFile.close()        
-        sv.fzCourbeMin.append(fx)
-        sv.fyCourbeMin.append(fy)
+        sv.fzCourbeMin.append(fy)
+        sv.fyCourbeMin.append(fz)
     osupFile = open(flecheFile,"a")
-    osupFile.write(f'0		{round(fyMin,3)}		{round(f*-fyMin,3)}\n')
+    osupFile.write(f'{round(f*-fzMin,3)}		0		{round(fzMin,3)}\n')
     osupFile.close()
     sv.fzCourbeMin.append(0)
-    sv.fyCourbeMin.append(fyMin)
+    sv.fyCourbeMin.append(fzMin)
     #----------------------------------QUADRANT 3 fz <0 , fx < 0-------------------------------
-    #----------------------------- fxMin --------------------------------
-    fxMin = -fzMax/f
+    #----------------------------- fyMin --------------------------------
+    fyMin = -fxMax/f
     reportFile = open(resultfile,"a")
     reportFile.write(dash)
-    reportFile.write(f'CHARGEMENT: FX = {round(fxMin ,2)}, FY = 0, FZ = {round(f*-fxMin ,2)}\n')
+    reportFile.write(f'CHARGEMENT: FX = {round(f*-fzMin ,2)}, FY = 0, FZ = {round(fzMin ,2)}\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
-        FZ = f*-fxMin ,FX=fxMin ,),
+        FX = f*-fzMin ,FZ=fzMin ,),
     );
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
@@ -7006,21 +7006,21 @@ if niveau == "oab":
         OPERATION='EXTRACTION',),);
         
     depl = TAB_depl.EXTR_TABLE()
-    dx = max( depl.DX)
+    dy = max( depl.DY)
     dz = max( depl.DZ)
-    fleche_max = max(dx, dz)
+    fleche_max = max(dy, dz)
     IMPR_TABLE (TABLE=TAB_depl,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
 
     DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
     while fleche_max < fleche_adm:
-        fxMin  *= 2
+        fyMin  *= 2
         reportFile = open(resultfile,"a")
-        reportFile.write(f'CHARGEMENT: FX = {round(fxMin,2)}, FY = 0, FZ = {round(-f*fxMin,2)} \n')
+        reportFile.write(f'CHARGEMENT: FX = {round(-f*fyMin,2)}, FY = {round(fyMin,2)}, FZ = 0\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = -f*fxMin,FX=fxMin,),
+            FX = -f*fyMin,FY=fyMin,),
         );
 
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
@@ -7035,28 +7035,28 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
     a2 = 0
-    b2 = fxMin 
+    b2 = fyMin 
     while abs((fleche_max-0.01) - fleche_adm) > 0.01:
         if fleche_max < fleche_adm:
-            a2 = fxMin 
+            a2 = fyMin 
         else:
-            b2 = fxMin 
-        fxMin  = (a2+b2)/2
+            b2 = fyMin 
+        fyMin  = (a2+b2)/2
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fxMin ,2)}, FY = 0, FZ = {round(f*-fxMin ,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(-f*fyMin ,2)}, FY = {round(fyMin ,2)}, FZ = 0\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*-fxMin ,FX=fxMin ,),
+            FX = f*-fyMin ,FY=fyMin ,),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -7070,22 +7070,22 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);    
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),); 
 
     for i in range(1,n):
-        fx = fxMin /n*i    
+        fy = fyMin /n*i    
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(f*(fx**2)**0.5,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2)**0.5,2)}, FY = {round(fy,2)}, FZ = 0\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*(fx**2)**0.5,FY=0,FX=fx),
+            FX = f*(fy**2)**0.5,FY=fy),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -7099,22 +7099,22 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);    
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);  
         # Pour pas faire de boucle infinie
         while fleche_max > fleche_adm:
-            fx = (fx + sv.fzCourbeMin[-1])/2 
+            fy = (fy + sv.fzCourbeMin[-1])/2 
             reportFile = open(resultfile,"a")
             reportFile.write(f'{dash}\n')
-            reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(f*(fx**2)**0.5,2)}\n')
+            reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2)**0.5,2)}, FY = {round(fy,2)}, FZ = 0\n')
             reportFile.close()
             force=AFFE_CHAR_MECA(MODELE=model,
             FORCE_NODALE=_F(GROUP_NO=('load',),
-                FZ = f*(fx**2)**0.5,FY=0,FX=fx),
+                FX = f*(fy**2)**0.5,FY=fy),
             );
             stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
             EXCIT=(			_F(CHARGE=encast,),
@@ -7127,19 +7127,19 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);            
             depl = TAB_depl.EXTR_TABLE()
-            dx = max( depl.DX)
+            dy = max( depl.DY)
             dz = max( depl.DZ)
-            fleche_max = max(dx, dz)
+            fleche_max = max(dy, dz)
             IMPR_TABLE (TABLE=TAB_depl,)
             DETRUIRE(CONCEPT=_F(NOM=force,),);            
             DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(fyMin,2)}, FZ = {round(f*(fx**2+fyMin**2)**0.5,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2+fzMin**2)**0.5,2)}, FY = {round(fy,2)}, FZ = {round(fzMin,2)}\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*(fx**2+fyMin**2)**0.5,FY=fyMin,FX=fx),
+            FX = f*(fy**2+fzMin**2)**0.5,FZ=fzMin,FY=fy),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -7154,22 +7154,22 @@ if niveau == "oab":
         OPERATION='EXTRACTION',),);
         
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);        
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
         if fleche_max < fleche_adm:
-            fyMin *= 2
-        fyCourbe = fyMin/fxMin*fx + fyMin
+            fzMin *= 2
+        fzCourbe = fzMin/fyMin*fy + fzMin
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(fyCourbe,2)}, FZ = {round(f*(fx**2+fyCourbe**2)**0.5,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2+fzCourbe**2)**0.5,2)}, FY = {round(fy,2)}, FZ = {round(fzCourbe,2)}\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*(fx**2+fyCourbe**2)**0.5,FY=fyCourbe,FX=fx),
+            FX = f*(fy**2+fzCourbe**2)**0.5,FZ=fzCourbe,FY=fy),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -7183,26 +7183,26 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);    
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);   
         if fleche_max > fleche_adm:
             alpha = 0
-            beta = fyCourbe
+            beta = fzCourbe
         else:
-            alpha = fyCourbe
-            beta = fyMin
-        fy = (alpha + beta)/2
+            alpha = fzCourbe
+            beta = fzMin
+        fz = (alpha + beta)/2
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(fy,2)}, FZ ={round(f*(fy**2+fx**2)**0.5,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2+fz**2)**0.5,2)}, FY = {round(fy,2)}, FZ = {round(fz,2)}\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*(fy**2+fx**2)**0.5,FY=fy,FX=fx),
+            FX = f*(fy**2+fz**2)**0.5,FY=fy,FZ=fz),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -7216,25 +7216,25 @@ if niveau == "oab":
         TOUT_ORDRE='OUI',
         OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)     
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);    
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
         while abs((fleche_max-0.01)-fleche_adm) > 0.01:
             if fleche_max < fleche_adm:
-                alpha = fy
+                alpha = fz
             else:
-                beta = fy
-            fy = (alpha+beta)/2
+                beta = fz
+            fz = (alpha+beta)/2
             reportFile = open(resultfile,"a")
             reportFile.write(f'{dash}\n')
-            reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(fy,2)}, FZ = {round(f*(fx**2+fy**2)**0.5,2)}\n')
+            reportFile.write(f'CHARGEMENT: FX = {round(f*(fz**2+fy**2)**0.5,2)}, FY = {round(fy,2)}, FZ = {round(fz,2)}\n')
             reportFile.close()
             force=AFFE_CHAR_MECA(MODELE=model,
             FORCE_NODALE=_F(GROUP_NO=('load',),
-                FY=fy,FX=fx, FZ = f*(fy**2+fx**2)**0.5),
+                FY=fy,FZ=fz, FX = f*(fy**2+fz**2)**0.5),
             );
             stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
             EXCIT=(			_F(CHARGE=encast,),
@@ -7247,33 +7247,33 @@ if niveau == "oab":
                 TOUT_ORDRE='OUI',
                 OPERATION='EXTRACTION',),);        
             depl = TAB_depl.EXTR_TABLE()
-            dx = max( depl.DX)
+            dy = max( depl.DY)
             dz = max( depl.DZ)     
-            fleche_max = max(dx, dz)
+            fleche_max = max(dy, dz)
             IMPR_TABLE (TABLE=TAB_depl,)
             DETRUIRE(CONCEPT=_F(NOM=force,),);            
             DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
         #-----------------------------------------------------------------------------------------
         osupFile = open(flecheFile,"a")
-        osupFile.write(f'{round(fx,3)}		{round(fy,3)}		{round(f*((fy**2+fx**2)**0.5),3)}		{round(ratioMax,3)}\n')
+        osupFile.write(f'{round(f*((fy**2+fz**2)**0.5),3)}		{round(fy,3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
         osupFile.close()    
-        sv.fzCourbeMin.append(fx)
-        sv.fyCourbeMin.append(fy)
+        sv.fzCourbeMin.append(fy)
+        sv.fyCourbeMin.append(fz)
     osupFile = open(flecheFile,"a")
-    osupFile.write(f'{round(fxMin ,3)}		0		{round(f*(fxMin ),3)}		\n')
+    osupFile.write(f'{round(f*fyMin ,3)}		{round(fyMin ,3)}		0		\n')
     osupFile.close()
-    sv.fzCourbeMin.append(fxMin)
+    sv.fzCourbeMin.append(fyMin)
     sv.fyCourbeMin.append(0)
     #----------------------------------QUADRANT 4 fz <0 , fx > 0-------------------------------
     for i in range(1,n):
-        fx = fxMin/n*(n-i)    
+        fy = fyMin/n*(n-i)    
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(f*(fx**2)**0.5,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2)**0.5,2)}, FY = {round(fy,2)}, FZ = 0\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*(fx**2)**0.5,FX=fx,FY=0),
+            FX = f*(fy**2)**0.5,FY=fy),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -7288,24 +7288,24 @@ if niveau == "oab":
             OPERATION='EXTRACTION',),);
         
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)     
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);        
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),); 
         while fleche_max > fleche_adm:
             if i ==1:
-                fx = (fx + sv.fzCourbeMin[-2])/2
+                fy = (fy + sv.fzCourbeMin[-2])/2
             else:
-                fx = (fx + sv.fzCourbeMin[-1])/2
+                fy = (fy + sv.fzCourbeMin[-1])/2
             reportFile = open(resultfile,"a")
             reportFile.write(f'{dash}\n')
-            reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = 0, FZ = {round(f*(fx**2)**0.5,2)}\n')
+            reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2)**0.5,2)}, FY = {round(fy,2)}, FZ = 0\n')
             reportFile.close()
             force=AFFE_CHAR_MECA(MODELE=model,
             FORCE_NODALE=_F(GROUP_NO=('load',),
-                FZ = f*(fx**2)**0.5,FX=fx,FY=0),
+                FX = f*(fy**2)**0.5,FY=fy),
             );
             stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
             EXCIT=(			_F(CHARGE=encast,),
@@ -7318,19 +7318,19 @@ if niveau == "oab":
                 TOUT_ORDRE='OUI',
                 OPERATION='EXTRACTION',),);        
             depl = TAB_depl.EXTR_TABLE()
-            dx = max( depl.DX)
+            dy = max( depl.DY)
             dz = max( depl.DZ)     
-            fleche_max = max(dx, dz)
+            fleche_max = max(dy, dz)
             IMPR_TABLE (TABLE=TAB_depl,)
             DETRUIRE(CONCEPT=_F(NOM=force,),);        
             DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(fyMax,2)}, FZ = {round(f*(fx**2+fyMax**2)**0.5,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2+fzMax**2)**0.5,2)}, FY = {round(fy,2)}, FZ = {round(fzMax,2)}\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*(fx**2+fyMax**2)**0.5,FX=fx,FY=fyMax),
+            FX = f*(fy**2+fzMax**2)**0.5,FY=fy,FZ=fzMax),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -7344,22 +7344,22 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)     
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);    
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),); 
         if fleche_max < fleche_adm:
-            fyMax *= 2
-        fyCourbe = fyMax/-fxMax*fx + fyMax
+            fzMax *= 2
+        fzCourbe = fzMax/-fyMax*fy + fzMax
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(fyCourbe,2)}, FZ = {round(f*(fx**2+fyCourbe**2)**0.5,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2+fzCourbe**2)**0.5,2)}, FY = {round(fy,2)}, FZ = {round(fzCourbe,2)}\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*(fx**2+fyCourbe**2)**0.5,FX=fx,FY=fyCourbe),
+            FX = f*(fy**2+fzCourbe**2)**0.5,FY=fy,FZ=fzCourbe),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -7373,26 +7373,26 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)     
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);    
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);    
         if fleche_max > fleche_adm:
             alpha = 0
-            beta = fyCourbe
+            beta = fzCourbe
         else:
-            alpha = fyCourbe
-            beta = fyMax
-        fy = (alpha + beta)/2
+            alpha = fzCourbe
+            beta = fzMax
+        fz = (alpha + beta)/2
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(fy,2)}, FZ ={round(f*(fx**2+fy**2)**0.5,2)}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2+fz**2)**0.5,2)}, FY = {round(fy,2)}, FZ = {round(fz,2)}\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
-            FZ = f*(fy**2+fx**2)**0.5,FY=fy,FX=fx),
+            FX = f*(fy**2+fz**2)**0.5,FY=fy,FZ=fz),
         );
         stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
         EXCIT=(			_F(CHARGE=encast,),
@@ -7406,25 +7406,25 @@ if niveau == "oab":
             TOUT_ORDRE='OUI',
             OPERATION='EXTRACTION',),);    
         depl = TAB_depl.EXTR_TABLE()
-        dx = max( depl.DX)
+        dy = max( depl.DY)
         dz = max( depl.DZ)     
-        fleche_max = max(dx, dz)
+        fleche_max = max(dy, dz)
         IMPR_TABLE (TABLE=TAB_depl,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);    
         DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
         while abs((fleche_max - 0.01) - fleche_adm) > 0.01:
             if fleche_max < fleche_adm:
-                alpha = fy
+                alpha = fz
             else:
-                beta = fy
-            fy = (alpha+beta)/2
+                beta = fz
+            fz = (alpha+beta)/2
             reportFile = open(resultfile,"a")
             reportFile.write(f'{dash}\n')
-            reportFile.write(f'CHARGEMENT: FX = {round(fx,2)}, FY = {round(fy,2)}, FZ = {round(f*(fy**2+fx**2)**0.5,2)}\n')
+            reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2+fz**2)**0.5,2)}, FY = {round(fy,2)}, FZ = {round(fz,2)}\n')
             reportFile.close()
             force=AFFE_CHAR_MECA(MODELE=model,
             FORCE_NODALE=_F(GROUP_NO=('load',),
-                FZ = f*(fx**2+fy**2)**0.5,FX=fx,FY=fy),
+                FX = f*(fy**2+fy**2)**0.5,FZ=fz,FY=fy),
             );
             stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
             EXCIT=(			_F(CHARGE=encast,),
@@ -7438,24 +7438,24 @@ if niveau == "oab":
                 OPERATION='EXTRACTION',),);
         
             depl = TAB_depl.EXTR_TABLE()
-            dx = max( depl.DX)
+            dy = max( depl.DY)
             dz = max( depl.DZ)     
-            fleche_max = max(dx, dz)
+            fleche_max = max(dy, dz)
             IMPR_TABLE (TABLE=TAB_depl,)
             DETRUIRE(CONCEPT=_F(NOM=force,),);        
             DETRUIRE(CONCEPT=_F(NOM=TAB_depl,),);
         #-----------------------------------------------------------------------------------------
         osupFile = open(flecheFile,"a")
-        osupFile.write(f'{round(fx,3)}		{round(fy,3)}		{round(f*((fy**2+fx**2)**0.5),3)}		{round(ratioMax,3)}\n')
+        osupFile.write(f'{round(f*((fy**2+fz**2)**0.5),3)}		{round(fy,3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
         osupFile.close()    
-        sv.fzCourbeMin.append(fx)
-        sv.fyCourbeMin.append(fy)
+        sv.fzCourbeMin.append(fy)
+        sv.fyCourbeMin.append(fz)
     import matplotlib.pyplot as plt
     sv.timefin = time.time()
     print("Temps total = ",sv.timefin-sv.timeInit)
     plt.plot(sv.fzCourbeMin,sv.fyCourbeMin) 
     plt.show()
     osupFile = open(flecheFile,"a")
-    osupFile.write(f'0		{round(fyMax_init,2)}		{round(f*fyMax_init,2)}\n')
+    osupFile.write(f'{round(f*fzMax_init,2)}		0		{round(fzMax_init,2)}\n')
     osupFile.close()     
 FIN()    
