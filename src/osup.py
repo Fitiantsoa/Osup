@@ -344,6 +344,11 @@ class OSup(QObject):
             self.created_file = True
             return True
 
+        elif file_type == "cheville":
+            self.comm_file = CommFile(self.data)
+            self.comm_file.write()
+            return True
+
     def create_result_file(self):
         resultfile = os.environ["HOMEPATH"] + "\\Desktop\\aster"
         if not os.path.exists(resultfile):
@@ -440,7 +445,6 @@ class OSup(QObject):
             else:
                 self.result_window.load_result(self.result_file.get_dict_data(self.get_saved_data()["verification_module"]['points'],self.data_stirrup), "Etrier")
             self.result_window.showMaximized()
-
 
         else:
             try:

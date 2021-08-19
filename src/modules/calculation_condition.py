@@ -22,6 +22,7 @@ class CalculationCondition:
         self.friction_coefficient = TextField("FrictionCoefficientTF", self.sibling)
         self.ratioProf = TextField("RatioMaxProf", self.sibling)
         self.ratioPlat = TextField("RatioMaxPlat", self.sibling)
+        self.ratioChev = TextField("RatioMaxChev", self.sibling)
         self.portee = TextField("Portee", self.sibling)
 
 
@@ -40,6 +41,7 @@ class CalculationCondition:
         self.friction_coefficient.update_qml(data['friction_coefficient'])
         self.ratioProf.update_qml(data['ratio_profile'])
         self.ratioPlat.update_qml(data['ratio_platine'])
+        self.ratioChev.update_qml(data['ratio_cheville'])
         self.portee.update_qml(data['portee'])
 
 
@@ -52,7 +54,8 @@ class CalculationCondition:
             "friction_coefficient": self.friction_coefficient._text,
             "ratio_profile": self.ratioProf._text,
             "ratio_platine": self.ratioPlat._text,
-            "portee": self.portee._text
+            "portee": self.portee._text,
+            "ratio_cheville" : self.ratioChev._text
         }
 
 

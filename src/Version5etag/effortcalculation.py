@@ -143,7 +143,7 @@ class CalculationEffort:
 
         elif self.TypeCompression == "Pas de compression" or self.TypeCompression == "Compression totale":
             self.z = 0
-
+        print("nfjebnugibtgrnronizgguonrouzhnruzbndsfngoirn")
         dico = {"NEd": self.NEd,
                 "NEdg": self.NEdg,
                 "z": self.z,
@@ -374,6 +374,8 @@ class CalculationEffort:
         return PosCEd, CEd
 
     def triangle_compression(self, c, pm, alpha, lref):
+        '''Calcul de la force de compression et de son point d'application sur un triangle de compression'''
+
         d = lref / math.sin(alpha)
 
         Nt = (1 / 6) * math.tan(alpha) * pm * d ** 2
@@ -384,6 +386,7 @@ class CalculationEffort:
         return np.array([Nt, G0, G1])
 
     def equation_straight_line_biaxial(self, alpha, lref):
+        ''' Equation cartésienne de l'axe neutre A0.x+A1.z+A2=0 '''
 
         if self.Lx * math.sin(alpha) <= lref <= self.Lz * math.cos(alpha):
             d2 = lref / math.cos(alpha)
@@ -415,6 +418,7 @@ class CalculationEffort:
         return np.array([A0, A1, A2])
 
     def distance_dowel_biaxial(self, PosFix_bis, alpha, lref):
+        ''' Calcul des distances des fixations à l'axe neutre lref '''
         L = np.zeros((self.NbFixa, 1))
 
         res = self.equation_straight_line_biaxial(alpha, lref)
@@ -429,7 +433,8 @@ class CalculationEffort:
                 L[j, 0] = abs(A0 * PosFix_bis[j, 0] + A1 * PosFix_bis[j, 1] + A2) / math.sqrt(A0 ** 2 + A1 ** 2)
         return L
 
-    def systeme_biaxial(self, PosFix_bis, pm, alpha, lref):  # Equilibre statique
+    def systeme_biaxial(self, PosFix_bis, pm, alpha, lref):
+        ''' Calcul de l'équilibre statique '''
         L = np.zeros((self.NbFixa, 1))
         self.Nt_u = 0
         self.Nt_d = 0
@@ -513,6 +518,7 @@ class CalculationEffort:
         return f
 
     def calculation_jocobien_biaxial(self, PosFix_bis, pm, alpha, lref, d_pm, d_alpha, d_lref):
+        ''' Calcul de la jacobienne : différences finies centrées'''
         F_d = self.systeme_biaxial(PosFix_bis, pm + d_pm, alpha, lref)
         F_g = self.systeme_biaxial(PosFix_bis, pm - d_pm, alpha, lref)
         F_dpm = np.zeros((3, 1))
@@ -544,6 +550,7 @@ class CalculationEffort:
         return Jac
 
     def newton_biaxial(self, PosFix_bis, alpha0, lref0):
+        ''' Utilisation de la méthode Newton-Rapshon dans le cas biaxial'''
         d_pm = 0.000001
         d_alpha = 0.000001
         d_lref = 0.000001
@@ -616,6 +623,7 @@ class CalculationEffort:
             return pm, alpha, lref  # Renvoi une liste des trois valeurs
 
     def state_compression_board(self):
+        ''' Détermine le niveau de compression entre partielle, totale ou nulle '''
         condi2 = -self.N / self.NbFixa
         condi3 = 0
 
@@ -641,6 +649,7 @@ class CalculationEffort:
         return TypeCompression
 
     def calculation_traction_without_compression(self):
+        '''Calcul de la traction dans les chevilles lorsque la platine ne comprime pas le béton '''
         global NEdg
         NEd = np.zeros((self.NbFixa, 1))
         NEdg = 0
@@ -730,6 +739,7 @@ class CalculationEffort:
         return get_error
 
     def newton_monoaxial(self, PosFix_bis, lref0):
+        ''' Utilisation de la méthode Newton-Rapshon dans le cas monoaxial'''
         d_pm = 0.000001
         d_lref = 0.000001
 
@@ -791,6 +801,7 @@ class CalculationEffort:
             return pm, lref
 
     def systeme_monoaxial(self, PosFix_bis, pm, lref):
+        ''' Equilibre stattique cas monoaxial'''
         suml = 0
         sumlx = 0
         sumlz = 0
@@ -825,6 +836,7 @@ class CalculationEffort:
         return f
 
     def calculation_jacobien_monoaxial(self, PosFix_bis, pm, lref, d_pm, d_lref):
+        ''' Calcul de la jacobienne : différences finies centrées'''
         Jac = np.zeros((2, 2))
 
         F_d = self.systeme_monoaxial(PosFix_bis, abs(pm + d_pm), lref)
@@ -848,6 +860,7 @@ class CalculationEffort:
         return Jac
 
     def distance_dowel_monoaxial(self, PosFix_bis, lref, dir):
+        ''' Calcul des distances des fixations à l'axe neutre lref '''
         L = np.zeros((self.NbFixa, 1))
         if dir == "x":
             self.A0 = 0

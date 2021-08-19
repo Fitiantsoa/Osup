@@ -1,5 +1,8 @@
 import numpy as np
 
+''' Classe mathématique utilisée pour le calcul des efforts dans les chevilles : 1 - Calcul de la norme d'un vecteur, 
+#  2 - Produit matrice par vecteur  '''
+
 
 class Mathematique:
     def __init__(self, matrix=None, vector=None):
