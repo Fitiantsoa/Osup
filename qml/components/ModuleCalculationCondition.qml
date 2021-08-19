@@ -20,6 +20,7 @@ Rectangle {
 //    property alias lvlC_check: lvlC.checked
 //    property alias lvlD_check: lvlD.checked
     property alias rccm : rccm
+    property alias oab : lvlA
 //    property alias en_check : normeRadioButtonEN.checked
 
     Rectangle {
@@ -441,7 +442,7 @@ Rectangle {
                             anchors.leftMargin: 15
                             anchors.rightMargin: 20
                             Label{
-                                text: "Portée:"
+                                text: "Portée (mm):"
                                 Layout.preferredWidth: 130
                                 color : Theme.grey_6
                             }

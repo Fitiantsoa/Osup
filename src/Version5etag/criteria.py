@@ -143,6 +143,7 @@ class Criteria:
 
     def calculation_criteria_traction_shearing(self):
         if self.resultshearing is None or self.resultTrac is None:
+            print("Non convergence")
             return "Non convergence"
         else:
             a = self.calculation_criteria_traction()

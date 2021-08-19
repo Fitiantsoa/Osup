@@ -1698,7 +1698,7 @@ osupFile.write(f'{dash}\nFX 			FY 			FZ 			Axial 			ratio max\n')
 osupFile.write(f'{round(f*fzMax, 3)} 			0 			{round(fzMax,3)}\n')
 osupFile.close()
 fzMax_init = fzMax
-ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+
 sv.fxCourbeMin.append(0)
 sv.fzCourbeMin.append(fzMax)
 
@@ -1909,7 +1909,7 @@ for i in range(1,n):
     osupFile = open(platineFile,"a")
     osupFile.write(f'{round(f*((fz**2+fy**2)**0.5),3)}		{round(fy,3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
     osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    
     sv.fxCourbeMin.append(fy)
     sv.fzCourbeMin.append(fz)
 osupFile = open(platineFile,"a")
@@ -1923,11 +1923,11 @@ sv.fzCourbeMin.append(0)
 fzMin = -fxMax/f
 reportFile = open(resultfile,"a")
 reportFile.write(f'{dash}\n')
-reportFile.write(f'CHARGEMENT: FX ={round(-f*fzMin,2)}, FY = 0, FZ = {round(fzMin,2)} \n')
+reportFile.write(f'CHARGEMENT2: FX ={round(-f*fzMin,2)}, FY = 0, FZ = {round(fzMin,2)} \n')
 reportFile.close()
 force=AFFE_CHAR_MECA(MODELE=model,
 FORCE_NODALE=_F(GROUP_NO=('load',),
-	FX = f*fzMin,FZ=fzMin,),
+	FX = -f*fzMin,FZ=fzMin,),
 );
 stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
 EXCIT=(			_F(CHARGE=encast,),
@@ -1978,7 +1978,7 @@ while abs((ratioLimProf-0.01) - ratioMax) > 0.01:
     fzMin = (a3+b3)/2
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = {round(-f*fzMin,2)} , FY = 0, FZ = {round(fzMin,2)}\n')
+    reportFile.write(f'CHARGEMENT3: FX = {round(-f*fzMin,2)} , FY = 0, FZ = {round(fzMin,2)}\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
@@ -2035,11 +2035,11 @@ for i in range(1,n):
     fy = fyMax/n*(n-i)    
     reportFile = open(resultfile,"a")
     reportFile.write(f'{dash}\n')
-    reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2+fzMax**2)**0.5,2)}, FY = {round(fy,2)}, FZ={round(-fzMax,2)}\n')
+    reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2+fzMin**2)**0.5,2)}, FY = {round(fy,2)}, FZ={round(fzMin,2)}\n')
     reportFile.close()
     force=AFFE_CHAR_MECA(MODELE=model,
     FORCE_NODALE=_F(GROUP_NO=('load',),
-        FX = f*(fy**2+fzMax**2)**0.5,FZ=-fzMax,FY=fy),
+        FX = f*(fy**2+fzMin**2)**0.5,FZ=fzMin,FY=fy),
     );
     stat=MECA_STATIQUE(MODELE=model,CHAM_MATER=material,CARA_ELEM=elemcar,
     EXCIT=(			_F(CHARGE=encast,),
@@ -2237,7 +2237,7 @@ for i in range(1,n):
     osupFile = open(platineFile,"a")
     osupFile.write(f'{round(f*((fz**2+fy**2)**0.5),3)}		{round(fy,3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
     osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    
     sv.fxCourbeMin.append(fy)
     sv.fzCourbeMin.append(fz)
 #----------------------------------QUADRANT 3 FX <0 , FY < 0-------------------------------
@@ -2646,7 +2646,7 @@ for i in range(1,n):
     osupFile = open(platineFile,"a")
     osupFile.write(f'{round(f*((fz**2+fy**2)**0.5),3)}		{round(fy,3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
     osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    
     sv.fxCourbeMin.append(fy)
     sv.fzCourbeMin.append(fz)
 sv.fxCourbeMin.append(fyMin)
@@ -2957,7 +2957,7 @@ for i in range(1,n):
     osupFile = open(platineFile,"a")
     osupFile.write(f'{round(f*((fz**2+fy**2)**0.5),3)}		{round(fy,3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
     osupFile.close()
-    ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    
     sv.fxCourbeMin.append(fy)
     sv.fzCourbeMin.append(fz)
 import matplotlib.pyplot as plt
@@ -3415,7 +3415,7 @@ osupFile.close()
 # osupFile.write(f'{round(f*fzMax, 3)} 			0 			{round(fzMax,3)}\n')
 # osupFile.close()
 # fzMax_init = fzMax
-# ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+# 
 # sv.fxCourbeMin.append(0)
 # sv.fzCourbeMin.append(fzMax)
 
@@ -3618,7 +3618,7 @@ osupFile.close()
     # osupFile = open(platineFile,"a")
     # osupFile.write(f'{round(f*((fz**2+fy**2)**0.5),3)}		{round(fy,3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
     # osupFile.close()
-    # ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    # 
     # sv.fxCourbeMin.append(fy)
     # sv.fzCourbeMin.append(fz)
 # osupFile = open(platineFile,"a")
@@ -3934,7 +3934,7 @@ osupFile.close()
     # osupFile = open(platineFile,"a")
     # osupFile.write(f'{round(f*((fz**2+fy**2)**0.5),3)}		{round(fy,3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
     # osupFile.close()
-    # ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    # 
     # sv.fxCourbeMin.append(fy)
     # sv.fzCourbeMin.append(fz)
 # #----------------------------------QUADRANT 3 FX <0 , FY < 0-------------------------------
@@ -4327,7 +4327,7 @@ osupFile.close()
     # osupFile = open(platineFile,"a")
     # osupFile.write(f'{round(f*((fz**2+fy**2)**0.5),3)}		{round(fy,3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
     # osupFile.close()
-    # ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    # 
     # sv.fxCourbeMin.append(fy)
     # sv.fzCourbeMin.append(fz)
 # sv.fxCourbeMin.append(fyMin)
@@ -4626,7 +4626,7 @@ osupFile.close()
     # osupFile = open(platineFile,"a")
     # osupFile.write(f'{round(f*((fz**2+fy**2)**0.5),3)}		{round(fy,3)}		{round(fz,3)}		{round(ratioMax,3)}\n')
     # osupFile.close()
-    # ratioPlatine.append_reaction(dx,dy,dz,drx,dry,drz)
+    # 
     # sv.fxCourbeMin.append(fy)
     # sv.fzCourbeMin.append(fz)
 # import matplotlib.pyplot as plt
@@ -4677,10 +4677,7 @@ drz = torseur.DRZ
 nbChevilles = value['platine']['nbCheville']
 maxRatio = []
 for i in range(len(nbChevilles)):
-    if nbChevilles[i] =='2':         
-        maxRatio.append(ratioPlatine.ratio2chevilles(niveau, dx, dy, dz, drx, dry, drz,i))
-    if nbChevilles[i] =='4':
-        maxRatio.append(ratioPlatine.ratio4chevilles(niveau, dx, dy, dz, drx, dry, drz,i))
+    maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
 ratioMax = max(maxRatio)
 IMPR_TABLE (TABLE=TAB_eff,)
 DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -4730,7 +4727,7 @@ while ratioMax < ratioLimPlat:
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -4781,7 +4778,7 @@ while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -4928,7 +4925,7 @@ while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -5075,7 +5072,7 @@ while abs((ratioLimPlat-0.01) - ratioMax) > 0.01:
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -5131,7 +5128,7 @@ for i in range(1,n):
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -5177,7 +5174,7 @@ for i in range(1,n):
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -5227,7 +5224,7 @@ for i in range(1,n):
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -5276,7 +5273,7 @@ for i in range(1,n):
         nbChevilles = value['platine']['nbCheville']
         maxRatio = []
         for i in range(len(nbChevilles)):
-            maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+            maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
         ratioMax = max(maxRatio)
         IMPR_TABLE (TABLE=TAB_eff,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -5447,7 +5444,7 @@ for i in range(1,n):
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -5493,7 +5490,7 @@ for i in range(1,n):
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -5543,7 +5540,7 @@ for i in range(1,n):
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -5592,7 +5589,7 @@ for i in range(1,n):
         nbChevilles = value['platine']['nbCheville']
         maxRatio = []
         for i in range(len(nbChevilles)):
-            maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+            maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
         ratioMax = max(maxRatio)
         IMPR_TABLE (TABLE=TAB_eff,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -5750,7 +5747,7 @@ for i in range(1,n):
     drz = torseur.DRZ    
     maxRatio = []
     for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -5796,7 +5793,7 @@ for i in range(1,n):
         nbChevilles = value['platine']['nbCheville']
         maxRatio = []
         for i in range(len(nbChevilles)):
-            maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+            maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
         ratioMax = max(maxRatio)
         IMPR_TABLE (TABLE=TAB_eff,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -5839,7 +5836,7 @@ for i in range(1,n):
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -5885,7 +5882,7 @@ for i in range(1,n):
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -5935,7 +5932,7 @@ for i in range(1,n):
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=stat,),);
@@ -5983,7 +5980,7 @@ for i in range(1,n):
         nbChevilles = value['platine']['nbCheville']
         maxRatio = []
         for i in range(len(nbChevilles)):
-            maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+            maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
         ratioMax = max(maxRatio)
         IMPR_TABLE (TABLE=TAB_eff,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -6041,7 +6038,7 @@ for i in range(1,n):
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -6089,7 +6086,7 @@ for i in range(1,n):
         nbChevilles = value['platine']['nbCheville']
         maxRatio = []
         for i in range(len(nbChevilles)):
-            maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+            maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
         ratioMax = max(maxRatio)
         IMPR_TABLE (TABLE=TAB_eff,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -6132,7 +6129,7 @@ for i in range(1,n):
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -6178,7 +6175,7 @@ for i in range(1,n):
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -6228,7 +6225,7 @@ for i in range(1,n):
     nbChevilles = value['platine']['nbCheville']
     maxRatio = []
     for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
     ratioMax = max(maxRatio)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -6276,7 +6273,7 @@ for i in range(1,n):
         nbChevilles = value['platine']['nbCheville']
         maxRatio = []
         for i in range(len(nbChevilles)):
-            maxRatio.append(ratioPlatine.ratio_flèche(nbCheville, dx, dy, dz, drx, dry, drz,i))
+            maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
         ratioMax = max(maxRatio)
         IMPR_TABLE (TABLE=TAB_eff,)
         DETRUIRE(CONCEPT=_F(NOM=force,),);
@@ -6299,7 +6296,7 @@ if niveau == "oab":
     L = float(value['calculation_condition']['portee'])
     if L / 700 <= 2:
         fleche_adm = L/700
-     else:
+    else:
         fleche_adm = 2
     # ------------------------------- FLECHE ------------------------------------
     #------------------------ Début dichotomie -------------------------
@@ -6514,7 +6511,6 @@ if niveau == "oab":
         ),
     SOLVEUR=_F(RESI_RELA=1.E-04,NPREC=11,),
     );
-    );
     TAB_depl = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
         GROUP_NO = ('ALL',),RESULTAT=stat,NOM_CHAM='DEPL',TOUT_CMP='OUI',
         TOUT_ORDRE='OUI',
@@ -6570,7 +6566,7 @@ if niveau == "oab":
         fzMax = (a3+b3)/2
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(f*fyMax,2), FY = 0, FZ = {round(fzMax,2)}}\n')
+        reportFile.write(f'CHARGEMENT: FX = {round(f*fyMax,2)}, FY = 0, FZ = {round(fzMax,2)}\n')
         reportFile.close()
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
@@ -6608,7 +6604,7 @@ if niveau == "oab":
         fy = fyMax/n*i    
         reportFile = open(resultfile,"a")
         reportFile.write(f'{dash}\n')
-        reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2+fzMax**2)**0.5,2)}, FY = {round(fy,2), FZ = {round(fzMax,2)}
+        reportFile.write(f'CHARGEMENT: FX = {round(f*(fy**2+fzMax**2)**0.5,2)}, FY = {round(fy,2)}, FZ = {round(fzMax,2)}\n')
         force=AFFE_CHAR_MECA(MODELE=model,
         FORCE_NODALE=_F(GROUP_NO=('load',),
             FX = f*(fy**2+fzMax**2)**0.5,FY=fy,FZ=fzMax),

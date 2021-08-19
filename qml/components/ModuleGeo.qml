@@ -840,7 +840,7 @@ Rectangle {
                                     }
                                 }
                             }
-                        }
+                        }                        
                         Rectangle {
                             width: parent.width
                             height: 1
@@ -974,7 +974,7 @@ Rectangle {
                                         anchors.horizontalCenter: parent.horizontalCenter
                                         source:"../../assets/images/poutreU_z_y.png"
                                     }
-                                }
+                                }                                
                                 Rectangle{
                                     height : parent.height
                                     width : parent.width - 200
@@ -1047,6 +1047,23 @@ Rectangle {
                                                 pageGeo.beam_list = beamModel.get_ids()
                                             }
                                             ScrollIndicator.vertical: ScrollIndicator { }
+                                        }
+                                        Rectangle {
+                                            anchors.right: parent.right
+                                            height: 100
+                                            width: 140
+                                            color: "transparent"
+                                            ButtonText {
+                                                anchors.left: parent.left
+                                                anchors.verticalCenter: parent.verticalCenter
+                                                text: "Vérifier la géométrie"
+                                                color: Theme.grey_3
+                                                width: 130
+                                                onClicked:{
+                                                    osup.create_file("geo_display")
+                                                    osup.open_file_gmsh()
+                                                }
+                                            }
                                         }
                                         MessageDialog {
                                             id: errorMessageElem
