@@ -221,10 +221,22 @@ class ModulePlatine:
             self.norme.append(data['norme'])
             self.type_charge.append(data['TypeCharge'])
             self.situation_initiale.append(data['txt'])
-            self.cx0.append(data['cx0'])
-            self.cx1.append(data['cx1'])
-            self.cz0.append(data['cz0'])
-            self.cz1.append(data['cz1'])
+            if data['cx0'] == 0:
+                self.cx0.append(1E+15)
+            else:
+                self.cx0.append(data['cx0'])
+            if data['cx1'] == 0:
+                self.cx1.append(1E+15)
+            else:
+                self.cx1.append(data['cx1'])
+            if data['cz0'] == 0:
+                self.cz0.append(1E+15)
+            else:
+                self.cz0.append(data['cz0'])
+            if data['cz1'] == 0:
+                self.cz1.append(1E+15)
+            else:
+                self.cz1.append(data['cz1'])
             self.calcul.append(data['calcul'])
             if data['etat'] == "Fissuré":
                 self.state_concrete.append("Fissure")

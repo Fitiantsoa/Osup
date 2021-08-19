@@ -4,7 +4,7 @@ from src.Version5etag.effortcalculation import CalculationEffort
 from src.Version5etag.readinginputdata import ReadingInputData
 from src.Version5etag.criteria import Criteria
 
-
+''' Classe générale qui permet d'appeler toutes les fonctions de SoFix '''
 class General:
     def __init__(self, data_dowel):
         self.data_dowel = data_dowel

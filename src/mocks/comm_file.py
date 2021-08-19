@@ -18,6 +18,7 @@ class CommFile:
         self.loads = []
         self.meshes = []
         self.content = []
+        self.content_cheville = []
         self.result_file = ResultFile("")
 
     def write(self):
@@ -32,6 +33,9 @@ class CommFile:
             self.__post_treatment()
         with open(COMM_FILE, "w", encoding='utf-8') as f:
             f.write('\n'.join(self.content))
+            f.close()
+        with open(COMM_FILE_CHEVILLE, "w", encoding='utf-8') as f:
+            f.write('\n'.join(self.content_cheville))
             f.close()
 
     def __read_meshes(self):
@@ -265,7 +269,16 @@ class CommFile:
                 line.replace("***********load*********", f'FX = fx, FY = fy, FZ = fz')
             self.content.append(line)
 
-
+    def __write_load_cheville(self, fx, fy, fz):
+        self.content_cheville.append(f"fx = {fx}")
+        self.content_cheville.append(f"fy = {fy}")
+        self.content_cheville.append(f"fz = {fz}")
+        osup_file = open(FICHIER_CHEVILLE_RATIO, 'r')
+        lines = osup_file.readlines()
+        for line in lines:
+            if "***********load*********" in line:
+                line.replace("***********load*********", f'FX = fx, FY = fy, FZ = fz')
+            self.content_cheville.append(line)
 
     def __write_dichotomy(self):
         #TODO enlever friction load de verif_mod
@@ -298,6 +311,10 @@ class CommFile:
             self.content.append(f'ratioLimPlat = {self.calc_cond["ratio_platine"]}')
         else:
             self.content.append(f'ratioLimPlat = 1')
+        if self.calc_cond["ratio_cheville"] != "":
+            self.content.append(f'ratioLimChev = {self.calc_cond["ratio_cheville"]}')
+        else:
+            self.content.append(f'ratioLimChev = 1')
         for line in lines:
             self.content.append(line)
 

@@ -21,7 +21,7 @@ class Geometrie:
         self.DistFixBord = self.calculation_distance_fixing_edge()[0]
 
     def calculation_position_fixing(self):
-
+        ''' Calcul de la position des chevilles sur la platine '''
         global CentreGeo1, CentreGeo0
         print(self.NbFixa)
         CentreGeo0 = 0
@@ -62,17 +62,19 @@ class Geometrie:
         return CentreGeo0, CentreGeo1, PosFix
 
     def calculation_position_edge(self):
+        ''' Calcul de la position des bords '''
         PosBord = np.zeros((2, 2))
 
         PosBord[0, 0] = self.data_board_dowel.get("dx0") - self.data_board_dowel.get("cx0")
         PosBord[0, 1] = (self.Lx - self.data_board_dowel.get("dx1")) + self.data_board_dowel.get("cx1")
-        print(self.data_board_dowel.get("dz0"), self.data_board_dowel.get("cz0"), self.data_board_dowel)
+        # print(self.data_board_dowel.get("dz0"), self.data_board_dowel.get("cz0"), self.data_board_dowel)
         PosBord[1, 0] = self.data_board_dowel.get("dz0") - self.data_board_dowel.get("cz0")
         PosBord[1, 1] = (self.Lz - self.data_board_dowel.get("dz1")) + self.data_board_dowel.get("cz1")
 
         return PosBord
 
     def calculation_distance_fixing_fixing(self):
+        ''' Calcul des distances entre les fixations dans les 4 directions (pour chaque fixation) '''
         DistFixFix = np.zeros((self.NbFixa, 2, 2))
 
         for j in range(self.NbFixa):
@@ -109,6 +111,7 @@ class Geometrie:
         return DistFixFix
 
     def calculation_distance_fixing_edge(self):
+        ''' Calcul les distances aux 4 bord de chaque fixation et calcul le nombre de bords pour chaque fixation '''
         DistFixBord = np.zeros((self.NbFixa, 2, 2))
         self.PosBord = self.calculation_position_edge()
         NbFixBord = np.zeros((self.NbFixa, 1))
@@ -143,6 +146,7 @@ class Geometrie:
         return DistFixBord, NbFixBord
 
     def calculation_smin(self):
+        ''' Calcul de l'entraxe minimum '''
         global smin
         self.orientation = self.data_board_dowel.get("orientation")
         if self.NbFixa == 2 and self.orientation == "Vertical":
@@ -164,6 +168,7 @@ class Geometrie:
         return smin
 
     def calculation_cmin(self, j):
+        '''Calcul de la distance aux bords minimum '''
         if j == "":
             cmin = self.data_board_dowel.get("cx0")
 
