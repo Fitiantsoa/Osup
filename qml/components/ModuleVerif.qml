@@ -298,22 +298,6 @@ Rectangle {
                             color: "transparent"
                         }
 
-                        Rectangle {
-                            height: 100
-                            width: 140
-                            color: "transparent"
-                            ButtonText {
-                                anchors.left: parent.left
-                                anchors.verticalCenter: parent.verticalCenter
-                                text: "Vérifier la géométrie"
-                                color: Theme.grey_3
-                                width: 130
-                                onClicked:{
-                                    osup.create_file("geo")
-                                    osup.open_file_gmsh()
-                                }
-                            }
-                        }
                     }
                 }
             }

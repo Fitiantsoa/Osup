@@ -442,7 +442,7 @@ Rectangle {
                             anchors.leftMargin: 15
                             anchors.rightMargin: 20
                             Label{
-                                text: "Portée:"
+                                text: "Portée (mm):"
                                 Layout.preferredWidth: 130
                                 color : Theme.grey_6
                             }

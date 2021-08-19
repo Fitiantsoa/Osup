@@ -1,3 +1,4 @@
+import os
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QToolBar, QAction, QGroupBox, QGridLayout, QLabel, QFileDialog
 from PyQt5.QtCore import Qt
 from src.utils import lerp
@@ -294,10 +295,30 @@ class ResultWindow(QWidget):
             self.hide_torsor.setText("Cacher les torseurs")
 
     def torsor_buttons_clicked(self):
-        if self.chevilleerror is True:
-            General(self.platine_data.get_dowel_data())
         Fy, Fz, name, status = self.torsor_view.get_data()
+        self.write_load_comm(Fy, Fz)
+        self.run_aster_sofix()
         self.add_torsor(Fy, Fz, name, status)
+
+    def write_load_comm(self, Fy, Fz):
+        osup_file = open(FICHIER_CHEVILLE_RATIO, 'r')
+        lines = osup_file.readlines()
+        with open(COMM_FILE_CHEVILLE, "a") as f:
+            for line in lines:
+                if "***********load*********" in line:
+                    line = ""
+                    if self.pipe_axis == "Z":
+                        line += f'\tFX = {Fy}, FY = {Fz}, FZ = {0.3*(float(Fz)**2 + float(Fy)**2)**0.5}, ),'
+                    elif self.pipe_axis == "Y":
+                        line += f'\tFX = {Fy}, FZ = {Fz}, FY = {0.3*(float(Fz)**2 + float(Fy)**2)**0.5},  ),'
+                    else:
+                        line += f'\tFY = {Fy}, FZ = {Fz}, FX = {0.3*(float(Fz)**2 + float(Fy)**2)**0.5},),'
+                f.write(line)
+            f.close()
+
+    @staticmethod
+    def run_aster_sofix():
+        os.system(ASTER_CHEVILLE)
 
     def export_buttons_clicked(self):
         self.exportResult()

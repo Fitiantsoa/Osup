@@ -28,6 +28,7 @@ class Geometry:
         self.nodes = self.node_list_view._model._data
         self.node_rep_dict = {}
         self.node_orientation_dict = {}
+        self.fleche_node = None
 
     def update_from_file(self, data):
         self.node_list_view.set_model_data(data['node_init'])
@@ -46,6 +47,14 @@ class Geometry:
     def update_material(self):
         current_text = self.sibling.findChild(QObject, "ProductionCB").property("currentText")
         self.set_model("MaterialCB", list(self.material_db["RCC-M 2016"][current_text].keys()))
+        if current_text == "RIGIDE":
+            self.set_model("SectionCB", ["RIGIDE"])
+            self.set_model("DimensionCB", list(self.profile_db[current_text].keys()))
+        else:
+            self.set_model("SectionCB", list(self.profile_db.keys()))
+            current_sect = self.sibling.findChild(QObject, "SectionCB").property("currentText")
+            self.set_model("DimensionCB", list(self.profile_db[current_sect].keys()))
+
 
     def update_profile(self):
         current_text = self.sibling.findChild(QObject, "SectionCB").property("currentText")
@@ -62,7 +71,8 @@ class Geometry:
             "node_group" : self.get_node_group(),
             "node_rep" : self.get_node_rep(),
             "beam_list": self.get_beam_list(),
-            "beam_group": self.get_beam_group()
+            "beam_group": self.get_beam_group(),
+            "fleche_node": self.fleche_node
         }
 
 
@@ -139,7 +149,6 @@ class Geometry:
                 node_list_dict[str(beam['n2'])] = 1
             else:
                 node_list_dict[str(beam['n2'])] += 1
-
         return node_list_dict
 
     def get_node_rep(self):
@@ -148,7 +157,6 @@ class Geometry:
         for i in sorted(rep_dict.keys()):
             if i == "1":
                 node_rep_dict[i] = list(range(1, rep_dict[i] + 1))
-
             else:
                 node_rep_dict[i] = list(range(node_rep_dict[str(int(i) - 1)][-1] + 1,node_rep_dict[str(int(i) - 1)][-1] + rep_dict[i] + 1))
         return node_rep_dict
@@ -165,6 +173,9 @@ class Geometry:
                     cl = (x**2 + y**2 + z**2)**0.5
                 except:
                     cl = 200
+                for type in ['cx', 'cy', 'cz']:
+                    if self.nodes[int(i)-1][type] == "":
+                        self.nodes[int(i) - 1][type] = 0
                 node_list_dict[str(node_id)] = {'id':str(node_id),'cx':self.nodes[int(i)-1]['cx'], 'cy': self.nodes[int(i)-1]['cy'], 'cz':self.nodes[int(i)-1]['cz'], 'cl': cl,'ap':self.nodes[int(i)-1]['ap']}
         return node_list_dict
 
@@ -176,7 +187,8 @@ class Geometry:
             n1 = str(beam['n1'])
             n2 = str(beam['n2'])
             beam_list.append({'id':beam['id'],'n1': node_rep_dict[str(beam['n1'])][0],'n2':node_rep_dict[str(beam['n2'])][0],'mat':beam['mat'],'prod': beam['prod'],'sec':beam['sec'],'or':beam['or'],'t':beam['t']})
-
+            if beam['prod'] == 'RIGIDE':
+                self.fleche_node = [node_rep_dict[str(beam['n1'])][0],node_rep_dict[str(beam['n2'])][0]]
             del node_rep_dict[n1][0]
             del node_rep_dict[n2][0]
             i += 1
@@ -207,6 +219,7 @@ class Geometry:
         for node in self.nodes:
             if node['id'] not in beam_node:
                 return True
+
 
     def printImage(self, n1, n2,section,or_poutre):
         try:

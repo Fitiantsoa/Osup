@@ -98,16 +98,23 @@ class OSup(QObject):
                 f.write(json.dumps(recent_file))
             return True
 
-    def get_saved_data(self):
-        return {
-            "calculation_condition": self.calculation_condition.get_data(),
-            "verification_module": self.verification_module.get_data(),
-            "platine_data" : self.platine_data.get_data(self.geometry_module.get_models()),
-            "geo": self.geometry_module.get_models(),
-            "stirrup": self.stirrup_module.get_data(),
-            "cheville": General(self.platine_data.get_dowel_data()).input_data_aster(),
-            "input_data_dowel": self.platine_data.get_dowel_data()
-             }
+    def get_saved_data(self, type):
+        if type :
+            return {
+                "calculation_condition": self.calculation_condition.get_data(),
+                "verification_module": self.verification_module.get_data(),
+                "geo": self.geometry_module.get_models(),
+            }
+        else:
+            return {
+                "calculation_condition": self.calculation_condition.get_data(),
+                "verification_module": self.verification_module.get_data(),
+                "platine_data" : self.platine_data.get_data(self.geometry_module.get_models()),
+                "geo": self.geometry_module.get_models(),
+                "stirrup": self.stirrup_module.get_data(),
+                "cheville": General(self.platine_data.get_dowel_data()).input_data_aster(),
+                "input_data_dowel": self.platine_data.get_dowel_data()
+                 }
 
     @pyqtSlot(result=list)
     def get_saved_data_sofix(self):
@@ -137,10 +144,10 @@ class OSup(QObject):
     @pyqtSlot(str)
     def save_to_file_as(self, file_name):
         self.file_name = file_name.lstrip("file:///")
-        print("saved data", self.get_saved_data()['cheville'])
+        print("saved data", self.get_saved_data(type=None)['cheville'])
         try:
             with open(self.file_name, "w") as fic:
-                fic.write(json.dumps([self.version, self.get_saved_data()]))
+                fic.write(json.dumps([self.version, self.get_saved_data(type=None)]))
                 print("Fichier Osup enregistré")
         except:
             print("ERREUR : Impossible de sauvegarder le fichier .osup", file=sys.stderr)
@@ -322,11 +329,15 @@ class OSup(QObject):
 
     @pyqtSlot(str, result=bool)
     def create_file(self, file_type):
-        if self.data == {}:
-            self.data = self.get_saved_data()
         if file_type == "geo":            #on ne crée les groupes qu'une seule fois sinon existence doublon
+            self.data = self.get_saved_data(type=None)
             self.geo_file = GeoFile(self.data)
-            self.geo_file.write()
+            self.geo_file.write("generate")
+            return True
+        if file_type == "geo_display":
+            display_data = self.get_saved_data("display")
+            self.geo_file = GeoFile(display_data)
+            self.geo_file.write("display")
             return True
 
         elif file_type == "med":
@@ -381,7 +392,7 @@ class OSup(QObject):
 
     @pyqtSlot()
     def run_aster(self):
-        self.run_calculation()
+        # self.run_calculation()
         self.display_result()
 
     def run_calculation(self):
@@ -419,11 +430,11 @@ class OSup(QObject):
 
     @pyqtSlot(str)
     def display_result(self, result_file=None):
-        if "axis" in self.get_saved_data()["verification_module"].keys() :
-            pipe_axis = self.get_saved_data()["verification_module"]["axis"]
+        if "axis" in self.get_saved_data(type=None)["verification_module"].keys() :
+            pipe_axis = self.get_saved_data(type=None)["verification_module"]["axis"]
             self.result_file = ResultFile(pipe_axis)
             self.result_file.load(result_file,"profile")
-            nb_point = self.get_saved_data()["verification_module"]['points']
+            nb_point = self.get_saved_data(type=None)["verification_module"]['points']
             self.result_window = ResultWindow(pipe_axis)
             self.result_window.load_result(self.result_file.get_plot_data(),"Profilé")
             self.result_file.load(result_file, "platine")
@@ -441,9 +452,9 @@ class OSup(QObject):
             self.result_file.load(result_file, "fleche")
             self.result_window.load_result(self.result_file.get_plot_data(), "Flèche")
             if self.data_stirrup == {}:
-                self.result_window.load_result(self.result_file.get_dict_data(self.get_saved_data()["verification_module"]['points'],self.get_saved_data()["stirrup"]["plot_data"]), "Etrier")
+                self.result_window.load_result(self.result_file.get_dict_data(self.get_saved_data(type=None)["verification_module"]['points'],self.get_saved_data(type=None)["stirrup"]["plot_data"]), "Etrier")
             else:
-                self.result_window.load_result(self.result_file.get_dict_data(self.get_saved_data()["verification_module"]['points'],self.data_stirrup), "Etrier")
+                self.result_window.load_result(self.result_file.get_dict_data(self.get_saved_data(type=None)["verification_module"]['points'],self.data_stirrup), "Etrier")
             self.result_window.showMaximized()
 
         else:
@@ -480,7 +491,7 @@ class OSup(QObject):
         try:
             self.result_window.remove_plot(name)
         except:
-            del self.get_saved_data()["stirrup"]["plot_data"][name]
+            del self.get_saved_data(type=None)["stirrup"]["plot_data"][name]
 
     @pyqtSlot()
     def extractNote(self):
