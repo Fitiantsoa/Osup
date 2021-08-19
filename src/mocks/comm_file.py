@@ -27,6 +27,9 @@ class CommFile:
         self.__create_material()
         self.__write_section()
         self.__write_limits_conditions()
+        with open(COMM_FILE_CHEVILLE, "w", encoding='utf-8') as f:
+            f.write('\n'.join(self.content))
+            f.close()
         if self.verif_mod['methode'] == 'courbe':
             self.__write_dichotomy()
         else:
@@ -34,9 +37,7 @@ class CommFile:
         with open(COMM_FILE, "w", encoding='utf-8') as f:
             f.write('\n'.join(self.content))
             f.close()
-        with open(COMM_FILE_CHEVILLE, "w", encoding='utf-8') as f:
-            f.write('\n'.join(self.content_cheville))
-            f.close()
+
 
     def __read_meshes(self):
         self.content.append("DEBUT(PAR_LOT='NON');")
@@ -270,15 +271,25 @@ class CommFile:
             self.content.append(line)
 
     def __write_load_cheville(self, fx, fy, fz):
-        self.content_cheville.append(f"fx = {fx}")
-        self.content_cheville.append(f"fy = {fy}")
-        self.content_cheville.append(f"fz = {fz}")
-        osup_file = open(FICHIER_CHEVILLE_RATIO, 'r')
+        osup_file = open(DICHOTOMIE_RATIO, 'r')
         lines = osup_file.readlines()
+        rslt_file = self.verif_mod['folder_path'] + "/result.osup"
         for line in lines:
             if "***********load*********" in line:
-                line.replace("***********load*********", f'FX = fx, FY = fy, FZ = fz')
-            self.content_cheville.append(line)
+                line = ""
+                if fx != "":
+                    line += f'\tFX = {fx},'
+                if fy != "":
+                    line += f'FY = {fy},'
+                if fz != "":
+                    line += f'FZ = {fz},'
+                line += "),"
+            if "*************result_file*********" in line:
+                line = f"result_file = '{rslt_file}'"
+            self.content.append(line)
+        self.content.append(f"result_file = '{rslt_file}'")
+        self.result_file.write_load(fx, fy, fz, self.calc_cond["level"])
+        self.result_file.create_result_file(rslt_file)  # On écrit qu'un seul chargement par fichier
 
     def __write_dichotomy(self):
         #TODO enlever friction load de verif_mod

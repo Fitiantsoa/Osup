@@ -392,7 +392,7 @@ class OSup(QObject):
 
     @pyqtSlot()
     def run_aster(self):
-        self.run_calculation()
+        # self.run_calculation()
         self.display_result()
 
     def run_calculation(self):
