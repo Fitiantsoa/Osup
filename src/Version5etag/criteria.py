@@ -1954,6 +1954,7 @@ class Criteria:
         return self.hef1
 
     def calculation_cmax(self, scrN, j):
+        '''Calcul de la distance aux bords béton maximale '''
         ccrN = 0.5 * scrN
         cmax = 0
 
@@ -1989,6 +1990,7 @@ class Criteria:
         return cmax
 
     def calculation_smax(self, scrN):
+        '''Calcul de l'entraxe maximum '''
         global scrN1
         smin = self.calculation_smin()
         smax = smin
@@ -2022,6 +2024,7 @@ class Criteria:
         return smax
 
     def calculation_smin(self):
+        '''Calcul de l'entraxe minimum '''
         global smin
         if self.NbFixa == 2 and self.orientation == "Vertical":
             smin = self.sz0
@@ -2042,6 +2045,7 @@ class Criteria:
         return smin
 
     def calculation_cmin(self, j):
+        '''Calcul de la distance aux bords minimumale '''
         if j == "":
             cmin = self.cx0
 

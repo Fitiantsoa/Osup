@@ -20,6 +20,8 @@ DICHOTOMIE_COUBE_X = os.getcwd() + "/src/temp/commCourbe_X.txt"
 DICHOTOMIE_COUBE_Y = os.getcwd() + "/src/temp/commCourbe_Y.txt"
 DICHOTOMIE_COUBE_Z = os.getcwd() + "/src/temp/commCourbe_Z.txt"
 DICHOTOMIE_RATIO = os.getcwd()+ "/src/temp/commRatio_file.txt"
+FICHIER_CHEVILLE = os.getcwd()+ "/src/temp/commcheville.txt"
+FICHIER_CHEVILLE_RATIO = os.getcwd()+ "/src/temp/commchev_file.txt"
 
 ASTER = os.getcwd() + "/code-aster_v2019_std-win64//v2019//bin//as_run --test osup"
 
@@ -30,6 +32,7 @@ RIGIDITE_PLAT_RSLT = ("'" + TEMP + "rigidie_plat(2).Osup" + "'").replace("\\","/
 FLECHE_RSLT = ("'" + TEMP + "fleche(2).Osup" + "'").replace("\\","/")
 
 COMM_FILE = os.getcwd() + "/code-aster_v2019_std-win64/v2019/14.4/share/aster/tests/osup.comm"
+COMM_FILE_CHEVILLE = os.getcwd() + "/code-aster_v2019_std-win64/v2019/14.4/share/aster/tests/cheville.comm"
 EXPORT_FILE = os.getcwd() + "/code-aster_v2019_std-win64/v2019/14.4/share/aster/tests/osup.export"
 resu_PATH = os.getcwd() + "/code-aster_v2019_std-win64/v2019/14.4/share/aster/tests/osup.resu"
 mess_PATH = os.getcwd() + "/code-aster_v2019_std-win64/v2019/14.4/share/aster/tests/osup.mess"

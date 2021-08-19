@@ -431,7 +431,7 @@ Rectangle {
                                 Layout.preferredWidth: 150
                                 validator: RegExpValidator{regExp: /^[0-1]{0,1}[.][0-9]{0,1}([0-9]{0,1})?([0-9]{0,1})?/}
                                 opacity: enabled?1:0.6
-                                objectName: "RatioMaxPlat"
+                                objectName: "RatioMaxChev"
 
                             }
                         }

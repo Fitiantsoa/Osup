@@ -246,6 +246,10 @@ Rectangle {
                                 font.family: "fontello"
                                 anchors.verticalCenter: parent.verticalCenter
                                 onClicked: {
+                                    labnorme.visible = false
+                                    norme.visible = true
+                                    normetf.visible = false
+                                    situationinitiale.visible = true
                                     platineModel.remove(index);
                                 }
                             }
@@ -913,17 +917,28 @@ Rectangle {
                                 Label{
                                     id: labnorme
                                     text: "Norme utilisée:"
+                                    Component.onCompleted: visible = true
                                     Layout.preferredWidth: 100
                                     color : Theme.grey_6
                                     }
 
                                 CComboBox{
                                     id: norme
+                                    Component.onCompleted: visible = true
                                     anchors.left: parent.left
-                                    anchors.leftMargin: labnorme.width + 5
-                                    implicitWidth: 100
+                                    anchors.leftMargin: situationlabel.width + 5
+                                    implicitWidth: 200
                                     objectName: "Norme"
                                     model: ["Eurocode 2", "ETAG"]
+                                }
+                                CTextField{
+                                    id: normetf
+                                    enabled : false
+                                    Component.onCompleted: visible = false
+                                    objectName: "Normetf"
+                                    text : norme.currentText
+                                    Layout.preferredWidth: 50
+                                    validator: IntValidator{}
                                 }
                                 }
                                 }
@@ -988,6 +1003,7 @@ Rectangle {
                                     }
                                 CComboBox{
                                     id: situationinitiale
+                                    Component.onCompleted: visible = true
                                     anchors.left: parent.left
                                     anchors.leftMargin: situationlabel.width + 5
                                     implicitWidth: 200
@@ -1247,6 +1263,10 @@ Rectangle {
                                     anchors.bottom: parent.bottom
                                     anchors.bottomMargin: 5
                                     onClicked: {
+                                        norme.visible = false
+                                        normetf.visible = true
+                                        labnorme.visible = true
+                                        situationinitiale.visible = false
                                         if (pageGeo.temperature !== ""){
                                             if (nbCheville.currentText === "2"){
                                                 if (orientation.currentText === "Vertical"){
@@ -1273,7 +1293,6 @@ Rectangle {
                                             errorMessageElem.visible = true
                                         }
                                     }
-
                                 }
                             }
                         }
