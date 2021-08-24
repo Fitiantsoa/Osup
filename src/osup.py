@@ -351,7 +351,8 @@ class OSup(QObject):
 
         elif file_type == "export":
             self.export_file = ExportFile()
-            self.export_file.write()
+            self.export_file.write("osup")
+            self.export_file.write("cheville")
             self.created_file = True
             return True
 
