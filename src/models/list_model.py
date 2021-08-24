@@ -555,6 +555,9 @@ class SofixListModel(ListModel):
         dict['ruptBordBet'] = str(round(model['ruptBordBet'], 4))
         dict['ruptCombiAcier'] = str(round(model['ruptCombiAcier'], 4))
         dict['ruptCombiBet'] = str(round(model['ruptCombiBet'], 4))
+        dict['betaN'] = str(round(model['betaN'], 4))
+        dict['betaV'] = str(round(model['betaV'], 4))
+
         return self.insert(self.count, dict)
 
 

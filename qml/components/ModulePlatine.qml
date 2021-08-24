@@ -16,6 +16,7 @@ Rectangle {
     width: parent.width
     height: title.height + corps.height + 600
     color:"transparent"
+    property int nbclick : 0
 
     Rectangle {
         id:title
@@ -246,10 +247,11 @@ Rectangle {
                                 font.family: "fontello"
                                 anchors.verticalCenter: parent.verticalCenter
                                 onClicked: {
-                                    labnorme.visible = false
-                                    norme.visible = true
-                                    normetf.visible = false
-                                    situationinitiale.visible = true
+                                    nbclick = nbclick - 1
+                                    //labnorme.visible = true;
+                                    //norme0.visible = true;
+                                    //normetf.visible = false;
+                                    //situationinitiale.visible = true;
                                     platineModel.remove(index);
                                 }
                             }
@@ -921,12 +923,12 @@ Rectangle {
                                     Layout.preferredWidth: 100
                                     color : Theme.grey_6
                                     }
-
                                 CComboBox{
-                                    id: norme
-                                    Component.onCompleted: visible = true
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: situationlabel.width + 5
+                                    id: norme0
+                                    //Component.onCompleted: visible = true
+                                    //anchors.left: parent.left
+                                    //anchors.leftMargin: labnorme.width + 5
+                                    visible: nbclick == 0? true : false
                                     implicitWidth: 200
                                     objectName: "Norme"
                                     model: ["Eurocode 2", "ETAG"]
@@ -934,11 +936,10 @@ Rectangle {
                                 CTextField{
                                     id: normetf
                                     enabled : false
-                                    Component.onCompleted: visible = false
+                                    visible: nbclick == 0? false : true
                                     objectName: "Normetf"
-                                    text : norme.currentText
+                                    text : norme0.currentText
                                     Layout.preferredWidth: 50
-                                    validator: IntValidator{}
                                 }
                                 }
                                 }
@@ -978,9 +979,9 @@ Rectangle {
                                     anchors.leftMargin: labcharge.width + 5
                                     implicitWidth: 150
                                     objectName: "TypeCharge"
-                                    model: ["Statique ou quasi-statique", "Sismique C1", "Sismique C2"]
-                                    //{if (pageGeo.rccm.checked){ typecharge.model = ["Statique ou quasi-statique"]}
-                                      //  else{typecharge.model = ["Statique ou quasi-statique", "Sismique C1", "Sismique C2"]}}
+                                    model: pageGeo.lvlA.checked? ["Statique ou quasi-statique"] : edf.checked? ["Statique ou quasi-statique", "Sismique C2"] : ["Statique ou quasi-statique", "Sismique C1", "Sismique C2"]
+                                        //if (pageGeo.rccm.checked === true){ typecharge.model = ["Statique ou quasi-statique"]}
+                                      //else{typecharge.model = ["Statique ou quasi-statique", "Sismique C1", "Sismique C2"]}
                                 }
                                 }
                                 }
@@ -1008,7 +1009,7 @@ Rectangle {
                                     anchors.leftMargin: situationlabel.width + 5
                                     implicitWidth: 200
                                     objectName: "SituationInitiale"
-                                    model: ["Situations permanentes et transitoires", "Situations accidentelles"]
+                                    model: typecharge.currentText === "Statique ou quasi-statique"? ["Situations permanentes et transitoires", "Situations accidentelles"] : ["Situations accidentelles"]
 
                                 }
                                 }
@@ -1263,26 +1264,38 @@ Rectangle {
                                     anchors.bottom: parent.bottom
                                     anchors.bottomMargin: 5
                                     onClicked: {
-                                        norme.visible = false
-                                        normetf.visible = true
-                                        labnorme.visible = true
-                                        situationinitiale.visible = false
+                                        //normetf.visible = true
+                                        //norme0.visible = false
+                                        //labnorme.visible = true
+                                        //situationinitiale.visible = false
+                                        nbclick = nbclick + 1
+                                        if (l.text === 0 || h.text === 0 || l.text === "" || h.text === ""){
+                                            errorMessageElem.title = "Saisie incomplète"
+                                            errorMessageElem.text = "Veuillez rentrer les dimensions la platine"
+                                            errorMessageElem.visible = true
+                                        }
+                                        if (epaisseurbeton.text === 0 || epaisseurbeton.text === ""){
+                                            errorMessageElem.title = "Saisie incomplète"
+                                            errorMessageElem.text = "Veuillez rentrer l'épaisseur du béton"
+                                            errorMessageElem.visible = true
+                                        }
+                                        else{
                                         if (pageGeo.temperature !== ""){
                                             if (nbCheville.currentText === "2"){
                                                 if (orientation.currentText === "Vertical"){
                                                     platineModel.append2dwV(nbCheville.currentText, axis.currentText, l.text, h.text,e.text,noeud.currentText,prod.currentText, mat.currentText,pageGeo.temperature, b.text,orientation.currentText, gammeCheville.currentText, modeleCheville.currentText,
-                                        typeCheville.currentText, profondeurCheville.currentText, norme.currentText, typecharge.currentText, situationinitiale.currentText,
+                                        typeCheville.currentText, profondeurCheville.currentText, norme0.currentText, typecharge.currentText, situationinitiale.currentText,
                                         cx0.text, cx1.text, cz0.text, cz1.text, beton.currentText, classeb.currentText, epaisseurbeton.text, armature.currentText, edf.checked)
                                                 }
                                                 else{
                                                     platineModel.append2dwH(nbCheville.currentText, axis.currentText, l.text, h.text, e.text,noeud.currentText,prod.currentText, mat.currentText,pageGeo.temperature, a.text, orientation.currentText, gammeCheville.currentText, modeleCheville.currentText,
-                                        typeCheville.currentText, profondeurCheville.currentText, norme.currentText, typecharge.currentText, situationinitiale.currentText,
+                                        typeCheville.currentText, profondeurCheville.currentText, norme0.currentText, typecharge.currentText, situationinitiale.currentText,
                                         cx0.text, cx1.text, cz0.text, cz1.text, beton.currentText, classeb.currentText, epaisseurbeton.text, armature.currentText, edf.checked)
                                                 }
                                             }
                                             else{
                                                 platineModel.append4dw(nbCheville.currentText, axis.currentText, l.text, h.text,e.text,noeud.currentText,prod.currentText, mat.currentText,pageGeo.temperature, gammeCheville.currentText, modeleCheville.currentText,
-                                        typeCheville.currentText, profondeurCheville.currentText, norme.currentText, typecharge.currentText, situationinitiale.currentText,
+                                        typeCheville.currentText, profondeurCheville.currentText, norme0.currentText, typecharge.currentText, situationinitiale.currentText,
                                         cx0.text, cx1.text, cz0.text, cz1.text, beton.currentText, classeb.currentText, epaisseurbeton.text, armature.currentText, edf.checked, b.text, a.text)
                                             }
                                             noeud.model.remove(noeud.currentText)
@@ -1291,6 +1304,7 @@ Rectangle {
                                             errorMessageElem.title = "Température non défine"
                                             errorMessageElem.text = "Veuillez définir une température dans les conditions de calculs"
                                             errorMessageElem.visible = true
+                                        }
                                         }
                                     }
                                 }

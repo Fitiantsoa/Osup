@@ -60,8 +60,6 @@ class General:
                 Criteria(geo, i)
                 self.result_sofix.append(Criteria(geo, i).calculation_criteria_traction_shearing())
 
-
-
         elif calcul == "Osup":
             for i in range(len(self.data_dowel['Lx'])):
                 data_dowel_general = self.input_data_general(i)

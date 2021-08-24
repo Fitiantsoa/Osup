@@ -120,8 +120,6 @@ class CommFile:
         self.content.append("\t),")
         self.content.append(");")
 
-
-
     def __write_section(self):
         gp_sect = {}
         gp_or = {}
