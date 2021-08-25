@@ -1323,8 +1323,7 @@ for j in range(len(nbChevilles)):
         TAB_eff = POST_RELEVE_T(ACTION=_F(INTITULE='sum reactions',
         GROUP_NO = ('encas',),RESULTAT=stat,NOM_CHAM='REAC_NODA',TOUT_CMP='OUI',
         TOUT_ORDRE='OUI',
-        OPERATION='EXTRACTION',),);
-        
+        OPERATION='EXTRACTION',),);        
 
         torseur = TAB_eff.EXTR_TABLE()
         dx = torseur.DX
@@ -2907,6 +2906,7 @@ for j in range(len(nbChevilles)):
     # ------------------------ Début dichotomie -------------------------
     # TODO modifier le script pour qu'il détecte la direction principale de poutre 
     # Pour ce support le frottement est suivant X
+    rigiditeFile = rigidite_rslt + "(" + str(j + 1) + ").Osup"
     reportFile = open(resultfile,"a")
     reportFile.write(f'RIGIDITE\n{dash}')
     reportFile.write(f'CHARGEMENT: FX = 0, FY = {fy}, FZ = 0\n')
@@ -2940,12 +2940,7 @@ for j in range(len(nbChevilles)):
     drx = torseur.DRX
     dry = torseur.DRY
     drz = torseur.DRZ
-     
-    nbChevilles = value['platine']['nbCheville']
-    maxRatio = []
-    for i in range(len(nbChevilles)):
-        maxRatio.append(ratioPlatine.ratio_fleche(nbChevilles[i], dx, dy, dz, drx, dry, drz,i))
-    ratioMax = max(maxRatio)
+    ratioMax = ratioPlatine.ratio_fleche(nbChevilles[j], dx, dy, dz, drx, dry, drz,j)
     IMPR_TABLE (TABLE=TAB_eff,)
     DETRUIRE(CONCEPT=_F(NOM=force,),);
     DETRUIRE(CONCEPT=_F(NOM=stat,),);
