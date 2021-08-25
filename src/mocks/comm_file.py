@@ -294,9 +294,9 @@ class CommFile:
     def __write_dichotomy(self):
         #TODO enlever friction load de verif_mod
         self.content.append(f'curveFile = {PROFILE_RSLT}')
-        self.content.append(f'platineFile = {PLATINE_RSLT}')
-        self.content.append(f'chevilleFile = {CHEVILLE_RSLT}')
-        self.content.append(f'rigiditeFile = {RIGIDITE_PLAT_RSLT}')
+        self.content.append(f'platine_rslt = {PLATINE_RSLT}')
+        # self.content.append(f'cheville = {CHEVILLE_RSLT}')
+        self.content.append(f'rigidite_rslt = {RIGIDITE_PLAT_RSLT}')
         self.content.append(f'flecheFile = {FLECHE_RSLT}')
         if self.verif_mod["axis"] == 'X' or self.verif_mod["axis"] =='':
             osup_file = open(DICHOTOMIE_COUBE_X, 'r')
