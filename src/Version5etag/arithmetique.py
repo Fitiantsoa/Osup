@@ -7,6 +7,7 @@ class Arithmetique:
         self.surf = []
 
     def Intersection(self, surf1, surf2):
+        """Calcul d'intersection de surfaces"""
         p = 0
         for i in range(4):
             self.surf.append(surf1[i, 0])
@@ -45,6 +46,7 @@ class Arithmetique:
         return C
 
     def Surface(self, list):
+        """Calcul de surface"""
         self.surf = []
         for i in range(4):
             self.surf.append(list[i, 0])

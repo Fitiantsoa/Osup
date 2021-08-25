@@ -14,6 +14,7 @@ class CalculationEffort:
         self.Vx = Vx
         self.Vz = Vz
         self.T = T
+        print("Vx", Vx, "N", N, "Vz", Vz, "Mx", Mx, "T", T, "Mz", Mz)
         self.NbFixa = int(self.data_dowel.get("nbCheville")[i])
 
         self.Lx = self.data_dowel.get("Lx")[i]
@@ -24,12 +25,12 @@ class CalculationEffort:
         self.CentreGeo0 = geo.get("CentreGeo0")[i]
         #print("centre", self.CentreGeo1, self.PosFix[0, 1])
 
-        self.Mzb = effortcenter[5]
+        self.Mzb = effortcenter[4]
         self.Mxb = effortcenter[3]
         self.Ix = effortcenter[0]
         self.Iy = effortcenter[1]
         self.Iz = effortcenter[2]
-        self.Tb = effortcenter[4]
+        self.Tb = effortcenter[5]
 
         self.PosCmax = origin[1]
         self.PosCmax1 = origin[2]
@@ -143,7 +144,7 @@ class CalculationEffort:
 
         elif self.TypeCompression == "Pas de compression" or self.TypeCompression == "Compression totale":
             self.z = 0
-        print("nfjebnugibtgrnronizgguonrouzhnruzbndsfngoirn")
+
         dico = {"NEd": self.NEd,
                 "NEdg": self.NEdg,
                 "z": self.z,
@@ -203,7 +204,7 @@ class CalculationEffort:
                 "eV1": eV1,
                 "Ved": self.Ved}
         print(dico)
-        #print(self.CentreGeo1, self.CentreGeo0)
+        print(self.CentreGeo1, self.CentreGeo0, self.PosFix, self.NbFixa, self.Tb, self.Iy, self.Vx, self.Vz)
         return dico
 
     def calculation_biaxial(self):

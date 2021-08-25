@@ -5,11 +5,13 @@ from src.Version5etag.readinginputdata import ReadingInputData
 from src.Version5etag.criteria import Criteria
 
 ''' Classe générale qui permet d'appeler toutes les fonctions de SoFix '''
+
+
 class General:
     def __init__(self, data_dowel):
         self.data_dowel = data_dowel
         print("hello", data_dowel)
-        self.data = 0
+        self.data1 = 0
         self.readinputdata = 0
         self.resultTrac = 0
         self.dnom = 0
@@ -54,13 +56,13 @@ class General:
                 self.dnom = float(self.data.get_dowel_property('Diametre de percage dnom=d0 (mm)'))
                 self.readinputdata = self.data.read_input_data()
                 self.get_data_geo(self.dnom, self.readinputdata, self.geo_calculation(i), self.dowel_name)
-                self.check_data(i)
-                geo = self.input_data_aster()
-                #self.effort_calculation(geo, i)
-                Criteria(geo, i)
-                self.result_sofix.append(Criteria(geo, i).calculation_criteria_traction_shearing())
-
-
+                if self.check_data(i) is True:
+                    geo = self.input_data_aster()
+                    #self.effort_calculation(geo, i)
+                    Criteria(geo, i)
+                    self.result_sofix.append(Criteria(geo, i).calculation_criteria_traction_shearing())
+                else:
+                    return False
 
         elif calcul == "Osup":
             for i in range(len(self.data_dowel['Lx'])):
@@ -71,7 +73,10 @@ class General:
                 self.readinputdata = self.data.read_input_data()
                 self.get_data_geo(self.dnom, self.readinputdata, self.geo_calculation(i), self.dowel_name)
                 self.check_data(i)
-
+                # if self.check_data(i) is True:
+                #     pass
+                # else:
+                #     return False
 
     def critere_sofix(self):
         return self.result_sofix
@@ -188,8 +193,9 @@ class General:
         return self.inertia
 
     def check_data(self, i):
-        self.data = self.data.get_dowel_full_property()
-        Verification(self.inertia, self.data, self.readinputdata, self.input_data_general(i))
+        self.data1 = self.data.get_dowel_full_property()
+        check = Verification(self.inertia, self.data1, self.readinputdata, self.input_data_general(i))
+        return check.verification_anchors()
 
     # def effort_calculation(self, geo, i):
     #     self.calculation_effort = CalculationEffort(geo, i)
