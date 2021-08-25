@@ -397,7 +397,7 @@ class OSup(QObject):
 
     @pyqtSlot()
     def run_aster(self):
-        # self.run_calculation()
+        self.run_calculation()
         self.display_result()
 
     def run_calculation(self):
@@ -438,20 +438,20 @@ class OSup(QObject):
         if "axis" in self.get_saved_data(type=None)["verification_module"].keys() :
             pipe_axis = self.get_saved_data(type=None)["verification_module"]["axis"]
             self.result_file = ResultFile(pipe_axis)
-            self.result_file.load(result_file,"profile")
+            self.result_file.load("profile")
             nb_point = self.get_saved_data(type=None)["verification_module"]['points']
             self.result_window = ResultWindow(pipe_axis)
             self.result_window.load_result(self.result_file.get_plot_data(),"Profilé")
-            self.result_file.load(result_file, "platine")
+            self.result_file.load("platine")
             self.result_window.load_result(self.result_file.get_plot_data(), "Platine")
-            print("gqdreqqg", self.result_file.void_file())
-            self.result_file.load(result_file, "cheville")
-            self.result_window.load_result(self.result_file.get_plot_data(), "Cheville")
-            self.result_file.load(result_file, "cheville")
-            self.result_window.load_result(self.result_file.get_plot_data(), "Cheville")
-            self.result_file.load(result_file, "rigidie_plat")
+            # print("gqdreqqg", self.result_file.void_file())
+            # self.result_file.load("cheville")
+            # self.result_window.load_result(self.result_file.get_plot_data(), "Cheville")
+            # self.result_file.load("cheville")
+            # self.result_window.load_result(self.result_file.get_plot_data(), "Cheville")
+            self.result_file.load("rigidite_plat")
             self.result_window.load_result(self.result_file.get_plot_data(), "Rigidité platine")
-            self.result_file.load(result_file, "fleche")
+            self.result_file.load( "fleche")
             self.result_window.load_result(self.result_file.get_plot_data(), "Flèche")
             if self.data_stirrup == {}:
                 self.result_window.load_result(self.result_file.get_dict_data(self.get_saved_data(type=None)["verification_module"]['points'],self.get_saved_data(type=None)["stirrup"]["plot_data"]), "Etrier")
