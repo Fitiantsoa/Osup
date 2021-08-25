@@ -28,7 +28,7 @@ ASTER_CHEVILLE = os.getcwd() + "/code-aster_v2019_std-win64//v2019//bin//as_run 
 
 PROFILE_RSLT = ("'" + TEMP + "profile(2).Osup" + "'").replace("\\","/")
 PLATINE_RSLT = ("'" + TEMP + "platine'").replace("\\","/")
-# CHEVILLE_RSLT = ("'" + TEMP + "cheville(2)'").replace("\\","/")
+CHEVILLE_RSLT = ("'" + TEMP + "cheville(2)'").replace("\\","/")
 RIGIDITE_PLAT_RSLT = ("'" + TEMP + "rigidite_plat'").replace("\\","/")
 FLECHE_RSLT = ("'" + TEMP + "fleche(2).Osup" + "'").replace("\\","/")
 

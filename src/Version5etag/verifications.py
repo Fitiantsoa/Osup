@@ -3,7 +3,7 @@ class Verification:
     def __init__(self, inertia, data, readinputdata, data_dowel):
         self.Lx = data_dowel.get("Lx")
         self.Lz = data_dowel.get("Lz")
-        self.h = data_dowel.get("h")
+        self.h = float(data_dowel.get("h"))
         self.NbFixa = data_dowel.get("nbCheville")
         self.sx0 = self.sx(data_dowel.get("sx0"), data_dowel.get("sz0"))[0]
         self.sx1 = 0
