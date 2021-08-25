@@ -303,7 +303,13 @@ class ResultWindow(QWidget):
     def write_load_comm(self, Fy, Fz):
         osup_file = open(FICHIER_CHEVILLE_RATIO, 'r')
         lines = osup_file.readlines()
-        with open(COMM_FILE_CHEVILLE, "a") as f:
+        osup_file.close()
+        dataFile = open(COMM_FILE_DATA, "r")
+        data_lines = dataFile.readlines()
+        dataFile.close()
+        with open(COMM_FILE_CHEVILLE, "w") as f:
+            for data in data_lines:
+                f.write(data)
             for line in lines:
                 if "***********load*********" in line:
                     line = ""
@@ -313,6 +319,13 @@ class ResultWindow(QWidget):
                         line += f'\tFX = {Fy}, FZ = {Fz}, FY = {0.3*(float(Fz)**2 + float(Fy)**2)**0.5},  ),'
                     else:
                         line += f'\tFY = {Fy}, FZ = {Fz}, FX = {0.3*(float(Fz)**2 + float(Fy)**2)**0.5},),'
+                elif "************RESULTFILE*****************" in line:
+                    if self.pipe_axis == "Z":
+                        line = f'ratio_cheville.write_osup_result({CHEVILLE_RSLT}, {Fy}, {Fz}, {0.3*(float(Fz)**2 + float(Fy)**2)**0.5})\n'
+                    elif self.pipe_axis == "Y":
+                        line = f'ratio_cheville.write_osup_result({CHEVILLE_RSLT}, {Fy}, {0.3 * (float(Fz) ** 2 + float(Fy) ** 2) ** 0.5}, {Fz})\n'
+                    else:
+                        line = f'ratio_cheville.write_osup_result({CHEVILLE_RSLT},{0.3 * (float(Fz) ** 2 + float(Fy) ** 2) ** 0.5}, {Fy}, {Fz})\n'
                 f.write(line)
             f.close()
 

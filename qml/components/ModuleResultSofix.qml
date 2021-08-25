@@ -168,95 +168,14 @@ Rectangle {
                             Layout.preferredWidth: 50
                             Layout.maximumWidth: 50
                             Layout.minimumWidth: 50
-                        }/*
-                        CTextField {
-                            id: tfruptAcier
-                            enabled: false
-                            text: ruptacier
-                            Layout.preferredWidth: 50
-                            Layout.maximumWidth: 50
-                            Layout.minimumWidth: 50
-                            color : if (tfruptAcier.text >= 1)
-                                        tfruptAcier.color = "red";
-                                    else
-                                        tfruptAcier.color = Theme.primary
                         }
-                        CTextField {
-                            id: tfruptExtGliss
-                            text: ruptExtGliss
-                            enabled: false
-                            Layout.preferredWidth: 50
-                            Layout.maximumWidth: 50
-                            Layout.minimumWidth: 50
-                            color : if (tfruptExtGliss.text >= 1)
-                                        tfruptExtGliss.color = "red";
-                                    else
-                                        tfruptExtGliss.color = Theme.primary
-                        }
-                        CTextField {
-                            id: tfruptConeBet
-                            text: ruptConeBet
-                            enabled: false
-                            Layout.preferredWidth: 50
-                            Layout.maximumWidth: 50
-                            Layout.minimumWidth: 50
-                            color : if (tfruptConeBet.text >= 1)
-                                        tfruptConeBet.color = "red";
-                                    else
-                                        tfruptConeBet.color = Theme.primary
-                        }
-                        CTextField {
-                            id: tfruptFendBet
-                            text: ruptFendBet
-                            enabled: false
-                            Layout.preferredWidth: 100
-                            Layout.maximumWidth: 100
-                            Layout.minimumWidth: 100
-                            color : if (tfruptFendBet.text >= 1)
-                                        tfruptFendBet.color = "red";
-                                    else
-                                        tfruptFendBet.color = Theme.primary
-                        }
-                        CTextField {
-                            id: tfruptAcierSansBrasLevier
-                            text: ruptAcierSansBrasLevier
-                            enabled: false
-                            Layout.preferredWidth: 100
-                            Layout.maximumWidth: 100
-                            Layout.minimumWidth: 100
-                            color : if (tfruptAcierSansBrasLevier.text >= 1)
-                                        tfruptAcierSansBrasLevier.color = "red";
-                                    else
-                                        tfruptAcierSansBrasLevier.color = Theme.primary
-                        }
-                        CTextField {
-                            id: tfruptEffetLevier
-                            text: ruptEffetLevier
-                            enabled: false
-                            Layout.preferredWidth: 100
-                            Layout.maximumWidth: 100
-                            Layout.minimumWidth: 100
-                            color : if (tfruptEffetLevier.text >= 1)
-                                        tfruptEffetLevier.color = "red";
-                                    else
-                                        tfruptEffetLevier.color = Theme.primary
-                        }
-                        CTextField {
-                            id: tfruptBordBet
-                            text: ruptBordBet
-                            enabled: false
-                            Layout.preferredWidth: 100
-                            Layout.maximumWidth: 100
-                            Layout.minimumWidth: 100
-                            color : if (tfruptBordBet.text >= 1)
-                                        tfruptBordBet.color = "red";
-                                    else
-                                        tfruptBordBet.color = Theme.primary
-                        }*/
+
                         CTextField {
                             id: tfruptCombiAcier
                             text: ruptCombiAcier
                             enabled: false
+                            anchors.left: mz.right
+                            anchors.leftMargin: 90
                             Layout.preferredWidth: 100
                             Layout.maximumWidth: 100
                             Layout.minimumWidth: 100
@@ -272,6 +191,8 @@ Rectangle {
                             Layout.preferredWidth: 100
                             Layout.maximumWidth: 100
                             Layout.minimumWidth: 100
+                            anchors.left: tfruptCombiAcier.right
+                            anchors.leftMargin: 140
                             color : if (tfruptCombiBet.text >= 1)
                                         tfruptCombiBet.color = "red";
                                     else
@@ -285,6 +206,8 @@ Rectangle {
                             Layout.preferredWidth: 100
                             Layout.maximumWidth: 100
                             Layout.minimumWidth: 100
+                            anchors.left: tfruptCombiBet.right
+                            anchors.leftMargin: 140
                             color : if (tftracmax.text >= 1)
                                         tftracmax.color = "red";
                                     else
@@ -297,6 +220,8 @@ Rectangle {
                                 color: "transparent"
                                 anchors.top: parent.top
                                 anchors.topMargin: 0
+                                anchors.left: tftracmax.right
+                                anchors.leftMargin: 0
                                 Label {
                                             id: indicateur
                                             width: 20
@@ -308,7 +233,6 @@ Rectangle {
                                             anchors.leftMargin: 2
                                         }
 
-
                                 ButtonTable{
                                     id : tabButton
                                     anchors.verticalCenter: parent.verticalCenter
@@ -316,7 +240,7 @@ Rectangle {
                                     anchors.rightMargin: 5
                                     Popup{
                                         width : 305
-                                        height : 80
+                                        height : 90
                                         x: - width
                                         visible: tabButton.survol
                                         Rectangle{
@@ -325,13 +249,14 @@ Rectangle {
                                             Label{
                                                 Layout.preferredWidth: 100
                                                 Layout.preferredHeight: 100
-                                                text : "Rupture acier :   " + ruptacier + "\nRupture extarction glissement :   " + ruptExtGliss + "\nRupture cône béton : " + ruptConeBet + "\nRupture fendage : " + ruptFendBet
-                                                font.pointSize: 8
+                                                text : "Rupture acier : " + ruptacier + "\nRupture extarction glissement : " + ruptExtGliss + "\nRupture cône béton : " + ruptConeBet + "\nRupture fendage : " + ruptFendBet
+                                                font.pointSize: 10
                                                 font.capitalization: Font.MixedCase
                                                 font.weight: Font.Normal
                                                 font.family: "Verdana"
                                                 font.italic: false
                                                 horizontalAlignment: Text.AlignLeft
+                                                color: Theme.primary
                                             }
                                         }
                                     }
@@ -357,6 +282,8 @@ Rectangle {
                                 color: "transparent"
                                 anchors.top: parent.top
                                 anchors.topMargin: 0
+                                anchors.left: tfcisailmax.right
+                                anchors.leftMargin: 0
                                 Label {
                                             id: indicateur1
                                             width: 20
@@ -374,7 +301,7 @@ Rectangle {
                                     anchors.rightMargin: 5
                                     Popup{
                                         width : 305
-                                        height : 65
+                                        height : 75
                                         x: - width
                                         visible: tabButton1.survol
                                         Rectangle{
@@ -383,63 +310,20 @@ Rectangle {
                                             Label{
                                                 Layout.preferredWidth: 100
                                                 Layout.preferredHeight: 100
-                                                text : "Rupture acier sans bras levier:   " + ruptAcierSansBrasLevier + "\nRupture par effet levier :   " + ruptEffetLevier  + "\nRupture bord béton : " + ruptBordBet
-                                                font.pointSize: 8
+                                                text : "Rupture acier sans bras levier: " + ruptAcierSansBrasLevier + "\nRupture par effet levier : " + ruptEffetLevier  + "\nRupture bord béton : " + ruptBordBet
+                                                font.pointSize: 10
                                                 font.capitalization: Font.MixedCase
                                                 font.weight: Font.Normal
                                                 font.family: "Verdana"
                                                 font.italic: false
                                                 horizontalAlignment: Text.AlignLeft
+                                                color: Theme.primary
                                             }
                                         }
                                     }
                                 }
                             }
-                        //                        RowLayout{
-                        //                            id: rowLayout
-                        //                            anchors.verticalCenter: parent.verticalCenter
-                        //                            anchors.right: parent.right
-                        //                            Layout.maximumWidth: 50
-                        //                            ButtonTable{
-                        //                                id: editButton
-                        //                                toolTipText: "Modifier"
-                        //                                text: "\uE819"
-                        //                                font.family: "fontello"
-                        //                                anchors.verticalCenter: parent.verticalCenter
-                        //                                onClicked: {
-                        //                                    if (cbaxis.visible === false){
-                        //                                        tfid.color = "red"
-                        //                                    }
-                        //                                    else{
-                        //                                        cbaxis.visible =  false
-                        //                                        tfaxis.visible = true
-                        //                                        tfaxis.text = cbaxis.currentText
-                        //                                        modele.text = gammeCheville.currentText + " " + modeleCheville.currentText + " " + typeCheville.currentText
-                        //                                        platineModelSoFix.setProperty(index, "dowelsnb", tfdowelNb.text)
-                        //                                        platineModelSoFix.setProperty(index, "orientation", tforientation.text)
-                        //                                        platineModelSoFix.setProperty(index, "Vx", vx.text)
-                        //                                        platineModelSoFix.setProperty(index, "N", n.text)
-                        //                                        platineModelSoFix.setProperty(index, "Vz", vz.text)
-                        //                                        platineModelSoFix.setProperty(index, "Mx", mx.text)
-                        //                                        platineModelSoFix.setProperty(index, "T", t.text)
-                        //                                        platineModelSoFix.setProperty(index, "Mz", mz.text)
-                        //                                        tfid.color = Theme.grey_3
-                        //                                    }
-                        //                                }
-                        //                            }
-                        //                            ButtonTable{
-                        //                                id: removeButton
-                        //                                toolTipText: "Supprimer"
-                        //                                text: "\uE808"
-                        //                                font.family: "fontello"
-                        //                                anchors.verticalCenter: parent.verticalCenter
-                        //                                onClicked: {
-                        //                                    platineModelSoFix.remove(index);
-                        //                                }
-                        //                            }
-                        //                        }
-                        //                    }
-                        //                }
+
                         ListView.onAdd: SequentialAnimation {
                             PropertyAction { target: delegateItemPlatine; property: "height"; value: 0 }
                             NumberAnimation { target: delegateItemPlatine; property: "height"; to: 30; duration: 250; easing.type: Easing.InOutQuad }
@@ -542,69 +426,7 @@ Rectangle {
                                     Layout.maximumWidth: 50
                                     Layout.minimumWidth: 50
                                 }
-//                                Text {
-//                                    text: "Rupture acier"
-//                                    font.bold: true
-//                                    color: Theme.grey_6
-//                                    width: 140
-//                                    Layout.preferredWidth: 50
-//                                    Layout.maximumWidth: 50
-//                                    Layout.minimumWidth: 50
-//                                }
-//                                Text {
-//                                    text: "Rup Ext.Gliss"
-//                                    font.bold: true
-//                                    color: Theme.grey_6
-//                                    width: 140
-//                                    Layout.preferredWidth: 50
-//                                    Layout.maximumWidth: 50
-//                                    Layout.minimumWidth: 50
-//                                }
-//                                Text {
-//                                    text: "Rup Cône bet"
-//                                    font.bold: true
-//                                    color: Theme.grey_6
-//                                    width: 140
-//                                    Layout.preferredWidth: 50
-//                                    Layout.maximumWidth: 50
-//                                    Layout.minimumWidth: 50
-//                                }
-//                                Text {
-//                                    text: "Rup fend bet"
-//                                    font.bold: true
-//                                    color: Theme.grey_6
-//                                    width: 140
-//                                    Layout.preferredWidth: 100
-//                                    Layout.maximumWidth: 100
-//                                    Layout.minimumWidth: 100
-//                                }
-//                                Text {
-//                                    text: "Rup acier sans bras levier"
-//                                    font.bold: true
-//                                    color: Theme.grey_6
-//                                    width: 140
-//                                    Layout.preferredWidth: 100
-//                                    Layout.maximumWidth: 100
-//                                    Layout.minimumWidth: 100
-//                                }
-//                                Text {
-//                                    text: "Rup lev"
-//                                    font.bold: true
-//                                    color: Theme.grey_6
-//                                    width: 140
-//                                    Layout.preferredWidth: 100
-//                                    Layout.maximumWidth: 100
-//                                    Layout.minimumWidth: 100
-//                                }
-//                                Text {
-//                                    text: "Rup bord bet"
-//                                    font.bold: true
-//                                    color: Theme.grey_6
-//                                    width: 140
-//                                    Layout.preferredWidth: 100
-//                                    Layout.maximumWidth: 100
-//                                    Layout.minimumWidth: 100
-//                                }
+
                                 Text {
                                     text: "Rup combi acier"
                                     font.bold: true

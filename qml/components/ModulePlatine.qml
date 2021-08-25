@@ -523,7 +523,6 @@ Rectangle {
                                     source:"../../assets/images/Plat4Chev_Z_test.png"
                                 }
                             }
-
                         }
                     }
                     Rectangle {
@@ -544,7 +543,13 @@ Rectangle {
                         ColumnLayout{
                             anchors.fill: parent
                             anchors.margins: 20
-                            spacing: -1
+                            spacing: 0
+                            Label{
+                                Layout.preferredWidth: 150
+                                text : "La platine est considérée rigide pour le calcul d'ancrage"
+                                anchors.top: parent.top
+                                color : "red"//Theme.grey_6
+                            }
 
                             RowLayout{
                                 spacing: 15
@@ -552,6 +557,8 @@ Rectangle {
                                 anchors.left: parent.left
                                 anchors.leftMargin: 15
                                 anchors.rightMargin: 20
+//                                anchors.top: parent.top
+//                                anchors.topMargin: 40
                                 Label{
                                     text: "Données géometrique de la platine:"
                                     Layout.preferredWidth: 50
@@ -583,6 +590,8 @@ Rectangle {
                                     opacity: enabled?1:0.6
                                     placeholderText: qsTr(" ")
                                     Layout.preferredWidth: 50
+                                    Layout.maximumWidth: 150
+                                    Layout.minimumWidth: table.width / 9
                                     validator: IntValidator{}
                                 }
                                 Label{
@@ -595,6 +604,8 @@ Rectangle {
                                     objectName: "H"
                                     placeholderText: qsTr(" ")
                                     Layout.preferredWidth: 50
+                                    Layout.maximumWidth: 150
+                                    Layout.minimumWidth: table.width / 9
                                     validator: IntValidator{}
                                 }
                                 Label{
@@ -607,6 +618,8 @@ Rectangle {
                                     objectName: "e"
                                     placeholderText: qsTr(" ")
                                     Layout.preferredWidth: 50
+                                    Layout.maximumWidth: 150
+                                    Layout.minimumWidth: table.width / 9
                                     validator: IntValidator{}
                                 }
                                 Label{
@@ -621,6 +634,8 @@ Rectangle {
                                     objectName: "a"
                                     placeholderText: qsTr(" ")
                                     Layout.preferredWidth: 50
+                                    Layout.maximumWidth: 150
+                                    Layout.minimumWidth: table.width / 9
                                     validator: IntValidator{}
                                 }
                                 Label{
@@ -635,6 +650,8 @@ Rectangle {
                                     objectName: "b"
                                     placeholderText: qsTr(" ")
                                     Layout.preferredWidth: 50
+                                    Layout.maximumWidth: 150
+                                    Layout.minimumWidth: table.width / 9
                                     validator: IntValidator{}
                                 }
                                 }
@@ -1280,6 +1297,12 @@ Rectangle {
                                             errorMessageElem.visible = true
                                         }
                                         else{
+                                            if (typecharge.currentText === "Sismique C2" && (gammeCheville.currentText + " " + modeleCheville.currentText + " " + typeCheville.currentText === "HILTI HSL 3-G M8" || gammeCheville.currentText + " " + modeleCheville.currentText + " " + typeCheville.currentText === "HILTI HSL 3-G M24" || gammeCheville.currentText + " " + modeleCheville.currentText + " " + typeCheville.currentText === "TRIGA Z XTREM E8-12" || gammeCheville.currentText + " " + modeleCheville.currentText + " " + typeCheville.currentText === "TRIGA Z XTREM E20-28" || gammeCheville.currentText + " " + modeleCheville.currentText + " " + typeCheville.currentText === "SPIT FIX Z XTREM M8" || (gammeCheville.currentText + " " + modeleCheville.currentText + " " + typeCheville.currentText == "HILTI HST3 M10" && profondeurCheville.currentText === 40) || (gammeCheville.currentText + " " + modeleCheville.currentText + " " + typeCheville.currentText == "HILTI HST3 M16" && profondeurCheville.currentText === 65) || gammeCheville.currentText + " " + modeleCheville.currentText + " " + typeCheville.currentText === "HILTI HST3 M24" || gammeCheville.currentText + " " + modeleCheville.currentText + " " + typeCheville.currentText === "Würth W-HAZ-B M6")){
+                                                errorMessageElem.title = "Modèle inutilisable"
+                                                errorMessageElem.text = "Ce modèle de fixation n'est pas utilisable pour des charges de catégorie sismique C2"
+                                                errorMessageElem.visible = true
+                                            }
+
                                         if (pageGeo.temperature !== ""){
                                             if (nbCheville.currentText === "2"){
                                                 if (orientation.currentText === "Vertical"){

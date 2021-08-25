@@ -38,6 +38,7 @@ resu_PATH = os.getcwd() + "/code-aster_v2019_std-win64/v2019/14.4/share/aster/te
 mess_PATH = os.getcwd() + "/code-aster_v2019_std-win64/v2019/14.4/share/aster/tests/osup.mess"
 GEO_FILE = os.getcwd() + "/code-aster_v2019_std-win64/v2019/14.4/share/aster/tests/osup.geo"
 
+COMM_FILE_DATA = os.getcwd() + "/src/temp/cheville_comm_data.txt"
 COMM_FILE_CHEVILLE = os.getcwd() + "/code-aster_v2019_std-win64/v2019/14.4/share/aster/tests/cheville.comm"
 EXPORT_FILE_CHEVILLE = os.getcwd() + "/code-aster_v2019_std-win64/v2019/14.4/share/aster/tests/cheville.export"
 

@@ -11,12 +11,12 @@ class Criteria:
     def __init__(self, geo, i):
         self.data_dowel = geo.get("datadowel")
         print("datadowel", self.data_dowel)
-        self.Mx = self.data_dowel.get('Mx')[i] * 1000
-        self.Mz = self.data_dowel.get('Mz')[i] * 1000
-        self.N = - self.data_dowel.get('N')[i]
-        self.T = self.data_dowel.get('T')[i] * 1000
-        self.Vx = self.data_dowel.get('Vx')[i]
-        self.Vz = self.data_dowel.get('Vz')[i]
+        self.Mx = float(self.data_dowel.get('Mx')[i]) * 1000
+        self.Mz = float(self.data_dowel.get('Mz')[i]) * 1000
+        self.N = - float(self.data_dowel.get('N')[i])
+        self.T = float(self.data_dowel.get('T')[i]) * 1000
+        self.Vx = float(self.data_dowel.get('Vx')[i])
+        self.Vz = float(self.data_dowel.get('Vz')[i])
 
         self.NbFixa = int(self.data_dowel.get("nbCheville")[i])
         self.TypeCharge = self.data_dowel.get("TypeCharge")[i]
@@ -183,7 +183,7 @@ class Criteria:
 
             elif self.TypeCharge == "Sismique C2" or self.TypeCharge == "Sismique C1":
                 if self.norme == "ETAG":
-                    self.ruptbetcombi = "Non calculé pour l'ETAG"
+                    self.ruptbetcombi = 0 #"Non calculé pour l'ETAG"
                     self.ruptaciercombi = max(a[0]) + max(b[0])
                 else:
                     self.ruptaciercombi = max(a[0]) + max(b[0])
@@ -1533,7 +1533,6 @@ class Criteria:
         return ruptureconebeton
 
     def rupture_extraction(self):
-        # print(self.typebeton)
         gamma = self.calculation_gamma_c() * float(self.get_dowel_property(
             'Rupture par extraction glissement - gamma inst beton C20/25'))
         NRkp = self.calculation_NRkp()

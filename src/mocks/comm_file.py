@@ -27,7 +27,7 @@ class CommFile:
         self.__create_material()
         self.__write_section()
         self.__write_limits_conditions()
-        with open(COMM_FILE_CHEVILLE, "w", encoding='utf-8') as f:
+        with open(COMM_FILE_DATA, "w", encoding='utf-8') as f:
             f.write('\n'.join(self.content))
             f.close()
         if self.verif_mod['methode'] == 'courbe':
