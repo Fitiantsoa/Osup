@@ -20,7 +20,7 @@ Rectangle {
 //    property alias lvlC_check: lvlC.checked
 //    property alias lvlD_check: lvlD.checked
     property alias rccm : rccm
-    property alias oab : lvlA
+    property alias lvlA : lvlA
 //    property alias en_check : normeRadioButtonEN.checked
 
     Rectangle {

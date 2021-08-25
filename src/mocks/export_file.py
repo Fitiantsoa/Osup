@@ -22,11 +22,13 @@ class ExportFile:
         content.append("F med osup.med D 20")
         content.append("F mess osup.mess R 6")
         content.append("F resu osup.resu R 8")
-
         if filetype == "osup":
             export_file = EXPORT_FILE
         else:
             export_file = EXPORT_FILE_CHEVILLE
+            f = open(CHEVILLE_RSLT.replace("'", ""), "w")
+            f.write("fx          fy          fz             Combine beton             Combine acier          Max traction              Max cisaillement \n")
+            f.close()
 
         with open(export_file, "w", encoding='utf-8') as f:
             f.write('\n'.join(content))

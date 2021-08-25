@@ -10,12 +10,13 @@ class Criteria:
 
     def __init__(self, geo, i):
         self.data_dowel = geo.get("datadowel")
-        self.Mx = self.data_dowel.get('Mx')[i] * 1000
-        self.Mz = self.data_dowel.get('Mz')[i] * 1000
-        self.N = - self.data_dowel.get('N')[i]
-        self.T = self.data_dowel.get('T')[i] * 1000
-        self.Vx = self.data_dowel.get('Vx')[i]
-        self.Vz = self.data_dowel.get('Vz')[i]
+        print("datadowel", self.data_dowel)
+        self.Mx = float(self.data_dowel.get('Mx')[i]) * 1000
+        self.Mz = float(self.data_dowel.get('Mz')[i]) * 1000
+        self.N = - float(self.data_dowel.get('N')[i])
+        self.T = float(self.data_dowel.get('T')[i]) * 1000
+        self.Vx = float(self.data_dowel.get('Vx')[i])
+        self.Vz = float(self.data_dowel.get('Vz')[i])
 
         self.NbFixa = int(self.data_dowel.get("nbCheville")[i])
         self.TypeCharge = self.data_dowel.get("TypeCharge")[i]
@@ -171,7 +172,7 @@ class Criteria:
                     else:
                         cas = self.betaN ** 2 + self.betaV ** 2
                     self.ruptaciercombi = min((self.betaN + self.betaV) / 1.2, cas)
-                    self.ruptbetcombi = "Non calculé pour l'ETAG"
+                    self.ruptbetcombi = 0 # "Non calculé pour l'ETAG"
                 else:
                     self.ruptaciercombi = max(a[0]) ** 2 + max(b[0]) ** 2
                     if self.EDF == "Oui":
@@ -182,7 +183,7 @@ class Criteria:
 
             elif self.TypeCharge == "Sismique C2" or self.TypeCharge == "Sismique C1":
                 if self.norme == "ETAG":
-                    self.ruptbetcombi = "Non calculé pour l'ETAG"
+                    self.ruptbetcombi = 0 #"Non calculé pour l'ETAG"
                     self.ruptaciercombi = max(a[0]) + max(b[0])
                 else:
                     self.ruptaciercombi = max(a[0]) + max(b[0])
@@ -197,22 +198,21 @@ class Criteria:
 
             # print(self.ruptbetcombi, self.ruptaciercombi)
             print("critere", max(self.ruptbetcombi, self.ruptaciercombi, self.betaN, self.betaV), "effort", self.Vx,
-                  self.N,
-                  self.Vz, self.Mx, self.T, self.Mz)
+                  self.N, self.Vz, self.Mx, self.T, self.Mz)
             # return ruptbetcombi, ruptaciercombi, a, b
             return [max(a[0]), a[1], max(a[2]), a[3], max(b[0]), b1, b[2], self.ruptaciercombi, self.ruptbetcombi,
                     max(self.ruptbetcombi, self.ruptaciercombi, self.betaN, self.betaV), self.Vx, - self.N, self.Vz,
-                    self.Mx / 1000, self.T / 1000, self.Mz / 1000]
+                    self.Mx / 1000, self.T / 1000, self.Mz / 1000, self.betaN, self.betaV]
 
     def calculation_criteria_shearing(self):
         if self.TypeCharge == "Statique ou quasi-statique" or (
                 self.norme == "ETAG" and self.TypeCharge == "Sismique C2" or self.TypeCharge == "Sismique C1"):
             return self.rupture_steel_fixation_without_lever_arm(), self.rupture_concrete_with_lever_arm("", ""), \
                    self.rupture_edge_concrete("", "")
-        elif self.TypeCharge == "Sismique C2" and self.norme == "EC2":
+        elif self.TypeCharge == "Sismique C2" and self.norme == "Eurocode 2":
             return self.rupture_steel_fixation_without_lever_arm_C2(), self.rupture_concrete_with_lever_arm("", "C2"), \
                    self.rupture_edge_concrete("", "C2")
-        elif self.TypeCharge == "Sismique C1" and self.norme == "EC2":
+        elif self.TypeCharge == "Sismique C1" and self.norme == "Eurocode 2":
             return self.rupture_steel_fixation_without_lever_arm_C1(), self.rupture_concrete_with_lever_arm("C1", ""), \
                    self.rupture_edge_concrete("C1", "")
 
@@ -224,10 +224,10 @@ class Criteria:
                     self.norme == "ETAG" and self.TypeCharge == "Sismique C2" or self.TypeCharge == "Sismique C1"):
                 return self.rupture_steel_fixing(), self.rupture_cone_concrete(), self.rupture_extraction(), \
                        self.rupture_splitting()
-            elif self.TypeCharge == "Sismique C2" and self.norme == "EC2":
+            elif self.TypeCharge == "Sismique C2" and self.norme == "Eurocode 2":
                 return self.rupture_steel_fixing_C2(), self.rupture_cone_concrete_C2(), self.rupture_extraction_C2(), \
                        self.rupture_splitting_C2()
-            elif self.TypeCharge == "Sismique C1" and self.norme == "EC2":
+            elif self.TypeCharge == "Sismique C1" and self.norme == "Eurocode 2":
                 return self.rupture_steel_fixing_C1(), self.rupture_cone_concrete_C1(), self.rupture_extraction_C1(), \
                        self.rupture_splitting_C1()
 
@@ -333,7 +333,7 @@ class Criteria:
                     self.ruptbetonlevierglob = 3.33 * self.VEdg / (VRkcp / gamma)
                 else:
                     self.ruptbetonlevierglob = self.VEdg / (VRkcp / gamma)
-        # print(N0, a, A0, psisN, psireN, psiecN, psiMN, NRkc, ratio, k8, VRkcp, gamma, self.VEdg, scrN1, self.ccrN, hef1, self.fck)
+        print(N0, a, A0, psisN, psireN, psiecN, psiMN, NRkc, ratio, self.k8, VRkcp, gamma, self.VEdg, scrN1, self.ccrN, hef1, self.fck)
         Vedeq = self.VEdg
 
         # Affichage de VEdg / (VRkcp / gamma)
@@ -509,10 +509,10 @@ class Criteria:
     def rupture_edge_concrete_2_fixing(self, C1, C2, gamma, ratio1, ratio2, ratio3, ratio4, c1, agap, kt):
         global c1z, tempx1, tempx2
         c1z = 0
-        if self.cx0 < 500:
+        if self.cx0 < 10 * self.hef and self.cx0 < 60 * self.dnom:
             if (self.VEgdx < 0 and self.VEgdz != 0) or (self.VEgdx >= 0 and self.VEgdz != 0) or (
                     self.VEgdx < 0 and self.VEgdz == 0):
-                if self.cz0 < 500 and self.cz1 < 500:
+                if self.cz0 < 10 * self.hef and self.cz0 < 60 * self.dnom and self.cz1 < 10 * self.hef and self.cz1 < 60 * self.dnom:
                     if max(self.cz0, self.cz1) <= 1.5 * self.cx0 and self.h <= 1.5 * self.cx0:
                         if (self.VEgdx < 0 and self.VEgdz != 0) or (self.VEgdx >= 0 and self.VEgdz != 0):
                             c1x = max(max(self.cz0, self.cz1) / 1.5, self.h / 1.5)
@@ -536,26 +536,48 @@ class Criteria:
                     if (self.VEgdx < 0 and self.VEgdz != 0) or (self.VEgdx < 0 and self.VEgdz == 0):
                         psiecVx = self.calculation_psie_cN(3 * c1z, np.array([self.eV1, 0]), 4)
 
-                if self.Vedx[0] != 0 and self.Vedx[1] != 0:
-                    eV1 = ((self.PosFix[0, 1] - self.CentreGeo1) * self.Vedx[0] + (
-                            self.PosFix[1, 1] - self.CentreGeo1) * self.Vedx[
-                               1]) / (abs(self.Vedx[0]) + abs(self.Vedx[1]))
-                    psiecVx = self.calculation_psie_cN(3 * c1z, np.array([eV1, 0]), 4)
+                if self.norme == "ETAG":
+                    if self.Vedx[0] != 0 and self.Vedx[1] != 0:
+                        eV1 = ((self.PosFix[0, 1] - self.CentreGeo1) * self.Vedx[0] + (
+                                self.PosFix[1, 1] - self.CentreGeo1) * self.Vedx[
+                                   1]) / (abs(self.Vedx[0]) + abs(self.Vedx[1]))
+                        psiecVx = self.calculation_psie_cN(3 * c1z, np.array([eV1, 0]), 4)
+                    else:
+                        eV1 = 0
+                        psiecVx = self.calculation_psie_cN(3 * c1z, np.array([eV1, 0]), 4)
+
+                    if ((self.VEgdx < 0 and self.VEgdz != 0) or (
+                            self.VEgdx < 0 and self.VEgdz == 0 and (C1 == "C1" or C2 == "C2"))):
+                        aV = abs(math.atan(self.Vedz[0, 0] / self.Vx))
+                        self.psiaVx = (1 / (math.cos(aV) ** 2 + (math.sin(aV) / 2.5) ** 2)) ** (1 / 2)
+
+                    elif self.VEgdx < 0 and self.VEgdz == 0:
+                        aV = abs(math.atan((self.Vedz[0] / 2) / self.Vedx[1]))
+                        self.psiaVx = (1 / (math.cos(aV) ** 2 + (math.sin(aV) / 2.5) ** 2)) ** (1 / 2)
+
+                    elif self.VEgdx >= 0 and self.VEgdz != 0:
+                        self.psiaVx = 2
                 else:
-                    eV1 = 0
-                    psiecVx = self.calculation_psie_cN(3 * c1z, np.array([eV1, 0]), 4)
+                    if self.Vedx[0] != 0 and self.Vedx[1] != 0:
+                        eV1 = ((self.PosFix[0, 1] - self.CentreGeo1) * self.Vedx[0] + (
+                                self.PosFix[1, 1] - self.CentreGeo1) * self.Vedx[
+                                   1]) / (abs(self.Vedx[0]) + abs(self.Vedx[1]))
+                        psiecVx = self.calculation_psie_cN(3 * c1z, np.array([eV1, 0]), 4)
+                    else:
+                        eV1 = 0
+                        psiecVx = self.calculation_psie_cN(3 * c1z, np.array([eV1, 0]), 4)
 
-                if ((self.VEgdx < 0 and self.VEgdz != 0) or (
-                        self.VEgdx < 0 and self.VEgdz == 0 and (C1 == "C1" or C2 == "C2"))):
-                    aV = abs(math.atan(self.Vedz[0, 0] / self.Vx))
-                    self.psiaVx = (1 / (math.cos(aV) ** 2 + (0.5 * math.sin(aV)) ** 2)) ** (1 / 2)
+                    if ((self.VEgdx < 0 and self.VEgdz != 0) or (
+                            self.VEgdx < 0 and self.VEgdz == 0 and (C1 == "C1" or C2 == "C2"))):
+                        aV = abs(math.atan(self.Vedz[0, 0] / self.Vx))
+                        self.psiaVx = (1 / (math.cos(aV) ** 2 + (0.5 * math.sin(aV)) ** 2)) ** (1 / 2)
 
-                elif self.VEgdx < 0 and self.VEgdz == 0:
-                    aV = abs(math.atan((self.Vedz[0] / 2) / self.Vedx[1]))
-                    self.psiaVx = (1 / (math.cos(aV) * math.cos(aV) + (0.5 * math.sin(aV)) ** 2)) ** (1 / 2)
+                    elif self.VEgdx < 0 and self.VEgdz == 0:
+                        aV = abs(math.atan((self.Vedz[0] / 2) / self.Vedx[1]))
+                        self.psiaVx = (1 / (math.cos(aV) * math.cos(aV) + (0.5 * math.sin(aV)) ** 2)) ** (1 / 2)
 
-                elif self.VEgdx >= 0 and self.VEgdz != 0:
-                    self.psiaVx = 2
+                    elif self.VEgdx >= 0 and self.VEgdz != 0:
+                        self.psiaVx = 2
 
                 tempx1 = self.Ved[0, 0]
                 tempx2 = self.Ved[1, 0]
@@ -583,10 +605,10 @@ class Criteria:
 
                 # AFFICHAGE RESULTATS
 
-        if self.cx1 < 500:
+        if self.cx1 < 10 * self.hef and self.cx1 < 60 * self.dnom:
             if (self.VEgdx > 0 and self.VEgdz != 0) or (self.VEgdx <= 0 and self.VEgdz != 0) or (
                     self.VEgdx > 0 and self.VEgdz == 0):
-                if self.cz0 < 500 and self.cz1 < 500:
+                if self.cz0 < 10 * self.hef and self.cz0 < 60 * self.dnom and self.cz1 < 10 * self.hef and self.cz1 < 60 * self.dnom:
                     if max(self.cz0, self.cz1) <= 1.5 * self.cx1 and self.h <= 1.5 * self.cx1:
                         if (self.VEgdx > 0 and self.VEgdz != 0) or (self.VEgdx <= 0 and self.VEgdz != 0):
                             self.c1x = max(max(self.cz0, self.cz1) / 1.5, self.h / 1.5)
@@ -607,17 +629,30 @@ class Criteria:
                 psihVx = self.calculation_psih_V(self.c1x)
                 psireVx = 1
 
-                if self.Vedx[0] != 0 and self.Vedx[1] != 0:
-                    eV1 = ((self.PosFix[0, 1] - self.CentreGeo1) * self.Vedx[0] + (
-                            self.PosFix[1, 1] - self.CentreGeo1) * self.Vedx[
-                               1]) / (abs(self.Vedx[0]) + abs(self.Vedx[1]))
-                    self.psiecVx = self.calculation_psie_cN(3 * c1z, np.array([eV1, 0]), 4)
-                else:
-                    eV1 = 0
-                    self.psiecVx = self.calculation_psie_cN(3 * c1z, np.array([eV1, 0]), 4)
+                if self.norme == "ETAG":
+                    if self.Vedx[0] != 0 and self.Vedx[1] != 0:
+                        eV1 = ((self.PosFix[0, 1] - self.CentreGeo1) * self.Vedx[0] + (
+                                self.PosFix[1, 1] - self.CentreGeo1) * self.Vedx[
+                                   1]) / (abs(self.Vedx[0]) + abs(self.Vedx[1]))
+                        self.psiecVx = self.calculation_psie_cN(3 * c1z, np.array([eV1, 0]), 4)
+                    else:
+                        eV1 = 0
+                        self.psiecVx = self.calculation_psie_cN(3 * c1z, np.array([eV1, 0]), 4)
 
-                if self.VEgdx <= 0 and self.VEgdz != 0:
-                    self.psiaVx = 2
+                    if self.VEgdx <= 0 and self.VEgdz != 0:
+                        self.psiaVx = 2
+                else:
+                    if self.Vedx[0] != 0 and self.Vedx[1] != 0:
+                        eV1 = ((self.PosFix[0, 1] - self.CentreGeo1) * self.Vedx[0] + (
+                                self.PosFix[1, 1] - self.CentreGeo1) * self.Vedx[
+                                   1]) / (abs(self.Vedx[0]) + abs(self.Vedx[1]))
+                        self.psiecVx = self.calculation_psie_cN(3 * c1z, np.array([eV1, 0]), 4)
+                    else:
+                        eV1 = 0
+                        self.psiecVx = self.calculation_psie_cN(3 * c1z, np.array([eV1, 0]), 4)
+
+                    if self.VEgdx <= 0 and self.VEgdz != 0:
+                        self.psiaVx = 2
 
                 if C1 == "C1" or C2 == "C2":
                     if (self.VEgdx > 0 and self.VEgdz == 0) or (self.VEgdx > 0 and self.VEgdz != 0):
@@ -658,10 +693,10 @@ class Criteria:
                     # Affichage resultat
                     pass
 
-        if self.cz0 < 500:
+        if self.cz0 < 10 * self.hef and self.cz0 < 60 * self.dnom:
             if (self.VEgdx != 0 and self.VEgdz > 0) or (self.VEgdx == 0 and (self.VEgdz < 0 or self.T / 1000 != 0)) or (
                     self.VEgdz < 0 and self.VEgdx != 0):
-                if self.cx0 < 500 and self.cx1 < 500:
+                if self.cx0 < 10 * self.hef and self.cx0 < 60 * self.dnom and self.cx1 < 10 * self.hef and self.cx1 < 60 * self.dnom:
                     if max(self.cz0, self.cz1) <= 1.5 * self.cz0 and self.h <= 1.5 * self.cz0:
                         c1z = max(max(self.cx0, self.cx1) / 1.5, self.h / 1.5, self.sx0 / 3)
                     else:
@@ -734,9 +769,9 @@ class Criteria:
                     # Affichage resultat
                     pass
 
-        if self.cz1 < 500:
+        if self.cz1 < 10 * self.hef and self.cz1 < 60 * self.dnom:
             if (self.VEgdz != 0 and self.VEgdx != 0) or ((self.VEgdz > 0 or self.T / 1000 != 0) and self.VEgdx == 0):
-                if self.cx0 < 500 and self.cx1 < 500:
+                if self.cx0 < 10 * self.hef and self.cx0 < 60 * self.dnom and self.cx1 < 10 * self.hef and self.cx1 < 60 * self.dnom:
                     if max(self.cz0, self.cz1) <= 1.5 * self.cz1 and self.h <= 1.5 * self.cz1:
                         c1z = max(max(self.cx0, self.cx1) / 1.5, self.h / 1.5, self.sx0 / 3)
                     else:
@@ -764,11 +799,18 @@ class Criteria:
                 if tempz2 <= 0:
                     tempz2 = 0
 
-                if self.VEgdz != 0 and self.VEgdx != 0:
-                    aV = abs(math.pi / 2 - math.atan((tempz1 + tempz2) / (self.Vedx[0] + self.Vedx[1])))
-                    self.psiaVz = (1 / (math.cos(aV) ** 2 + (0.5 * math.sin(aV)) ** 2)) ** (1 / 2)
-                elif (self.VEgdz > 0 or self.T / 1000 != 0) and self.VEgdx == 0:
-                    self.psiaVz = 1
+                if self.norme == "ETAG":
+                    if self.VEgdz != 0 and self.VEgdx != 0:
+                        aV = abs(math.pi / 2 - math.atan((tempz1 + tempz2) / (self.Vedx[0] + self.Vedx[1])))
+                        self.psiaVx = (1 / (math.cos(aV) ** 2 + (math.sin(aV) / 2.5) ** 2)) ** (1 / 2)
+                    elif (self.VEgdz > 0 or self.T / 1000 != 0) and self.VEgdx == 0:
+                        self.psiaVz = 1
+                else:
+                    if self.VEgdz != 0 and self.VEgdx != 0:
+                        aV = abs(math.pi / 2 - math.atan((tempz1 + tempz2) / (self.Vedx[0] + self.Vedx[1])))
+                        self.psiaVz = (1 / (math.cos(aV) ** 2 + (0.5 * math.sin(aV)) ** 2)) ** (1 / 2)
+                    elif (self.VEgdz > 0 or self.T / 1000 != 0) and self.VEgdx == 0:
+                        self.psiaVz = 1
 
                 psireVx = 1
 
@@ -1487,11 +1529,10 @@ class Criteria:
             ruptureconebeton = 1.5 * self.NEdg / (NRkc / gamma)
         else:
             ruptureconebeton = self.NEdg / (NRkc / gamma)
-        # print(N0, a, A0, psisN, psireN, psiecN, psiMN, NRkc, scrN1, hef1c, self.NEdg, gamma)
+        #print(N0, a, A0, psisN, psireN, psiecN, psiMN, NRkc, scrN1, hef1c, self.NEdg, gamma)
         return ruptureconebeton
 
     def rupture_extraction(self):
-        # print(self.typebeton)
         gamma = self.calculation_gamma_c() * float(self.get_dowel_property(
             'Rupture par extraction glissement - gamma inst beton C20/25'))
         NRkp = self.calculation_NRkp()
@@ -1521,7 +1562,7 @@ class Criteria:
         hef1 = self.calculation_hef(self.scrsp, "", self.ccrsp)
         scrsp1 = self.calculation_scrN(hef1, self.scrsp)
         hef1c = self.calculation_hef(self.scrn, "", self.ccrN)
-        if (cmin >= 1.2 * (scrsp1 / 2) and self.h >= self.hmin and self.norme == "EC2") or (cmin >= 1.2 *
+        if (cmin >= 1.2 * (scrsp1 / 2) and self.h >= self.hmin and self.norme == "Eurocode 2") or (cmin >= 1.2 *
                                                                                             (
                                                                                                     self.scrsp / 2) and self.h >= 2 * self.hef and self.norme == "ETAG"):
 
@@ -1529,7 +1570,7 @@ class Criteria:
                 self.textresult = "Vérification non nécessaire"
             elif self.NbFixa == 4:
                 self.textresult = "Vérification non nécessaire"
-            return self.textresult
+            return 0 # self.textresult
 
         else:
             if self.NbFixa == 2:
@@ -2424,7 +2465,7 @@ class Criteria:
         return psireN
 
     def calculation_psie_cN(self, scrN1, eN, a):
-        if self.norme == "ETAG":  # or self.norme == "EC2":
+        if self.norme == "ETAG":
             if scrN1 < 300:
                 scrN1 = 300
         if eN[0] != 0:
@@ -2674,7 +2715,7 @@ class Criteria:
 
     def calculation_psih_sp(self):
         c1 = self.calculation_cmin("")
-        if self.norme == "EC2":
+        if self.norme == "Eurocode 2":
             max = ((self.hef + 1.5 * c1) / self.hmin) ** (2 / 3)
             if max <= 1:
                 max = 1
@@ -2783,7 +2824,7 @@ class Criteria:
         Mxb = self.Mx - (self.Lz / 2 - self.CentreGeo1) * (-self.N)
         Tb = self.T + (self.Lz / 2 - self.CentreGeo1) * self.Vx - (self.Lx / 2 - self.CentreGeo0) * self.Vz
         Mzb = self.Mz + (self.Lx / 2 - self.CentreGeo0) * (-self.N)
-        # print("Hello",Ix, Iy, Iz, Mxb, Mzb, Tb)
+        print("Hello",Ix, Iy, Iz, Mxb, Mzb, Tb)
         return Ix, Iy, Iz, Mxb, Mzb, Tb
 
     def change_origin(self, PosCmax2):  # Verifier et correcte
