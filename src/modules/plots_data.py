@@ -50,8 +50,13 @@ class Data:
         return None
 
     def load_plots(self, data, part):
-        self.plots[part] = {"all": data}
-        # self.plots[1] = {"all": data}
+        self.plots[part] = {}
+        curv_list = list(data.keys())
+        if len(curv_list) > 1:
+            for key in data.keys():
+                self.plots[part][key] = data[key]
+        else:
+            self.plots[part]["all"] = data[curv_list[0]]
 
     def add_plot(self, data, key):
         self.plots[key] = data

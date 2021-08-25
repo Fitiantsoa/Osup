@@ -1,5 +1,5 @@
 from src.constantes import *
-
+import glob
 
 class ResultFile:
 
@@ -8,11 +8,14 @@ class ResultFile:
         self.content = []
         self.input_data = []
 
-    def load(self, path, part):
+    def load(self,part):
         self.content = []
-        if path is None:
-            path = TEMP + part + '(2).Osup'
-            # path = TEMP + '/profile.Osup'
+        i = 0
+        for path in glob.glob(TEMP + part + "*.Osup"):
+            i += 1
+            self.get_data(path, i)
+
+    def get_data(self, path, j):
         with open(path, 'r') as f:
             lines = f.readlines()
             for i, line in enumerate(lines):
@@ -21,39 +24,46 @@ class ResultFile:
                     try:
                         self.content.append({"Fx": float(data[0]),
                                              "Fy": float(data[1]),
-                                             "Fz": float(data[2])})
+                                             "Fz": float(data[2]),
+                                             "num_curv": str(j)})
                     except:
                         pass
         return True
 
     def get_plot_data(self):
-        data = {"DataX": [], "DataY": []}
+        data = {}
         for elt in self.content:
-            if self.axis == "Z":
-                data["DataX"].append(elt['Fx'])
-                data["DataY"].append(elt['Fy'])
-            elif self.axis == "Y":
-                data["DataX"].append(elt['Fx'])
-                data["DataY"].append(elt['Fz'])
-            else:
-                data["DataX"].append(elt['Fy'])
-                data["DataY"].append(elt['Fz'])
+            if elt["num_curv"] not in data.keys():
+                data[elt["num_curv"]] = {"DataX": [], "DataY": []}
+        for num in data.keys():
+            for elt in self.content:
+                if elt["num_curv"] == num:
+                    if self.axis == "Z":
+                        data[num]["DataX"].append(elt['Fx'])
+                        data[num]["DataY"].append(elt['Fy'])
+                    elif self.axis == "Y":
+                        data[num]["DataX"].append(elt['Fx'])
+                        data[num]["DataY"].append(elt['Fz'])
+                    else:
+                        data[num]["DataX"].append(elt['Fy'])
+                        data[num]["DataY"].append(elt['Fz'])
         return data
 
     def get_dict_data(self, nbPoint, data):
+        result = {}
         if nbPoint == '':
             nbPoint = 10
         try:
             name = list(data.keys())[0]
             pas_iter = int(len(data[name]['Courbe Minimale']['DataX']) / (2 * int(nbPoint)))
-            result = {"DataX": [], "DataY": []}
+            result[name] = {"DataX": [], "DataY": []}
             i = 0
             while i < len(data[name]['Courbe Minimale']['DataX']):
-                result["DataX"].append(data[name]['Courbe Minimale']['DataX'][i])
-                result["DataY"].append(data[name]['Courbe Minimale']['DataY'][i])
+                result[name]["DataX"].append(data[name]['Courbe Minimale']['DataX'][i])
+                result[name]["DataY"].append(data[name]['Courbe Minimale']['DataY'][i])
                 i += pas_iter
-            result["DataX"].append(data[name]['Courbe Minimale']['DataX'][-1])
-            result["DataY"].append(data[name]['Courbe Minimale']['DataY'][-1])
+            result[name]["DataX"].append(data[name]['Courbe Minimale']['DataX'][-1])
+            result[name]["DataY"].append(data[name]['Courbe Minimale']['DataY'][-1])
             return result
         except:
             print("Données étrier vide")
@@ -77,8 +87,8 @@ class ResultFile:
         self.input_data.append(
             "LOAD\t" + str(fx) + "\t" + str(fy) + "\t" + str(fz) + "\nNIVEAU\t" + niveau)
 
-    @staticmethod
-    def void_file():
-        return os.path.getsize(CHEVILLE_RSLT.replace("'", ""))
+    # @staticmethod
+    # def void_file():
+    #     return os.path.getsize(CHEVILLE_RSLT.replace("'", ""))
 
 
