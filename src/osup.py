@@ -339,7 +339,7 @@ class OSup(QObject):
     @pyqtSlot(result=bool)
     def check_etrier(self):
         return len(self.data['stirrup']['material']) != 0
-    
+
     @pyqtSlot(str, result=bool)
     def create_file(self, file_type):
         if file_type == "geo": #on ne crée les groupes qu'une seule fois sinon existence doublon
