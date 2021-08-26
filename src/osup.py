@@ -330,10 +330,20 @@ class OSup(QObject):
         return result_sofix
         #print(self.result_sofix)
 
+    @pyqtSlot()
+    def check_nb_platine_encas(self):
+        if "platine_data" in self.data.keys():
+            if len(self.data["platine_data"]["axis"]) ==  self.data['geo']['node_group']['encas']:
+                return True
+            else:
+                return False
+        else:
+            return False
+
 
     @pyqtSlot(str, result=bool)
     def create_file(self, file_type):
-        if file_type == "geo":            #on ne crée les groupes qu'une seule fois sinon existence doublon
+        if file_type == "geo": #on ne crée les groupes qu'une seule fois sinon existence doublon
             self.data = self.get_saved_data(type=None)
             self.geo_file = GeoFile(self.data)
             self.geo_file.write("generate")

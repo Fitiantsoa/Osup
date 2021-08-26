@@ -133,18 +133,25 @@ Page{
                                         progressbar.value = 0.1
                                         osup.update_widget()
                                         osup.create_file('geo')
-                                        osup.create_file("med")
-                                        progressbar.value = 0.2
-                                        osup.update_widget()
-                                        osup.create_file("comm")
-                                        osup.create_file("export")
-                                        progressbar.value = 0.3
-                                        osup.update_widget()
-                                        progressbar.value = 0.7
-                                        osup.update_widget()
-                                        osup.run_aster()
-                                        progressbar.value = 1
-                                        osup.update_widget()
+                                        if (osup.check_nb_platine_encas()){
+                                            osup.create_file("med")
+                                            progressbar.value = 0.2
+                                            osup.update_widget()
+                                            osup.create_file("comm")
+                                            osup.create_file("export")
+                                            progressbar.value = 0.3
+                                            osup.update_widget()
+                                            progressbar.value = 0.7
+                                            osup.update_widget()
+                                            osup.run_aster()
+                                            progressbar.value = 1
+                                            osup.update_widget()
+                                       }
+                                       else{
+                                            messageDialogErrorFre.title = "Nombre de platines incorrectes"
+                                            messageDialogErrorFre.text = "Le nombre de platines ne correspond pas au nombre de noeuds encastrés."
+                                            messageDialogErrorFre.visible = true
+                                        }
                                     }
                                }
                             }
