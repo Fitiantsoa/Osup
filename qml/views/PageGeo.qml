@@ -133,6 +133,7 @@ Page{
                                         progressbar.value = 0.1
                                         osup.update_widget()
                                         osup.create_file('geo')
+                                        console.log("test", osup.check_nb_platine_encas())
                                         if (osup.check_nb_platine_encas()){
                                             osup.create_file("med")
                                             progressbar.value = 0.2
@@ -148,6 +149,9 @@ Page{
                                             osup.update_widget()
                                        }
                                        else{
+                                            console
+                                            progressbar.value = 0
+                                            osup.update_widget()
                                             messageDialogErrorFre.title = "Nombre de platines incorrectes"
                                             messageDialogErrorFre.text = "Le nombre de platines ne correspond pas au nombre de noeuds encastrés."
                                             messageDialogErrorFre.visible = true

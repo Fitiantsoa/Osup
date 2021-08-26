@@ -330,15 +330,11 @@ class OSup(QObject):
         return result_sofix
         #print(self.result_sofix)
 
-    @pyqtSlot()
+    @pyqtSlot(result=bool)
     def check_nb_platine_encas(self):
         if "platine_data" in self.data.keys():
-            if len(self.data["platine_data"]["axis"]) ==  self.data['geo']['node_group']['encas']:
-                return True
-            else:
-                return False
-        else:
-            return False
+            return len(self.data["platine_data"]["axis"]) == len(self.data['geo']['node_group']['encas'])
+
 
 
     @pyqtSlot(str, result=bool)
