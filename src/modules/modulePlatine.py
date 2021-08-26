@@ -193,7 +193,8 @@ class ModulePlatine:
             'armature': self.armature_concrete,
             'EDF': self.edf,
             'axis': self.axis,
-            'calcul': self.calcul
+            'calcul': self.calcul,
+            'orientation': self.orientation
             }
 
     def get_list_value(self, geo_data):
@@ -207,8 +208,14 @@ class ModulePlatine:
             self.l.append(float(data['l']))
             self.h.append(float(data['h']))
             self.e.append(float(data['e']))
-            self.b.append(float(data['b']))
-            self.a.append(float(data['a']))
+            if data['a'] == "":
+                self.a.append(data['a'])
+            else:
+                self.a.append(float(data['a']))
+            if data['b'] == "":
+                self.b.append(data['b'])
+            else:
+                self.b.append(float(data['b']))
             self.prod.append(data['prod'])
             self.mat.append(data['mat'])
             self.node_list.append(data['noeud'])
