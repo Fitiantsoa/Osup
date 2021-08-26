@@ -149,6 +149,7 @@ class Geometrie:
         ''' Calcul de l'entraxe minimum '''
         global smin
         self.orientation = self.data_board_dowel.get("orientation")
+        print(self.orientation, self.NbFixa)
         if self.NbFixa == 2 and self.orientation == "Vertical":
             smin = self.data_board_dowel.get("sz0")
         elif self.NbFixa == 2 and self.orientation == "Horizontal":

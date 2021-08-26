@@ -104,7 +104,7 @@ class General:
                 "s": self.s,
                 "NbFixaBord": self.NbFixaBord,
                 "modele": self.dowelname,
-                "orientation": self.axis
+                "axis": self.axis
                 }
 
     def get_data_geo(self, val1, list1, list2, dowelname):
@@ -140,7 +140,7 @@ class General:
             Mx = self.data_dowel['Mx'][i]
             T = self.data_dowel['T'][i]
             Mz = self.data_dowel['Mz'][i]
-            orientation = self.data_dowel['orientation'][i]
+
         except:
             Vx = None
             N = None
@@ -148,6 +148,11 @@ class General:
             Mx = None
             T = None
             Mz = None
+
+        try:
+            orientation = self.data_dowel['orientation'][i]
+
+        except:
             orientation = None
 
         return {'nbCheville': int(self.data_dowel['nbCheville'][i]),

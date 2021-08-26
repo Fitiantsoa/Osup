@@ -548,6 +548,8 @@ Rectangle {
                                 Layout.preferredWidth: 150
                                 text : "La platine est considérée rigide pour le calcul d'ancrage"
                                 anchors.top: parent.top
+                                anchors.left: parent.left
+                                anchors.leftMargin: 15
                                 color : "red"//Theme.grey_6
                             }
 
