@@ -336,8 +336,10 @@ class OSup(QObject):
         if "platine_data" in self.data.keys():
             return len(self.data["platine_data"]["axis"]) == len(self.data['geo']['node_group']['encas'])
 
-
-
+    @pyqtSlot(result=bool)
+    def check_etrier(self):
+        return len(self.data['stirrup']['material']) != 0
+    
     @pyqtSlot(str, result=bool)
     def create_file(self, file_type):
         if file_type == "geo": #on ne crée les groupes qu'une seule fois sinon existence doublon
