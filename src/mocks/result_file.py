@@ -69,7 +69,7 @@ class ResultFile:
             print("Données étrier vide")
 
 
-    def create_result_file(self,path):
+    def create_result_file(self, path):
         print('path', path)
         with open(path, "w") as f:
             f.write("\n".join(self.input_data))

@@ -2003,6 +2003,7 @@ for j in range(len(nbChevilles)):
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=stat,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+    fyMin_init = fyMin
     for i in range(1,n):
         fx = fxMax/n*(n-i)    
         reportFile = open(resultfile,"a")
@@ -2193,7 +2194,7 @@ for j in range(len(nbChevilles)):
         sv.fzCourbeMin.append(fx)
         sv.fyCourbeMin.append(fy)
     osupFile = open(platineFile,"a")
-    osupFile.write(f'0		{round(fyMin,3)}		{round(f*-fyMin,3)}\n')
+    osupFile.write(f'0		{round(fyMin_init,3)}		{round(f*-fyMin_init,3)}\n')
     osupFile.close()
     sv.fzCourbeMin.append(0)
     sv.fyCourbeMin.append(fyMin)
@@ -3610,6 +3611,7 @@ for j in range(len(nbChevilles)):
         DETRUIRE(CONCEPT=_F(NOM=force,),);
         DETRUIRE(CONCEPT=_F(NOM=stat,),);
         DETRUIRE(CONCEPT=_F(NOM=TAB_eff,),);
+    fyMin_init = fyMin
     for i in range(1,n):
         fx = fxMax/n*(n-i)    
         reportFile = open(resultfile,"a")
@@ -3788,10 +3790,10 @@ for j in range(len(nbChevilles)):
         sv.fzCourbeMin.append(fx)
         sv.fyCourbeMin.append(fy)
     osupFile = open(rigiditeFile,"a")
-    osupFile.write(f'0		{round(fyMin,3)}		{round(f*-fyMin,3)}\n')
+    osupFile.write(f'0		{round(fyMin_init,3)}		{round(f*-fyMin_init,3)}\n')
     osupFile.close()
     sv.fzCourbeMin.append(0)
-    sv.fyCourbeMin.append(fyMin)
+    sv.fyCourbeMin.append(fyMin_init)
     #----------------------------------QUADRANT 3 fz <0 , fx < 0-------------------------------
     #----------------------------- fxMin --------------------------------
     fxMin = -fzMax/f
@@ -4850,6 +4852,7 @@ if niveau == "oab":
         DETRUIRE(CONCEPT=_F(NOM=stat,),);
     a3 = 0
     b3 = fyMin
+    fyMin_init = fyMin
     while abs((fleche_max - 0.01)-fleche_adm) > 0.01:
         if fleche_max < fleche_adm:
             a3 = fyMin
@@ -5020,10 +5023,10 @@ if niveau == "oab":
         sv.fzCourbeMin.append(fx)
         sv.fyCourbeMin.append(fy)
     osupFile = open(flecheFile,"a")
-    osupFile.write(f'0		{round(fyMin,3)}		0\n')
+    osupFile.write(f'0		{round(fyMin_init,3)}		0\n')
     osupFile.close()
     sv.fzCourbeMin.append(0)
-    sv.fyCourbeMin.append(fyMin)
+    sv.fyCourbeMin.append(fyMin_init)
     #----------------------------------QUADRANT 3 fz <0 , fx < 0-------------------------------
     #----------------------------- fxMin --------------------------------
     fxMin = -fzMax/f
