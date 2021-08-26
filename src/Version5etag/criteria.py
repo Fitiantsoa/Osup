@@ -4,7 +4,10 @@ from src.Version5etag.arithmetique import Arithmetique
 from src.Version5etag.readinginputdata import ReadingInputData
 from src.Version5etag.effortcalculation import CalculationEffort
 from src.Version5etag.database import Database
-
+"""
+Calcul des critères Sofix
+Récupération effort de réaction platine
+"""
 
 class Criteria:
 
@@ -81,27 +84,36 @@ class Criteria:
         self.fulldata = self.get_dowel_data()
         self.nom = []
 
+        self.betaN = None
+        self.betaV = None
+
         self.resultshearing = self.calculationEffort.shearing()
         self.resultTrac = self.calculationEffort.traction()
+        self.initial_value()
 
+
+    def initial_value(self):
         if self.resultshearing is None or self.resultTrac is None:
             pass
         else:
-            self.Ved = self.resultshearing.get('Ved')
-            self.VEdg = self.resultshearing.get('VEdg')
-            self.Vedx = self.resultshearing.get('Vedx')
-            self.Vedz = self.resultshearing.get('Vedz')
-            self.VEgdx = self.resultshearing.get('VEdgx')
-            self.VEgdz = self.resultshearing.get('VEdgz')
-            self.eV0 = self.resultshearing.get("eV0")
-            self.eV1 = self.resultshearing.get("eV1")
-            self.PosFix_bis = self.resultshearing.get("PosFix_bis")
-            self.eV = [self.eV0, self.eV1]
-            self.NEd = self.resultTrac.get("NEd")
-            self.NEdg = self.resultTrac.get("NEdg")
-            self.eN = self.resultTrac.get("eN")
-            self.z = self.resultTrac.get("z")
-            self.CEd = self.resultTrac.get("CEd")
+            self.no_shearing_traction_stress()
+
+    def no_shearing_traction_stress(self):
+        self.Ved = self.resultshearing.get('Ved')
+        self.VEdg = self.resultshearing.get('VEdg')
+        self.Vedx = self.resultshearing.get('Vedx')
+        self.Vedz = self.resultshearing.get('Vedz')
+        self.VEgdx = self.resultshearing.get('VEdgx')
+        self.VEgdz = self.resultshearing.get('VEdgz')
+        self.eV0 = self.resultshearing.get("eV0")
+        self.eV1 = self.resultshearing.get("eV1")
+        self.PosFix_bis = self.resultshearing.get("PosFix_bis")
+        self.eV = [self.eV0, self.eV1]
+        self.NEd = self.resultTrac.get("NEd")
+        self.NEdg = self.resultTrac.get("NEdg")
+        self.eN = self.resultTrac.get("eN")
+        self.z = self.resultTrac.get("z")
+        self.CEd = self.resultTrac.get("CEd")
 
     def EDF_profondeur_ancrage(self, hef):
         if self.EDF == "Oui" and (self.TypeCharge == "Sismique C1" or self.TypeCharge == "Sismique C2"):
@@ -135,11 +147,11 @@ class Criteria:
 
     def get_concrete_property(self, propriete):
         if self.norme == "ETAG":
-            self.dataconcrete = self.opendata.get("dataconcrete_etag")
+            dataconcrete = self.opendata.get("dataconcrete_etag")
         else:
-            self.dataconcrete = self.opendata.get("dataconcrete_ec2")
-        q = self.data_recovery(self.nom, "Classe de resistance", self.dataconcrete).index(self.typebeton)
-        prop = self.dataconcrete[q]['{}'.format(propriete)]
+            dataconcrete = self.opendata.get("dataconcrete_ec2")
+        q = self.data_recovery(self.nom, "Classe de resistance", dataconcrete).index(self.typebeton)
+        prop = dataconcrete[q]['{}'.format(propriete)]
         return prop
 
     def calculation_criteria_traction_shearing(self):

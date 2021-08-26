@@ -4,7 +4,9 @@ from src.Version5etag.effortcalculation import CalculationEffort
 from src.Version5etag.readinginputdata import ReadingInputData
 from src.Version5etag.criteria import Criteria
 
-''' Classe générale qui permet d'appeler toutes les fonctions de SoFix '''
+''' Classe générale qui permet d'appeler toutes les fonctions de SoFix 
+    Caractéristique géométrique
+'''
 
 
 class General:
@@ -46,6 +48,9 @@ class General:
         self.run()
 
     def run(self):
+        """
+        Permet de lancer Osup / Sofix
+        """
         calcul = self.data_dowel.get("calcul")[0]
         #print(calcul)
         if calcul == "Sofix":
@@ -202,10 +207,3 @@ class General:
         check = Verification(self.inertia, self.data1, self.readinputdata, self.input_data_general(i))
         return check.verification_anchors()
 
-    # def effort_calculation(self, geo, i):
-    #     self.calculation_effort = CalculationEffort(geo, i)
-    #     self.resultTrac = self.calculation_effort.traction()
-    #     self.resultShearing = self.calculation_effort.shearing()
-
-    # def criteria_calculation(self, geo, i, data_dowel_general):
-    #     Criteria(self.resultTrac, self.resultShearing, geo, i, data_dowel_general)

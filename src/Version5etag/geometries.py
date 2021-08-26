@@ -113,32 +113,32 @@ class Geometrie:
     def calculation_distance_fixing_edge(self):
         ''' Calcul les distances aux 4 bord de chaque fixation et calcul le nombre de bords pour chaque fixation '''
         DistFixBord = np.zeros((self.NbFixa, 2, 2))
-        self.PosBord = self.calculation_position_edge()
+        PosBord = self.calculation_position_edge()
         NbFixBord = np.zeros((self.NbFixa, 1))
         for j in range(self.NbFixa):
-            if abs(self.PosFix[j, 0] - self.PosBord[0, 0]) <= 10 * self.hef and abs(self.PosFix[j, 0] - self.PosBord[0, 0]) <= 60 * self.dnom:
-                DistFixBord[j, 0, 0] = abs(self.PosFix[j, 0] - self.PosBord[0, 0])
+            if abs(self.PosFix[j, 0] - PosBord[0, 0]) <= 10 * self.hef and abs(self.PosFix[j, 0] - PosBord[0, 0]) <= 60 * self.dnom:
+                DistFixBord[j, 0, 0] = abs(self.PosFix[j, 0] - PosBord[0, 0])
                 if DistFixBord[j, 0, 0] <= self.ccrN:
                     NbFixBord[j, 0] = NbFixBord[j, 0] + 1
             else:
                 DistFixBord[j, 0, 0] = 1E+15
 
-            if abs(self.PosFix[j, 0] - self.PosBord[0, 1]) <= 10 * self.hef and abs(self.PosFix[j, 0] - self.PosBord[0, 1]) <= 60 * self.dnom:
-                DistFixBord[j, 0, 1] = abs(self.PosFix[j, 0] - self.PosBord[0, 1])
+            if abs(self.PosFix[j, 0] - PosBord[0, 1]) <= 10 * self.hef and abs(self.PosFix[j, 0] - PosBord[0, 1]) <= 60 * self.dnom:
+                DistFixBord[j, 0, 1] = abs(self.PosFix[j, 0] - PosBord[0, 1])
                 if DistFixBord[j, 0, 1] <= self.ccrN:
                     NbFixBord[j, 0] = NbFixBord[j, 0] + 1
             else:
                 DistFixBord[j, 0, 1] = 1E+15
 
-            if abs(self.PosFix[j, 1] - self.PosBord[1, 0]) <= 10 * self.hef and abs(self.PosFix[j, 1] - self.PosBord[1, 0]) <= 60 * self.dnom:
-                DistFixBord[j, 1, 0] = abs(self.PosFix[j, 1] - self.PosBord[1, 0])
+            if abs(self.PosFix[j, 1] - PosBord[1, 0]) <= 10 * self.hef and abs(self.PosFix[j, 1] - PosBord[1, 0]) <= 60 * self.dnom:
+                DistFixBord[j, 1, 0] = abs(self.PosFix[j, 1] - PosBord[1, 0])
                 if DistFixBord[j, 1, 0] <= self.ccrN:
                     NbFixBord[j, 0] = NbFixBord[j, 0] + 1
             else:
                 DistFixBord[j, 1, 0] = 1E+15
 
-            if abs(self.PosFix[j, 1] - self.PosBord[1, 1]) <= 10 * self.hef and abs(self.PosFix[j, 1] - self.PosBord[1, 1]) <= 60 * self.dnom:
-                DistFixBord[j, 1, 1] = abs(self.PosFix[j, 1] - self.PosBord[1, 1])
+            if abs(self.PosFix[j, 1] - PosBord[1, 1]) <= 10 * self.hef and abs(self.PosFix[j, 1] - PosBord[1, 1]) <= 60 * self.dnom:
+                DistFixBord[j, 1, 1] = abs(self.PosFix[j, 1] - PosBord[1, 1])
                 if DistFixBord[j, 1, 1] <= self.ccrN:
                     NbFixBord[j, 0] = NbFixBord[j, 0] + 1
             else:
