@@ -147,6 +147,7 @@ Rectangle {
                             Component.onCompleted: visible = true
                             id: tfap
                             text: ap
+                            enabled: false
                             placeholderText: qsTr("Libre")
                             Layout.preferredWidth: 300
                             Layout.maximumWidth: 300
@@ -184,7 +185,7 @@ Rectangle {
                                         idtext.color = "red"
                                     }
                                     else{
-                                        tfap.text = appui_modif.currentText
+                                        tfap.text = appui_modif.currentText                                        
                                         nodeModel.setProperty(index, "ap", appui_modif.currentText)
                                         nodeModel.setProperty(index, "cx", tfx.text)
                                         nodeModel.setProperty(index, "cy", tfy.text)
@@ -193,6 +194,9 @@ Rectangle {
                                         appui_modif.visible = false
                                         tfap.visible = true
                                         idtext.color = Theme.grey_3
+                                    }
+                                    if (tfap.text == "Encastrement"){
+                                        pageGeo.encas_node_list = nodeModel.get_encas()
                                     }
                                 }
                             }
