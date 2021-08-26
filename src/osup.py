@@ -207,6 +207,7 @@ class OSup(QObject):
         self.geometry_module.new_file()
         self.platine_data.new_file()
         self.verification_module.new_file()
+        self.stirrup_module.new_file()
         self.saved = True
         self.parent.setProperty("title", "OSup - " + self.version)
         self.file_name = None
@@ -335,8 +336,10 @@ class OSup(QObject):
         if "platine_data" in self.data.keys():
             return len(self.data["platine_data"]["axis"]) == len(self.data['geo']['node_group']['encas'])
 
-
-
+    @pyqtSlot(result=bool)
+    def check_etrier(self):
+        return len(self.data['stirrup']['material']) != 0
+    
     @pyqtSlot(str, result=bool)
     def create_file(self, file_type):
         if file_type == "geo": #on ne crée les groupes qu'une seule fois sinon existence doublon
@@ -344,6 +347,7 @@ class OSup(QObject):
             self.geo_file = GeoFile(self.data)
             self.geo_file.write("generate")
             return True
+
         if file_type == "geo_display":
             display_data = self.get_saved_data("display")
             self.geo_file = GeoFile(display_data)
