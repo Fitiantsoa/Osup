@@ -1287,7 +1287,7 @@ Rectangle {
                                         //norme0.visible = false
                                         //labnorme.visible = true
                                         //situationinitiale.visible = false
-                                        nbclick = nbclick + 1
+
                                         if (l.text === 0 || h.text === 0 || l.text === "" || h.text === ""){
                                             errorMessageElem.title = "Saisie incomplète"
                                             errorMessageElem.text = "Veuillez rentrer les dimensions la platine"
@@ -1308,17 +1308,20 @@ Rectangle {
                                         if (pageGeo.temperature !== ""){
                                             if (nbCheville.currentText === "2"){
                                                 if (orientation.currentText === "Vertical"){
+                                                    nbclick = nbclick + 1
                                                     platineModel.append2dwV(nbCheville.currentText, axis.currentText, l.text, h.text,e.text,noeud.currentText,prod.currentText, mat.currentText,pageGeo.temperature, b.text,orientation.currentText, gammeCheville.currentText, modeleCheville.currentText,
                                         typeCheville.currentText, profondeurCheville.currentText, norme0.currentText, typecharge.currentText, situationinitiale.currentText,
                                         cx0.text, cx1.text, cz0.text, cz1.text, beton.currentText, classeb.currentText, epaisseurbeton.text, armature.currentText, edf.checked)
                                                 }
                                                 else{
+                                                    nbclick = nbclick + 1
                                                     platineModel.append2dwH(nbCheville.currentText, axis.currentText, l.text, h.text, e.text,noeud.currentText,prod.currentText, mat.currentText,pageGeo.temperature, a.text, orientation.currentText, gammeCheville.currentText, modeleCheville.currentText,
                                         typeCheville.currentText, profondeurCheville.currentText, norme0.currentText, typecharge.currentText, situationinitiale.currentText,
                                         cx0.text, cx1.text, cz0.text, cz1.text, beton.currentText, classeb.currentText, epaisseurbeton.text, armature.currentText, edf.checked)
                                                 }
                                             }
                                             else{
+                                                nbclick = nbclick + 1
                                                 platineModel.append4dw(nbCheville.currentText, axis.currentText, l.text, h.text,e.text,noeud.currentText,prod.currentText, mat.currentText,pageGeo.temperature, gammeCheville.currentText, modeleCheville.currentText,
                                         typeCheville.currentText, profondeurCheville.currentText, norme0.currentText, typecharge.currentText, situationinitiale.currentText,
                                         cx0.text, cx1.text, cz0.text, cz1.text, beton.currentText, classeb.currentText, epaisseurbeton.text, armature.currentText, edf.checked, b.text, a.text)

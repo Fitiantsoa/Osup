@@ -91,7 +91,6 @@ class Criteria:
         self.resultTrac = self.calculationEffort.traction()
         self.initial_value()
 
-
     def initial_value(self):
         if self.resultshearing is None or self.resultTrac is None:
             pass

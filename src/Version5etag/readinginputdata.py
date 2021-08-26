@@ -19,7 +19,7 @@ class ReadingInputData:
         self.read_input_data()
 
     def read_input_data(self):
-        global scrn, ccrN
+        global scrn, ccrN, hmin
         gamme = self.modeledowel
         fck = self.get_concrete_property('fck')
 
@@ -37,9 +37,9 @@ class ReadingInputData:
 
         if gamme == "HSL 3-G" or gamme == "HST3" or gamme == "W-HAZ-B" or gamme == "W-FAZ" or gamme == "FIX Z XTREM" \
                 or gamme == "TRIGA XTREM":
-            self.hmin = float(self.get_dowel_property('Epaisseur mini du support hmin,i (mm)'))
+            hmin = float(self.get_dowel_property('Epaisseur mini du support hmin,i (mm)'))
         elif gamme == "HDA-T" or gamme == "HDA-P":
-            self.hmin = float(self.get_dowel_property('Epaisseur mini du support hmin,i (mm)')) - self.tfix
+            hmin = float(self.get_dowel_property('Epaisseur mini du support hmin,i (mm)')) - self.tfix
 
         Es = float(self.get_dowel_property('Module elasticite acier Es (N/mm2)'))
         Eb = self.get_concrete_property('Module elasicite beton Eb')
@@ -52,7 +52,7 @@ class ReadingInputData:
                 "ccrN": ccrN,
                 "scrsp": scrsp,
                 "ccrsp": ccrsp,
-                "hmin": self.hmin,
+                "hmin": hmin,
                 "nd": self.nd,
                 "Ar": Ar,
                 "fck": fck,
@@ -85,9 +85,9 @@ class ReadingInputData:
 
     def get_concrete_property(self, propriete):
         if self.norme == "ETAG":
-            self.dataconcrete = self.opendata.get("dataconcrete_etag")
+            dataconcrete = self.opendata.get("dataconcrete_etag")
         else:
-            self.dataconcrete = self.opendata.get("dataconcrete_ec2")
-        q = self.data_recovery(self.nom, "Classe de resistance", self.dataconcrete).index(self.typebeton)
-        prop = self.dataconcrete[q]['{}'.format(propriete)]
+            dataconcrete = self.opendata.get("dataconcrete_ec2")
+        q = self.data_recovery(self.nom, "Classe de resistance", dataconcrete).index(self.typebeton)
+        prop = dataconcrete[q]['{}'.format(propriete)]
         return prop

@@ -36,24 +36,22 @@ class CalculationEffort:
         self.PosCmax1 = origin[2]
         self.PosFix_bis = origin[0]
 
-        self.eN = [0, 0]
-
-        self.Vedx = np.zeros((self.NbFixa, 1))
-        self.Vedz = np.zeros((self.NbFixa, 1))
-        self.Ved = np.zeros((self.NbFixa, 1))
         self.NEd = np.zeros((self.NbFixa, 1))
 
         self.nd = geo.get("nd")[i]
         self.Ar = geo.get("Ar")[i]
 
         self.NbFixTraction = 0
-        self.NEdg = 0
 
     def traction(self):
+        global z
         CentreGeoTrac0 = 0
         CentreGeoTrac1 = 0
-        self.CentreGrav0 = 0
-        self.CentreGrav1 = 0
+        CentreGrav0 = 0
+        CentreGrav1 = 0
+        eN = [0, 0]
+        CEd = 0
+        NEdg = 0
 
         if self.Mx != 0 and self.Mz != 0:
             if abs(self.Mx / self.Mz) < 0.01:
@@ -68,9 +66,9 @@ class CalculationEffort:
 
         if self.N == 0 and self.Mx == 0 and self.Mz == 0:
             dico = {"NEd": self.NEd,
-                    "NEdg": self.NEdg,
+                    "NEdg": NEdg,
                     "z": 0,
-                    "eN": self.eN,
+                    "eN": eN,
                     "CEd": 0}
             print(dico)
             return dico
@@ -80,20 +78,20 @@ class CalculationEffort:
             get_error = self.get_error
             if get_error is True:
                 return
-            self.TypeCompression = Monoaxial[0]
-            if self.TypeCompression == "Compression partielle":
+            TypeCompression = Monoaxial[0]
+            if TypeCompression == "Compression partielle":
                 self.NbFixTraction = Monoaxial[2]
                 self.NEd = Monoaxial[1]
-                self.NEdg = Monoaxial[3]
+                NEdg = Monoaxial[3]
                 self.PosCEd = Monoaxial[4]
-                self.CEd = Monoaxial[5]
-            elif self.TypeCompression == "Pas de compression":
+                CEd = Monoaxial[5]
+            elif TypeCompression == "Pas de compression":
                 self.NEd = Monoaxial[1]
-                self.NEdg = Monoaxial[2]
-                self.CEd = 0
-            elif self.TypeCompression == "Compression totale":
-                self.CEd = Monoaxial[1]
-                self.NEdg = Monoaxial[2]
+                NEdg = Monoaxial[2]
+                CEd = 0
+            elif TypeCompression == "Compression totale":
+                CEd = Monoaxial[1]
+                NEdg = Monoaxial[2]
 
         else:
             Biaxial = self.calculation_biaxial()
@@ -101,94 +99,97 @@ class CalculationEffort:
             get_error = self.get_error
             if get_error is True:
                 return
-            self.TypeCompression = Biaxial[0]
-            if self.TypeCompression == "Compression partielle":
+            TypeCompression = Biaxial[0]
+            if TypeCompression == "Compression partielle":
                 self.NbFixTraction = Biaxial[2]
                 self.NEd = Biaxial[1]
-                self.NEdg = Biaxial[3][0]
+                NEdg = Biaxial[3][0]
                 self.PosCEd = Biaxial[4]
-                self.CEd = Biaxial[5]
-            elif self.TypeCompression == "Pas de compression":
-                self.CEd = 0
+                CEd = Biaxial[5]
+            elif TypeCompression == "Pas de compression":
+                CEd = 0
                 self.NEd = Biaxial[1]
-                self.NEdg = Biaxial[2]
-            elif self.TypeCompression == "Compression totale":
-                self.CEd = Biaxial[1]
+                NEdg = Biaxial[2]
+            elif TypeCompression == "Compression totale":
+                CEd = Biaxial[1]
 
         if self.NbFixTraction > 0:
             for j in range(self.NbFixa):
                 if self.NEd[j, 0] > 0:
                     CentreGeoTrac0 = CentreGeoTrac0 + self.PosFix[j, 0]
                     CentreGeoTrac1 = CentreGeoTrac1 + self.PosFix[j, 1]
-                    self.CentreGrav0 = self.CentreGrav0 + self.NEd[j, 0] * self.PosFix[j, 0]
-                    self.CentreGrav1 = self.CentreGrav1 + self.NEd[j, 0] * self.PosFix[j, 1]
+                    CentreGrav0 = CentreGrav0 + self.NEd[j, 0] * self.PosFix[j, 0]
+                    CentreGrav1 = CentreGrav1 + self.NEd[j, 0] * self.PosFix[j, 1]
 
             CentreGeoTrac0 = CentreGeoTrac0 / self.NbFixTraction
             CentreGeoTrac1 = CentreGeoTrac1 / self.NbFixTraction
-            self.CentreGrav0 = self.CentreGrav0 / self.NEdg
-            self.CentreGrav1 = self.CentreGrav1 / self.NEdg
+            CentreGrav0 = CentreGrav0 / NEdg
+            CentreGrav1 = CentreGrav1 / NEdg
 
-        eN0 = round(abs(CentreGeoTrac0 - self.CentreGrav0), 1)
+        eN0 = round(abs(CentreGeoTrac0 - CentreGrav0), 1)
         if eN0 < 0.0000000001:
             eN0 = 0
 
-        eN1 = round(abs(CentreGeoTrac1 - self.CentreGrav1), 1)
+        eN1 = round(abs(CentreGeoTrac1 - CentreGrav1), 1)
         if eN1 < 0.0000000001:
             eN1 = 0
 
-        self.eN[0] = eN0
-        self.eN[1] = eN1
+        eN[0] = eN0
+        eN[1] = eN1
 
-        if self.TypeCompression == "Compression partielle" and self.NbFixTraction > 0:
-            self.z = math.sqrt((self.PosCEd[0] - self.CentreGrav0) ** 2 + (self.PosCEd[1] - self.CentreGrav1) ** 2)
+        if TypeCompression == "Compression partielle" and self.NbFixTraction > 0:
+            z = math.sqrt((self.PosCEd[0] - CentreGrav0) ** 2 + (self.PosCEd[1] - CentreGrav1) ** 2)
 
-        elif self.TypeCompression == "Pas de compression" or self.TypeCompression == "Compression totale":
-            self.z = 0
+        elif TypeCompression == "Pas de compression" or TypeCompression == "Compression totale":
+            z = 0
 
         dico = {"NEd": self.NEd,
-                "NEdg": self.NEdg,
-                "z": self.z,
-                "eN": self.eN,
-                "CEd": self.CEd}
+                "NEdg": NEdg,
+                "z": z,
+                "eN": eN,
+                "CEd": CEd}
         print(dico)
-        #print(self.CentreGrav0, self.CentreGrav1)
+        #print(CentreGrav0, CentreGrav1)
         return dico
 
     def shearing(self):
-
+        global kx, kz
         VEdgx = 0
         VEdgz = 0
         eV0 = 0
         eV1 = 0
+        Vedx = np.zeros((self.NbFixa, 1))
+        Vedz = np.zeros((self.NbFixa, 1))
+        Ved = np.zeros((self.NbFixa, 1))
 
         for j in range(self.NbFixa):
-            self.Vedx[j, 0] = self.Vx / self.NbFixa - (self.CentreGeo1 - self.PosFix[j, 1]) * self.Tb / self.Iy
-            self.Vedz[j, 0] = self.Vz / self.NbFixa - (self.PosFix[j, 0] - self.CentreGeo0) * self.Tb / self.Iy
-            self.Ved[j, 0] = (self.Vedx[j, 0] ** 2 + self.Vedz[j, 0] ** 2) ** (1 / 2)
+            Vedx[j, 0] = self.Vx / self.NbFixa - (self.CentreGeo1 - self.PosFix[j, 1]) * self.Tb / self.Iy
+            Vedz[j, 0] = self.Vz / self.NbFixa - (self.PosFix[j, 0] - self.CentreGeo0) * self.Tb / self.Iy
+            Ved[j, 0] = (Vedx[j, 0] ** 2 + Vedz[j, 0] ** 2) ** (1 / 2)
 
-            VEdgx = VEdgx + self.Vedx[j, 0]
-            VEdgz = VEdgz + self.Vedz[j, 0]
+            VEdgx = VEdgx + Vedx[j, 0]
+            VEdgz = VEdgz + Vedz[j, 0]
 
         VEdg = math.sqrt(VEdgx ** 2 + VEdgz ** 2)
         for j in range(self.NbFixa):
-            eV0 = eV0 + (self.PosFix[j, 0] - self.CentreGeo0) * self.Vedz[j, 0]
+            eV0 = eV0 + (self.PosFix[j, 0] - self.CentreGeo0) * Vedz[j, 0]
 
-            if np.sign(self.Vedz[0, 0]) != np.sign(self.Vedz[j, 0]):
-                self.kz = -1
+            if np.sign(Vedz[0, 0]) != np.sign(Vedz[j, 0]):
+                kz = -1
             else:
-                self.kz = 1
-            eV1 = eV1 + (self.PosFix[j, 1] - self.CentreGeo1) * self.Vedx[j, 0]
+                kz = 1
+            eV1 = eV1 + (self.PosFix[j, 1] - self.CentreGeo1) * Vedx[j, 0]
 
-            if np.sign(self.Vedx[0, 0]) != np.sign(self.Vedx[j, 0]):
-                self.kx = -1
+            if np.sign(Vedx[0, 0]) != np.sign(Vedx[j, 0]):
+                kx = -1
             else:
-                self.kx = 1
+                kx = 1
 
-        if abs(VEdgz) > 0.000000001 and self.kz != -1:
+        if abs(VEdgz) > 0.000000001 and kz != -1:
             eV0 = abs(eV0 / VEdgz)
         else:
             eV0 = 0
-        if abs(VEdgx) > 0.000000001 and self.kx != -1:
+        if abs(VEdgx) > 0.000000001 and kx != -1:
             eV1 = abs(eV1 / VEdgx)
         else:
             eV1 = 0
@@ -196,13 +197,13 @@ class CalculationEffort:
             VEdg = 0
 
         dico = {"VEdg": VEdg,
-                "Vedx": self.Vedx,
-                "Vedz": self.Vedz,
+                "Vedx": Vedx,
+                "Vedz": Vedz,
                 "VEdgx": VEdgx,
                 "VEdgz": VEdgz,
                 "eV0": eV0,
                 "eV1": eV1,
-                "Ved": self.Ved}
+                "Ved": Ved}
         print(dico)
         print(self.CentreGeo1, self.CentreGeo0, self.PosFix, self.NbFixa, self.Tb, self.Iy, self.Vx, self.Vz)
         return dico
@@ -298,13 +299,13 @@ class CalculationEffort:
         return TypeCompression, self.NEd, self.NbFixTraction, Nedg, compression1, CEd
 
     def calculation_compression(self, pm, alpha, lref, PosCmax, PosCmax1):
-        global PosCEd1, PosCEd, listCEd
-        self.Nt_u = 0
-        self.Nt_d = 0
-        self.G_d0 = 0
-        self.G_d1 = 0
-        self.G_u0 = 0
-        self.G_u1 = 0
+        global listCEd
+        Nt_u = 0
+        Nt_d = 0
+        G_d0 = 0
+        G_d1 = 0
+        G_u0 = 0
+        G_u1 = 0
 
         if self.Mxb != 0 and self.Mzb == 0:
             PosCEd0 = self.Lx / 2
@@ -344,9 +345,9 @@ class CalculationEffort:
                 pt_d = (lt_d / lref) * pm
                 C_d = np.array([C_d0, C_d1])
                 res = self.triangle_compression(C_d, pt_d, alpha, lt_d)
-                self.Nt_d = res[0]
-                self.G_d0 = res[1]
-                self.G_d1 = res[2]
+                Nt_d = res[0]
+                G_d0 = res[1]
+                G_d1 = res[2]
                 res = np.zeros((3, 1))
 
             if lref > self.Lz * math.cos(alpha):
@@ -356,23 +357,23 @@ class CalculationEffort:
                 pt_u = (lt_u / lref) * pm
                 C_u = np.array([C_u0, C_u1])
                 res = self.triangle_compression(C_u, pt_u, alpha, lt_u)
-                self.Nt_u = res[0]
-                self.G_u0 = res[1]
-                self.G_u1 = res[2]
+                Nt_u = res[0]
+                G_u0 = res[1]
+                G_u1 = res[2]
                 res = np.zeros((3, 1))
 
-            CEd = Nt - self.Nt_d - self.Nt_u
-            PosCEd0 = (G0 * Nt - self.G_d0 * self.Nt_d - self.G_u0 * self.Nt_u) / CEd
-            PosCEd1 = (G1 * Nt - self.G_d1 * self.Nt_d - self.G_u1 * self.Nt_u) / CEd
+            CEd = Nt - Nt_d - Nt_u
+            PosCEd0 = (G0 * Nt - G_d0 * Nt_d - G_u0 * Nt_u) / CEd
+            PosCEd1 = (G1 * Nt - G_d1 * Nt_d - G_u1 * Nt_u) / CEd
             if PosCmax > 0:
                 PosCEd0 = self.Lx - PosCEd0
             if PosCmax1 > 0:
                 PosCEd1 = self.Lz - PosCEd1
 
-        PosCEd = np.array((PosCEd0, PosCEd1))
+        self.PosCEd = np.array((PosCEd0, PosCEd1))
         listCEd = []
         listCEd.append(CEd)
-        return PosCEd, CEd
+        return self.PosCEd, CEd
 
     def triangle_compression(self, c, pm, alpha, lref):
         '''Calcul de la force de compression et de son point d'application sur un triangle de compression'''
@@ -383,7 +384,6 @@ class CalculationEffort:
 
         G0 = c[0] + d / 4
         G1 = c[1] + d * math.tan(alpha) / 4
-        #print(c, pm, alpha, lref)
         return np.array([Nt, G0, G1])
 
     def equation_straight_line_biaxial(self, alpha, lref):
@@ -436,14 +436,14 @@ class CalculationEffort:
 
     def systeme_biaxial(self, PosFix_bis, pm, alpha, lref):
         ''' Calcul de l'équilibre statique '''
+        global A11, A21
         L = np.zeros((self.NbFixa, 1))
-        self.Nt_u = 0
-        self.Nt_d = 0
-        self.G_d0 = 0
-        self.G_d1 = 0
-        self.G_u0 = 0
-        self.G_u1 = 0
-        #print(PosFix_bis, pm, alpha, lref)
+        Nt_u = 0
+        Nt_d = 0
+        G_d0 = 0
+        G_d1 = 0
+        G_u0 = 0
+        G_u1 = 0
         c0 = 0
         c1 = 0
         c = np.array([c0, c1])
@@ -451,7 +451,6 @@ class CalculationEffort:
         Nt = res[0]
         G0 = res[1]
         G1 = res[2]
-        #print(res)
         if lref > self.Lx * math.sin(alpha) or lref > self.Lz * math.cos(alpha):
             res = self.equation_straight_line_biaxial(alpha, lref)
             self.A0 = res[0]
@@ -465,9 +464,9 @@ class CalculationEffort:
             pt_d = (lt_d / lref) * pm
             C_d = np.array([C_d0, C_d1])
             res = self.triangle_compression(C_d, pt_d, alpha, lt_d)
-            self.Nt_d = res[0]
-            self.G_d0 = res[1]
-            self.G_d1 = res[2]
+            Nt_d = res[0]
+            G_d0 = res[1]
+            G_d1 = res[2]
 
         if lref > self.Lz * math.cos(alpha):
             C_u0 = 0
@@ -476,9 +475,9 @@ class CalculationEffort:
             pt_u = (lt_u / lref) * pm
             C_u = np.array([C_u0, C_u1])
             res = self.triangle_compression(C_u, pt_u, alpha, lt_u)
-            self.Nt_u = res[0]
-            self.G_u0 = res[1]
-            self.G_u1 = res[2]
+            Nt_u = res[0]
+            G_u0 = res[1]
+            G_u1 = res[2]
 
         L = self.distance_dowel_biaxial(PosFix_bis, alpha, lref)
 
@@ -491,31 +490,29 @@ class CalculationEffort:
             Sumlz = Sumlz + L[j, 0] * (self.Lz / 2 - self.PosFix[j, 1])
             Sumlx = Sumlx + L[j, 0] * (self.PosFix[j, 0] - self.Lx / 2)
 
-        #print(Suml, Sumlx, Sumlz)
-
         if self.PosCmax == 0 and self.PosCmax1 == 0:
-            self.A11 = -1
-            self.A21 = -1
+            A11 = -1
+            A21 = -1
 
         elif self.PosCmax == self.Lx and self.PosCmax1 == 0:
-            self.A11 = -1
-            self.A21 = 1
+            A11 = -1
+            A21 = 1
 
         elif self.PosCmax == 0 and self.PosCmax1 == self.Lz:
-            self.A11 = 1
-            self.A21 = -1
+            A11 = 1
+            A21 = -1
 
         elif self.PosCmax == self.Lx and self.PosCmax1 == self.Lz:
-            self.A11 = 1
-            self.A21 = 1
+            A11 = 1
+            A21 = 1
 
-        f0 = Nt - self.Nt_d - self.Nt_u - (self.nd * self.Ar * pm * Suml / lref) - self.N
-        f1 = -self.A11 * ((self.Lz / 2 - G1) * Nt - (self.Lz / 2 - self.G_d1) * self.Nt_d - (
-                self.Lz / 2 - self.G_u1) * self.Nt_u) - self.nd * self.Ar * pm * Sumlz / lref + self.Mx  # Ar : section resistante à chercher
-        f2 = -self.A21 * ((G0 - self.Lx / 2) * Nt - (self.G_d0 - self.Lx / 2) * self.Nt_d - (
-                self.G_u0 - self.Lx / 2) * self.Nt_u) - self.nd * self.Ar * pm * Sumlx / lref + self.Mz
+        f0 = Nt - Nt_d - Nt_u - (self.nd * self.Ar * pm * Suml / lref) - self.N
+        f1 = -A11 * ((self.Lz / 2 - G1) * Nt - (self.Lz / 2 - G_d1) * Nt_d - (
+                self.Lz / 2 - G_u1) * Nt_u) - self.nd * self.Ar * pm * Sumlz / lref + self.Mx  # Ar : section resistante à chercher
+        f2 = -A21 * ((G0 - self.Lx / 2) * Nt - (G_d0 - self.Lx / 2) * Nt_d - (
+                G_u0 - self.Lx / 2) * Nt_u) - self.nd * self.Ar * pm * Sumlx / lref + self.Mz
         f = np.array([f0, f1, f2])
-        #print(Nt, self.Nt_d, self.Nt_u, self.nd, self.Ar, pm, lref, self.N)
+        #print(Nt, Nt_d, Nt_u, self.nd, self.Ar, pm, lref, self.N)
         return f
 
     def calculation_jocobien_biaxial(self, PosFix_bis, pm, alpha, lref, d_pm, d_alpha, d_lref):
@@ -552,6 +549,7 @@ class CalculationEffort:
 
     def newton_biaxial(self, PosFix_bis, alpha0, lref0):
         ''' Utilisation de la méthode Newton-Rapshon dans le cas biaxial'''
+        '''Initialisation'''
         d_pm = 0.000001
         d_alpha = 0.000001
         d_lref = 0.000001
@@ -575,7 +573,6 @@ class CalculationEffort:
                 return
             else:
                 Minv = np.linalg.inv(m)
-            #print(m)
             f = self.systeme_biaxial(PosFix_bis, pm, alpha, lref)
 
             X_Next = Mathematique(Minv, f).product_matrix_vector()
@@ -594,7 +591,6 @@ class CalculationEffort:
                 X_Next[2, 0] = abs(X2 - X_Next[2, 0])
 
             X = X_Next
-            #print(X)
             pm = X[0, 0]
             alpha = X[1, 0]
             lref = X[2, 0]
@@ -614,13 +610,10 @@ class CalculationEffort:
 
         if NbBoucle >= NbBoucleMax:
             self.Convergence = False
-            #print(NbBoucle)
             print('Non Convergence')
             return
         else:
             self.Convergence = True
-            #print(pm, alpha, lref)
-            #print(NbBoucle)
             return pm, alpha, lref  # Renvoi une liste des trois valeurs
 
     def state_compression_board(self):
@@ -743,7 +736,6 @@ class CalculationEffort:
         ''' Utilisation de la méthode Newton-Rapshon dans le cas monoaxial'''
         d_pm = 0.000001
         d_lref = 0.000001
-
         pm = 100
         lref = lref0
         X0 = pm
@@ -811,7 +803,7 @@ class CalculationEffort:
 
         if self.Mxb != 0 and self.Mzb == 0:
             L = self.distance_dowel_monoaxial(PosFix_bis, lref, "x")
-            # print(L)
+
         elif self.Mxb == 0 and self.Mzb != 0:
             L = self.distance_dowel_monoaxial(PosFix_bis, lref, "z")
 
@@ -819,8 +811,6 @@ class CalculationEffort:
             suml = suml + L[j, 0]
             sumlx = sumlx + L[j, 0] * (self.PosFix[j, 0] - self.Lx / 2)
             sumlz = sumlz + L[j, 0] * (self.PosFix[j, 1] - self.Lz / 2)
-
-        # print(suml, sumlx, sumlz)
 
         if self.Mxb != 0 and self.Mzb == 0:
             N_bis = (lref * self.Lx / 2) * pm
