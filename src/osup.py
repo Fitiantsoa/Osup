@@ -207,6 +207,7 @@ class OSup(QObject):
         self.geometry_module.new_file()
         self.platine_data.new_file()
         self.verification_module.new_file()
+        self.stirrup_module.new_file()
         self.saved = True
         self.parent.setProperty("title", "OSup - " + self.version)
         self.file_name = None
@@ -344,6 +345,7 @@ class OSup(QObject):
             self.geo_file = GeoFile(self.data)
             self.geo_file.write("generate")
             return True
+
         if file_type == "geo_display":
             display_data = self.get_saved_data("display")
             self.geo_file = GeoFile(display_data)
