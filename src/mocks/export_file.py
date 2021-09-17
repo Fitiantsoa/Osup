@@ -1,10 +1,8 @@
-import os
 import sys
 from src.constantes import *
 
 
 class ExportFile:
-    #PATH = TEMP + "osup.export"
 
     def write(self, filetype):
         content = []
