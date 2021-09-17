@@ -14,7 +14,8 @@ from src.modules.rw_error import Error
 from tkinter import *
 from tkinter import messagebox
 from src.Version5etag.general import General
-
+from src.modules.result_sofix import ResultWindowSofix
+import glob
 
 class ResultWindow(QWidget):
 
@@ -43,7 +44,7 @@ class ResultWindow(QWidget):
         self.tree_view = TreeListView()
         self.result_table_view_prof = TableView("profile")
         self.result_table_view_plat = TableView("platine")
-        self.result_table_view_chev = TableView("cheville")
+        self.result_table_view_chev = TableView("rigidite_plat")
         self.export_data = ExportResult()
         self.torsor_view = TorsorView(self.data, pipe_axis)
         # self.data_view = DataView()  # TODO: Maybe we don't need it, check that with the result file values
@@ -119,7 +120,7 @@ class ResultWindow(QWidget):
         layout.addWidget(title, 3, 1)
         layout.addWidget(self.result_table_view_plat, 4, 1)
         title = QLabel()
-        title.setText("Courbe cheville")
+        title.setText("Courbe rigidité platine")
         layout.addWidget(title, 5, 1)
         layout.addWidget(self.result_table_view_chev, 6, 1)
         layout.addWidget(self.export_data, 7, 1)
@@ -140,7 +141,7 @@ class ResultWindow(QWidget):
             data, name, parent, color, check_state = tree_item
             if data is not None and check_state == 2:
                 self.graph.add_plot(data["DataX"], data["DataY"], int(color), parent + " : " + name)
-                self.curve_data.append(data)
+                self.curve_data.append([parent + "$", data])
             else:
                 self.graph.remove_plot(name, parent)
             self.remove_torsor()
@@ -209,10 +210,16 @@ class ResultWindow(QWidget):
         frslt = file_path.split(".")[0] + "." + file_path.split(".")[1] + ".rslt"
         f = open(frslt, "r")
         lines = f.readlines()
-        j = 0
+        nb_plat = 0
+        nb_rig_plat = 0
+        plat_data = {}
+        rig_plat_data = {}
+        flech_data = {}
+        prof_data = {}
         for line in lines:
-            j += 1
-            data = line.split()
+            init_data = line.split("$',")
+            print("inittt data", init_data)
+            data = init_data[1].split()
             curve_data = []
             data_y_id = data.index("'DataY':")
             for i in range(len(data)):
@@ -225,23 +232,24 @@ class ResultWindow(QWidget):
                                 "}", "")))
                     except:
                         print("erreur data", data[i])
-            print(curve_data)
-            if j == 1:
-                prof_data = {'DataX': curve_data[1:data_y_id], 'DataY': curve_data[data_y_id + 1:]}
-                self.load_result(prof_data, "Profilé")
-                # data["Profilé"]={"all": line}
-            elif j == 2:
-                plat_data = {'DataX': curve_data[1:data_y_id], 'DataY': curve_data[data_y_id + 1:]}
-                self.load_result(plat_data, "Platine")
-                # data["Platine"]={"all": line}
-            elif j == 3:
-                etr_data = {'DataX': curve_data[1:data_y_id], 'DataY': curve_data[data_y_id + 1:]}
-                self.load_result(etr_data, "Etriers")
-                # data["Chevilles"] = {"all":line}
+            data = {'DataX': curve_data[1:data_y_id], 'DataY': curve_data[data_y_id + 1:]}
+            if "Profilé" in line :
+                prof_data['all'] = data
+                self.load_result_import(prof_data, "Profilé")
+            elif 'Platine' in line:
+                nb_plat += 1
+                plat_data[str(nb_plat)] = data
+            elif 'Rigidité platine' in line:
+                nb_rig_plat += 1
+                rig_plat_data[str(nb_rig_plat)] = data
+            elif "Etrier" in line:
+                self.load_result_import(data, "Etrier")
             else:
-                chev_data = {'DataX': curve_data[1:data_y_id], 'DataY': curve_data[data_y_id + 1:]}
-                self.load_result(chev_data, "Cheville")
-                # data["Chevilles"] = {"all":line}
+                flech_data['all'] = data
+                self.load_result_import(flech_data, "Flèche")
+
+        self.load_result_import(plat_data, "Platine")
+        self.load_result_import(rig_plat_data, "Rigidité platine")
 
     def exportResult(self):
         # fname = "C:" + os.environ["HOMEPATH"] + "\\Desktop\\aster\\" + file_name + ".osup"
@@ -253,21 +261,17 @@ class ResultWindow(QWidget):
         cp_file.write("\n")
         cp_file.write("PROFILE")
         cp_file.write("\n")
-        cp_file.close()
         self.copyFile(PROFILE_RSLT.replace("'", ""), fname[0], "PR")
-        cp_file = open(fname[0], "a")
-        cp_file.write("PLATINE")
-        cp_file.write("\n")
-        cp_file.close()
-        self.copyFile(PLATINE_RSLT.replace("'", ""), fname[0], "PL")
-        cp_file = open(fname[0], "a")
-        cp_file.write("CHEVILLE")
-        cp_file.write("\n")
-        cp_file.close()
-        self.copyFile(CHEVILLE_RSLT.replace("'", ""), fname[0], "CH")
+        for path in glob.glob(TEMP + "platine" + "*.Osup"):
+            self.copyFile(path, fname[0], "PL")
+            cp_file.write("PLATINE")
+            cp_file.write("\n")
+        for path in glob.glob(TEMP + "rigidite_plat" + "*.Osup"):
+            cp_file.write("RIGIDITE PLATINE")
+            self.copyFile(path, fname[0], "RP")
+            cp_file.write("\n")
         frslt_data = fname[0].split(".")[0] + "." + fname[0].split(".")[1] + ".rslt"
         frslt = open(frslt_data, "w")
-
         for data in self.curve_data:
             frslt.write(str(data))
             frslt.write("\n")
@@ -299,6 +303,10 @@ class ResultWindow(QWidget):
         self.write_load_comm(Fy, Fz)
         self.run_aster_sofix()
         self.add_torsor(Fy, Fz, name, status)
+        os.startfile(CHEVILLE_RSLT.replace("'",""))
+        resultSofix = ResultWindowSofix()
+        print("test")
+        resultSofix.showMaximized()
 
     def write_load_comm(self, Fy, Fz):
         osup_file = open(FICHIER_CHEVILLE_RATIO, 'r')
@@ -308,24 +316,16 @@ class ResultWindow(QWidget):
         data_lines = dataFile.readlines()
         dataFile.close()
         with open(COMM_FILE_CHEVILLE, "w") as f:
+            f.write(f'cheville_file = {CHEVILLE_RSLT}\n')
+            if self.pipe_axis == "Z":
+                f.write(f'fx = {Fy}\nfy = {Fz}\nfz = {0.3 * (float(Fz) ** 2 + float(Fy) ** 2) ** 0.5}\n')
+            elif self.pipe_axis == "Y":
+                f.write(f'fx = {Fy}\nfz = {Fz}\nfy = {0.3 * (float(Fz) ** 2 + float(Fy) ** 2) ** 0.5}\n')
+            else:
+                f.write(f'fy = {Fy}\nfz = {Fz}\nfx = {0.3 * (float(Fz) ** 2 + float(Fy) ** 2) ** 0.5}\n')
             for data in data_lines:
                 f.write(data)
             for line in lines:
-                if "***********load*********" in line:
-                    line = ""
-                    if self.pipe_axis == "Z":
-                        line += f'\tFX = {Fy}, FY = {Fz}, FZ = {0.3*(float(Fz)**2 + float(Fy)**2)**0.5}, ),'
-                    elif self.pipe_axis == "Y":
-                        line += f'\tFX = {Fy}, FZ = {Fz}, FY = {0.3*(float(Fz)**2 + float(Fy)**2)**0.5},  ),'
-                    else:
-                        line += f'\tFY = {Fy}, FZ = {Fz}, FX = {0.3*(float(Fz)**2 + float(Fy)**2)**0.5},),'
-                elif "************RESULTFILE*****************" in line:
-                    if self.pipe_axis == "Z":
-                        line = f'ratio_cheville.write_osup_result({CHEVILLE_RSLT}, {Fy}, {Fz}, {0.3*(float(Fz)**2 + float(Fy)**2)**0.5})\n'
-                    elif self.pipe_axis == "Y":
-                        line = f'ratio_cheville.write_osup_result({CHEVILLE_RSLT}, {Fy}, {0.3 * (float(Fz) ** 2 + float(Fy) ** 2) ** 0.5}, {Fz})\n'
-                    else:
-                        line = f'ratio_cheville.write_osup_result({CHEVILLE_RSLT},{0.3 * (float(Fz) ** 2 + float(Fy) ** 2) ** 0.5}, {Fy}, {Fz})\n'
                 f.write(line)
             f.close()
 
@@ -340,6 +340,11 @@ class ResultWindow(QWidget):
         self.graph.new_file()
 
     def load_result(self, data, part):
+        self.data.load_plots(data, part)
+        self.tree_view.add_model(self.data.plots)
+
+    def load_result_import(self, data, part):
+        # self.data.plot_import(data, part)
         self.data.load_plots(data, part)
         self.tree_view.add_model(self.data.plots)
 

@@ -1,5 +1,8 @@
+# Le fichier comm permet d'écrire l'entête du fichier .comm
+# Il permet de renseigner les caractéristiques du model
+
 from src.constantes import *
-from src.utils import sort_beam_by, read_json
+from src.utils import read_json
 from src.modules.calculation_module import Calculation_var
 from src.mocks.result_file import ResultFile
 
@@ -9,7 +12,7 @@ class CommFile:
         self.verif_mod = data['verification_module']
         self.plat_data = data['platine_data']
         self.dowel_data = data["cheville"]
-        self.list_liaison = self.liaison_ddl(data['geo']['node_rep'], data['geo']['beam_list'], data['verification_module']['load_node'])
+        self.list_liaison = self.__liaison_ddl(data['geo']['node_rep'], data['geo']['beam_list'], data['verification_module']['load_node'])
         self.beam_group = data['geo']['beam_group']
         self.node_group = data['geo']['node_group']
         self.calc_var = Calculation_var( data['geo'],self.plat_data, self.dowel_data)
@@ -71,9 +74,13 @@ class CommFile:
         self.content.append("")
 
     def __create_material(self):
+        """
+        La fonction write section permet de récupérer la liste des matériaux déclarées par l'utilisateur pour chaque barre ainsi que les caractéristiques de ces dernières
+        """
         list_mat = []
         gp_mat = {}
 
+        #Boucle pour créer la liste des noms des matériaux
         for group in self.beam_group:
             if len(list_mat) >= 1:
                 for i in range(len(list_mat)):
@@ -84,18 +91,23 @@ class CommFile:
             if group['material'] not in gp_mat.keys():
                 gp_mat[group['material']] = []
 
+        #Boucle pour lister toutes les poutres ayant le même matériau
         for group in self.beam_group:
             for mat in gp_mat.keys():
                 if group['material'] == mat:
                     gp_mat[mat].append(group['id'])
+
+        #Boucle qui permet de récupérer les caractéristiques matériaux
         for mat in list_mat:
             mat_name = mat[0].replace("≤","")
             mat_name = mat_name[0:7]
             self.content.append(str(mat_name.replace(" ",""))+"=DEFI_MATERIAU(ELAS=")
-            Su = self.material_database['RCC-M 2016'][mat[1]][mat[0]][mat[2]]['Su']
-            Sy = self.material_database['RCC-M 2016'][mat[1]][mat[0]][mat[2]]['Sy']
-            S = self.material_database['RCC-M 2016'][mat[1]][mat[0]][mat[2]]['S']
+
             if mat[1] != 'RIGIDE':
+                print("tessss", self.material_database['RCC-M 2016'][mat[1]][mat[0]])
+                Su = self.material_database['RCC-M 2016'][mat[1]][mat[0]][mat[2]]['Su']
+                Sy = self.material_database['RCC-M 2016'][mat[1]][mat[0]][mat[2]]['Sy']
+                S = self.material_database['RCC-M 2016'][mat[1]][mat[0]][mat[2]]['S']
                 E = self.material_database['RCC-M 2016'][mat[1]][mat[0]][mat[2]]['E'] * 10 ** 3
                 rho = 7.85e-09
                 nu = 0.3
@@ -105,6 +117,10 @@ class CommFile:
                 if self.verif_mod['methode'] != 'courbe':
                     self.result_file.append_material(mat[0], E, rho, nu, Sy, Su, S)
             else:
+                Su = self.material_database['RCC-M 2016'][mat[1]][mat[0]]['20.0']['Su']
+                Sy = self.material_database['RCC-M 2016'][mat[1]][mat[0]]['20.0']['Sy']
+                S = self.material_database['RCC-M 2016'][mat[1]][mat[0]]['20.0']['S']
+                E = self.material_database['RCC-M 2016'][mat[1]][mat[0]]['20.0']['E'] * 10 ** 3
                 self.content.append("\t_F(E =" + str(self.material_database['RCC-M 2016'][mat[1]][mat[0]]['20.0']['E'] * 10 ** 3) + ",")
                 self.content.append("\t\tNU = 0.3, RHO = 0 ,),\n")
                 self.result_file.append_material(mat_name, E, 0, 0.3, Sy, Su, S)
@@ -112,6 +128,7 @@ class CommFile:
 
         self.content.append("material=AFFE_MATERIAU(MAILLAGE=mesh,")
         self.content.append("\tAFFE=(")
+        #Boucle pour affecter les matériaux aux poutres
         for mat in gp_mat.keys():
             mat_name = mat.replace("≤", "")
             mat_name = mat_name[0:7]
@@ -121,6 +138,10 @@ class CommFile:
         self.content.append(");")
 
     def __write_section(self):
+        """
+        La fonction write section permet de récupérer la liste des sections déclarées par l'utilisateur pour chaque barre ainsi que les caractéristiques de ces dernières
+        Le cheminement est le même que celui utilisé pour les matériaux
+        """
         gp_sect = {}
         gp_or = {}
         for gp in self.beam_group:
@@ -180,7 +201,15 @@ class CommFile:
 
 
     def __write_limits_conditions(self):
+        """
+        Cette fonction permet de déclarer les conditions limites
+        Les contraintes dans Code_Aster étant la moyenne des contraintes aux noeuds de chaque barre et ceux dans Beamstress étant donné pour chaque noeud de chaque barre
+        des doublons de noeuds ont été créés.
+        L'attribut list_liaison a été créé pour pouvoir dire à Code_Aster que ce sont les mêmes noeuds
+        """
         self.content.append("encast=AFFE_CHAR_MECA(MODELE=model,")
+
+        #Boucle permettant de déclarer toutes le CL
         for boundary in self.node_group.keys():
             if self.node_group[boundary] != []:
                 #b_name stands for boundary
@@ -194,7 +223,7 @@ class CommFile:
                     self.content.append("\t\t" + "= 0,".join(boundary.split("_"))  + " = 0,),),")
                 else:
                     self.content.append("\t\t DX = 0,DY = 0, DZ = 0, DRX = 0, DRY = 0, DRZ = 0,),),")
-
+        # Boucle permettant de liers les noeuds en doublons
         if self.list_liaison is not None or  self.list_liaison != []:
             self.content.append("\tLIAISON_DDL =(")
             for node_link_list in self.list_liaison:
@@ -226,7 +255,10 @@ class CommFile:
         self.content.append(");")
         self.content.append("")
 
-    def liaison_ddl(self, node_rep_list_init,beam_list,load_node):
+    def __liaison_ddl(self, node_rep_list_init,beam_list,load_node):
+        """
+        Cette fonction permet d'avoir la liste des noeuds en doublon.
+        """
         list_ddl_impo = []
         list_beam = list(map(lambda x: [x['n1'],x['n2']],beam_list))
         list_node = [node_rep_list_init[str(load_node)][0]]
@@ -240,7 +272,7 @@ class CommFile:
                 for beam in list_beam:
                     #parcours la liste de liste de noeuds qui forment les bares
                     if find_node in beam:
-                        #cherche le noeud de charegement dans la liste précédente
+                        #cherche le noeud de chargement dans la liste précédente
                         beam.remove(find_node)
                         #il supprime ce dernier pour récupérer l'autre noeud à l'extrémité de la poutre
                         for node_base,rep_list in node_rep_list.items():

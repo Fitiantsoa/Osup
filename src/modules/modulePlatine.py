@@ -213,9 +213,10 @@ class ModulePlatine:
             else:
                 self.a.append(float(data['a']))
             if data['b'] == "":
-                self.b.append(data['b'])
+                self.b.append(0)
             else:
                 self.b.append(float(data['b']))
+            print("bbbbbb", self.b)
             self.prod.append(data['prod'])
             self.mat.append(data['mat'])
             self.node_list.append(data['noeud'])
@@ -300,10 +301,12 @@ class ModulePlatine:
         for beam_id in beam_id_list:
             for data in beams:
                 if data['id'] == beam_id:
-                    print("section", data['sec'].split())
-                    if data['sec'] != "RIGIDE  " and data['sec'].split()[0] != "REC":
+                    if data['sec'] != "RIGIDE  ":
                         sect = data['sec'].split()[0]
-                        dim = str(int(data['sec'].split()[1]))
+                        try:
+                            dim = str(int(data['sec'].split()[1]))
+                        except:
+                            dim = str(data['sec'].split()[1])
                         prod = data['prod']
                         mat = data['mat']
                         t = str(data['t'])

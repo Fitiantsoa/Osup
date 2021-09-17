@@ -52,11 +52,18 @@ class Data:
     def load_plots(self, data, part):
         self.plots[part] = {}
         curv_list = list(data.keys())
-        if len(curv_list) > 1:
+        if 'DataX' not in curv_list:
             for key in data.keys():
                 self.plots[part][key] = data[key]
         else:
             self.plots[part]["all"] = data[curv_list[0]]
+
+    # def plot_import(self, data, part):
+    #     self.plots[part] = {}
+    #     if num_curve != "all":
+    #         self.plots[part][num_curve] = data
+    #     else:
+    #         self.plots[part] = {'all': data}
 
     def add_plot(self, data, key):
         self.plots[key] = data
