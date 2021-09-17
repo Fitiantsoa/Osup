@@ -71,9 +71,12 @@ class ResultFile:
 
     def create_result_file(self, path):
         print('path', path)
-        with open(path, "w") as f:
-            f.write("\n".join(self.input_data))
-            f.write("\n")
+        try:
+            with open(path, "w") as f:
+                f.write("\n".join(self.input_data))
+                f.write("\n")
+        except:
+            pass
 
 
     def append_material(self, name, E, rho, G, Sy, Su, S):

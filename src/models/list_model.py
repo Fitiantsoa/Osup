@@ -293,7 +293,7 @@ class PlatineListModel(ListModel):
                   modele_dowel, type_dowel, deep_dowel, norme, type_charge, situation_initiale, cx0, cx1, cz0, cz1,
                   state_concrete, class_concrete, thick_concrete, armature_concrete, edf):
         return self.insert(self.count, {"id": self.get_next_id(),"dowelsnb": dowelsNumber, "axis": axis, "orientation": orientation, "l": l, "h": h,
-                                        "e": e, "a": '', 'b': b, 'noeud': noeud, 'prod':prod, 'mat': mat,'t':t,
+                                        "e": e, "a": 0, 'b': b, 'noeud': noeud, 'prod':prod, 'mat': mat,'t':t,
                                         'gamme': gamme_dowel, 'modele': modele_dowel, 'type':
                                         type_dowel, 'hef': deep_dowel, 'norme': norme,
                                         'TypeCharge': type_charge, 'txt': situation_initiale,
@@ -306,7 +306,7 @@ class PlatineListModel(ListModel):
                   modele_dowel, type_dowel, deep_dowel, norme, type_charge, situation_initiale, cx0, cx1, cz0, cz1,
                   state_concrete, class_concrete, thick_concrete, armature_concrete, edf):
         return self.insert(self.count, {"id": self.get_next_id(),"dowelsnb": dowelsNumber, "axis": axis, "orientation": orientation, "l": l, "h": h,
-                                        "e": e, "a": a, 'b': '', 'noeud': noeud, 'prod':prod, 'mat': mat,'t':t,
+                                        "e": e, "a": a, 'b': 0, 'noeud': noeud, 'prod':prod, 'mat': mat,'t':t,
                                         'gamme': gamme_dowel, 'modele': modele_dowel, 'type':
                                         type_dowel, 'hef': deep_dowel, 'norme': norme,
                                         'TypeCharge': type_charge, 'txt': situation_initiale,

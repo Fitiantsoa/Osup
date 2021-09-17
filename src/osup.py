@@ -17,6 +17,7 @@ from src.mocks.export_file import ExportFile
 from src.mocks.result_file import ResultFile
 from src.modules.module_extract_note import NoteDeCalcul
 from src.Version5etag.general import General
+import glob
 
 path = str(sys.path[0])
 
@@ -340,6 +341,19 @@ class OSup(QObject):
     def check_etrier(self):
         return len(self.data['stirrup']['material']) != 0
 
+    @pyqtSlot(result=bool)
+    def check_fleche(self):
+        print("tadaaaaa", self.data['geo']['fleche_node'])
+        return self.data['geo']['fleche_node'] != None
+
+    @pyqtSlot()
+    def delete_file(self):
+        file_type = ["profile", "platine", "rigidite_plat", "fleche"]
+        for file in file_type:
+            for filepath in glob.glob(TEMP + file + "*.Osup"):
+                print("pathhhh", filepath)
+                os.remove(filepath)
+
     @pyqtSlot(str, result=bool)
     def create_file(self, file_type):
         if file_type == "geo": #on ne crée les groupes qu'une seule fois sinon existence doublon
@@ -350,6 +364,7 @@ class OSup(QObject):
 
         if file_type == "geo_display":
             display_data = self.get_saved_data("display")
+            print("teeest")
             self.geo_file = GeoFile(display_data)
             self.geo_file.write("display")
             return True
@@ -445,11 +460,11 @@ class OSup(QObject):
 
     @pyqtSlot(str)
     def display_result(self, result_file=None):
-        if "axis" in self.get_saved_data(type=None)["verification_module"].keys() :
-            pipe_axis = self.get_saved_data(type=None)["verification_module"]["axis"]
+        if "axis" in self.data["verification_module"].keys() :
+            pipe_axis = self.data["verification_module"]["axis"]
             self.result_file = ResultFile(pipe_axis)
             self.result_file.load("profile")
-            nb_point = self.get_saved_data(type=None)["verification_module"]['points']
+            nb_point = self.data["verification_module"]['points']
             self.result_window = ResultWindow(pipe_axis)
             self.result_window.load_result(self.result_file.get_plot_data(),"Profilé")
             self.result_file.load("platine")
@@ -464,14 +479,14 @@ class OSup(QObject):
             self.result_file.load( "fleche")
             self.result_window.load_result(self.result_file.get_plot_data(), "Flèche")
             if self.data_stirrup == {}:
-                self.result_window.load_result(self.result_file.get_dict_data(self.get_saved_data(type=None)["verification_module"]['points'],self.get_saved_data(type=None)["stirrup"]["plot_data"]), "Etrier")
+                self.result_window.load_result(self.result_file.get_dict_data(self.data["verification_module"]['points'], self.data["stirrup"]["plot_data"]), "Etrier")
             else:
-                self.result_window.load_result(self.result_file.get_dict_data(self.get_saved_data(type=None)["verification_module"]['points'],self.data_stirrup), "Etrier")
+                self.result_window.load_result(self.result_file.get_dict_data(self.data["verification_module"]['points'],self.data_stirrup), "Etrier")
             self.result_window.showMaximized()
 
         else:
             try:
-                resultFile = "C:" + os.environ["HOMEPATH"] + "/Desktop/aster/result.osup"
+                resultFile = self.data["verification_module"]['folder_path'] + "/result.osup"
                 os.startfile(resultFile)
                 return True
             except:

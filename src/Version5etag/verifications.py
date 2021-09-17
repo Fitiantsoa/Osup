@@ -5,9 +5,9 @@ class Verification:
         self.Lz = data_dowel.get("Lz")
         self.h = float(data_dowel.get("h"))
         self.NbFixa = data_dowel.get("nbCheville")
-        self.sx0 = self.sx(data_dowel.get("sx0"), data_dowel.get("sz0"))[0]
+        self.sx0 = data_dowel.get("sx0")
         self.sx1 = 0
-        self.sz0 = self.sx(data_dowel.get("sx0"), data_dowel.get("sz0"))[1]
+        self.sz0 = data_dowel.get("sz0")
         self.sz1 = 0
         self.cx0 = data_dowel.get("cx0")
         self.cx1 = data_dowel.get("cx1")
@@ -32,16 +32,8 @@ class Verification:
         self.dz0 = data_dowel.get("dz0")
         self.dz1 = data_dowel.get("dz1")
 
-    def sx(self, sx0, sz0):
-        if self.NbFixa == 2:
-            if sx0 == "":
-                sx0 = 0
-                return sx0, sz0
-            if sz0 == "":
-                sz0 = 0
-                return sx0, sz0
-        else:
-            return sx0, sz0
+    # def sx(self, sx0, sz0):
+    #     return sx0, sz0
 
     def verification_anchors(self):
         if self.verification_entraxe_edge() is True and self.verification_center_distance_edge() is True and \

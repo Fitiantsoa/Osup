@@ -14,18 +14,8 @@ import "../ui"
 import"../components"
 
 Page{
-    id: pageGeo
+    id: pageCheville
     background:Rectangle{ color: Theme.background }
-    property var encas_node_list
-    property var beam_list
-    property var node_list
-    property var load_node_list
-    property var rccm: conditioncaclul.rccm
-    property var lvlA: conditioncaclul.lvlA
-    property var temperature: 20
-    property var porte: 0
-    property bool verifTemp: false
-
     Flickable {
         id: flickable
         anchors.fill: parent
@@ -57,7 +47,7 @@ Page{
                         spacing: 20
                         Label{
                             color:Theme.primary
-                            text:"Les modules suivants permettent de générer la géométrie pour code Aster"
+                            text:"Les modules suivants permettent de d'effectuer le calcul de chevilles d'ancrages"
                         }
                         Rectangle{
                             height : 1
@@ -66,30 +56,15 @@ Page{
                         }
                     }
                 }
-                ModuleCalculationCondition{id: conditioncaclul
-                    objectName: "moduleCalculationCondition"
+
+                ModulePlatineSofix{
+                    objectName: "modulePlatineSofix"
                     Layout.fillWidth: true
                 }
-                ModuleGeo{
-                    objectName: "moduleGeometry"
+                ModuleResultSofix{
+                    objectName: "moduleResultSofix"
                     Layout.fillWidth: true
                 }
-                ModulePlatine{
-                    objectName: "modulePlatine"
-                    Layout.fillWidth: true
-                }
-                ModuleStirrup{
-                    objectName: "moduleStirrup"
-                    Layout.fillWidth: true
-                }
-                ModuleVerif{
-                    objectName: "moduleVerif"
-                    Layout.fillWidth: true
-                }
-//                ModuleScript{
-//                    objectName: "moduleScript"
-//                    Layout.fillWidth: true
-//                }
 
                 Rectangle{
                     id: rectangle
@@ -100,73 +75,8 @@ Page{
                         text:"Lancer"
                         anchors.horizontalCenter: parent.horizontalCenter
                         onClicked: {
-                            if (osup.check_pipe_axis()){
-                                messageDialogErrorFre.title = "Axe de frottement non défini"
-                                messageDialogErrorFre.text = "Veuillez renseigner l'axe de frottement avant de lancer le calcul."
-                                messageDialogErrorFre.visible = true
-                            }
-                            else{
-                                if (osup.check_node_load()){
-                                    messageDialogErrorFre.title = "Erreur noeud de chargement"
-                                    messageDialogErrorFre.text = "Le noeud de chargement est un noeud encastré. Veuillez le modifier avant de relancer le calcul"
-                                    messageDialogErrorFre.visible = true
-                                }
-                                else{
-                                    osup.reinitialize_value()
-                                    if (osup.check_free_node()){
-                                        messageDialogErrorFre.title = "Noeuds libre"
-                                        messageDialogErrorFre.text = "Certaines noeuds du modèle n'appartiennent à aucune barre."
-                                        messageDialogErrorFre.visible = true
-                                    }
-
-                                    if (osup.check_list()){
-                                        if (osup.beam_list_empty()){
-                                            messageDialogErrorFre.title = "Vérifier géométrie"
-                                            messageDialogErrorFre.text = "Veuillez créer des barres."
-                                            messageDialogErrorFre.visible = true
-                                        }
-                                    }
-                                    else {
-                                        warningMessage.visible = true
-                                    }
-                                    if (!(osup.check_free_node()) && (osup.check_list()) && !(osup.beam_list_empty())) {
-                                        progressbar.value = 0.1
-                                        osup.update_widget()
-                                        osup.create_file('geo')                                        
-                                        if (osup.check_nb_platine_encas()){
-                                            if (osup.check_etrier()){
-                                                osup.delete_file()
-                                                osup.create_file("med")
-                                                progressbar.value = 0.2
-                                                osup.update_widget()
-                                                osup.create_file("comm")
-                                                osup.create_file("export")
-                                                progressbar.value = 0.3
-                                                osup.update_widget()
-                                                progressbar.value = 0.7
-                                                osup.update_widget()
-                                                osup.run_aster()
-                                                progressbar.value = 1
-                                                osup.update_widget()
-                                           }
-                                           else{
-                                                progressbar.value = 0
-                                                osup.update_widget()
-                                                messageDialogErrorFre.title = "Erreur étriers"
-                                                messageDialogErrorFre.text = "Veuillez définir les étriers avant de lancer le calcul."
-                                                messageDialogErrorFre.visible = true
-                                            }
-                                       }
-                                       else{
-                                            progressbar.value = 0
-                                            osup.update_widget()
-                                            messageDialogErrorFre.title = "Nombre de platines incorrectes"
-                                            messageDialogErrorFre.text = "Le nombre de platines ne correspond pas au nombre de noeuds encastrés."
-                                            messageDialogErrorFre.visible = true
-                                        }
-                                    }
-                               }
-                            }
+                            osup.resetSofix()
+                            osup.resultSopfix()
                         }
                     }
                     Image{
@@ -201,6 +111,7 @@ Page{
                             }
                         }
                     }
+
                     MessageDialog{
                         id: messageDialogErrorFre
                         objectName: "errorGenerate"

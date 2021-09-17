@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QAction, QTableWidget, QTableWidgetItem,QLabel
-from PyQt5.QtGui import QIcon
+from PyQt5 import QtGui
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QPushButton
 import sys
@@ -11,7 +11,7 @@ class TableView(QTableWidget):
         self.data = self.getData(comp)
         nb_point = len(self.data["Fx"])
         QTableWidget.__init__(self, nb_point,3)
-        self.setData()
+        self.setData(comp)
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
 
@@ -24,7 +24,7 @@ class TableView(QTableWidget):
         for path in glob.glob(TEMP + part + "*.Osup"):
             j += 1
             if len(glob.glob(TEMP + part + "*.Osup")) > 1:
-                content[0].append( part + str(j))
+                content[0].append( part + " " + str(j))
                 content[1].append("")
                 content[2].append("")
             with open(path, 'r') as f:
@@ -44,12 +44,15 @@ class TableView(QTableWidget):
             "Fz": content[2]
         }
 
-    def setData(self):
+    def setData(self, part):
         horHeaders = []
         for n, key in enumerate(sorted(self.data.keys())):
             horHeaders.append(key)
             for m, item in enumerate(self.data[key]):
                 newitem = QTableWidgetItem(item)
+                # newitem.setBackground(QtGui.QColor('red'))
                 self.setItem(m, n, newitem)
         self.setHorizontalHeaderLabels(horHeaders)
+
+
 

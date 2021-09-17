@@ -1,4 +1,4 @@
-import os, sys
+import sys
 import datetime
 from src.constantes import *
 
@@ -33,7 +33,6 @@ class GeoFile:
         # TODO à modifier groupe des noeuds pour prendre en compte les différents types de CL
         content += "\n// DOFs\n"
         for cl in self.node_group.keys():
-            # content += "Physical Point(\"encas\") = {" + ", ".join(str(x) for x in self.encas_node) + "};\n"
             if self.node_group[cl] != []:
                 content += "Physical Point('" + cl + "') = {" + ", ".join(str(x) for x in self.node_group[cl]) + "};\n"
         content += "\n// All nodes group\n"
@@ -49,9 +48,12 @@ class GeoFile:
             f.close()
 
     def __get_fleche_node(self, node_list):
-        for node in node_list:
-            if node != self.node_load:
-                return node
+        try:
+            for node in node_list:
+                if node != self.node_load:
+                    return node
+        except:
+            pass
 
     def open(self):
         try:
